@@ -1,4 +1,4 @@
-import { hash } from '@node-rs/argon2';
+import * as bcrypt from 'bcrypt'; 
 import { encodeBase32LowerCase } from '@oslojs/encoding';
 import { fail, redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
@@ -6,6 +6,8 @@ import * as auth from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import type { Actions, PageServerLoad } from './$types';
+
+const saltRounds = 10;
 
 export const load: PageServerLoad = async (event) => {
 	if (event.locals.user) throw redirect(302, '/');
@@ -43,23 +45,12 @@ export const actions: Actions = {
 
 		if (exists.length) return fail(400, { message: 'User or codename already exists' });
 
-		// ---------- HASH PASSWORD & PIN ----------
-		const passwordHash = await hash(password, {
-			memoryCost: 19456,
-			timeCost: 2,
-			outputLen: 32,
-			parallelism: 1
-		});
-
-		const pinHash = await hash(pin, {
-			memoryCost: 19456,
-			timeCost: 2,
-			outputLen: 32,
-			parallelism: 1
-		});
-
-		// ---------- INSERT USER ----------
+		// ---------- HASH PASSWORD & PIN (USING BCRYPT) ----------
 		try {
+			const passwordHash = await bcrypt.hash(password as string, saltRounds);
+			const pinHash = await bcrypt.hash(pin as string, saltRounds);
+
+			// ---------- INSERT USER ----------
 			const userId = generateUserId();
 			await db.insert(table.user).values({
 				id: userId,
@@ -108,5 +99,3 @@ function validatePassword(str: unknown): str is string {
 function validatePIN(str: unknown): str is string {
 	return typeof str === 'string' && /^[0-9]{4,8}$/.test(str);
 }
-
-
