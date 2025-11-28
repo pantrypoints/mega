@@ -1,11 +1,11 @@
-import * as bcrypt from 'bcryptjs'; 
+import * as bcrypt from 'bcryptjs';
 import { encodeBase32LowerCase } from '@oslojs/encoding';
 import { fail, redirect } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
+import { eq, or } from 'drizzle-orm';
 import * as auth from '$lib/server/auth';
-import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import type { Actions, PageServerLoad } from './$types';
+
 
 const saltRounds = 10;
 
@@ -16,8 +16,9 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
 	register: async (event) => {
+		const db = event.locals.db; // ✅ Use db from locals
+		
 		const form = await event.request.formData();
-
 		const username = form.get('username');
 		const codename = form.get('codename');
 		const pin = form.get('pin');
@@ -30,19 +31,22 @@ export const actions: Actions = {
 		if (!validateCodename(codename)) return fail(400, { message: 'Invalid codename' });
 		if (!validatePassword(password)) return fail(400, { message: 'Password too weak' });
 		if (!validatePIN(pin)) return fail(400, { message: 'Invalid PIN' });
-
 		if (password !== passwordConfirm)
 			return fail(400, { message: 'Passwords do not match' });
-
 		if (pin !== pinConfirm)
 			return fail(400, { message: 'PIN does not match' });
 
-		// Check duplicate username OR codename
+		// Check duplicate username OR codename (fixed the query)
 		const exists = await db
 			.select()
 			.from(table.user)
-			.where(eq(table.user.username, username) || eq(table.user.codename, codename));
-
+			.where(
+				or(
+					eq(table.user.username, username),
+					eq(table.user.codename, codename)
+				)
+			);
+		
 		if (exists.length) return fail(400, { message: 'User or codename already exists' });
 
 		// ---------- HASH PASSWORD & PIN (USING BCRYPT) ----------
@@ -66,8 +70,9 @@ export const actions: Actions = {
 				location: null
 			});
 
+			// ✅ Pass db as first parameter
 			const sessionToken = auth.generateSessionToken();
-			const session = await auth.createSession(sessionToken, userId);
+			const session = await auth.createSession(db, sessionToken, userId);
 			auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
 		} catch (err) {
 			console.error(err);
