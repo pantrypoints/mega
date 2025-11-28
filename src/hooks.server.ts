@@ -20,8 +20,10 @@ const handleDatabase: Handle = async ({ event, resolve }) => {
 	return resolve(event);
 };
 
+
 // 🔐 Auth + global redirect here
 const handleAuth: Handle = async ({ event, resolve }) => {
+
 	// Your existing session cookie system
 	const sessionToken = event.cookies.get(auth.sessionCookieName);
 	if (sessionToken) {
@@ -34,16 +36,19 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 		event.locals.user = null;
 		event.locals.session = null;
 	}
+
 	// ⛔ Redirect to login if not authenticated 🟢 but allow access to public pages
-	const PUBLIC_STARTS = ['/login', '/register', '/api/']; 
+	const PUBLIC_STARTS = ['/login', '/register', '/api/', '/stats']; 
 	
 	// Check if the current path starts with any of the public paths
 	const isPublicPath = PUBLIC_STARTS.some(path => event.url.pathname.startsWith(path));
+
 	// The base path '/' must be explicitly checked if you want it to be public
 	const isRootPath = event.url.pathname === '/';
 	if (!event.locals.user && !isPublicPath && !isRootPath) {
 		throw redirect(302, '/login');
 	}
+	
 	// You also need to handle the case where a logged-in user tries to access /login
 	if (event.locals.user && (event.url.pathname === '/login' || event.url.pathname === '/register')) {
 		// Redirect logged-in users to the home page or dashboard
@@ -53,6 +58,11 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 };
 
 export const handle: Handle = sequence(handleParaglide, handleDatabase, handleAuth);
+
+
+
+
+
 
 
 
