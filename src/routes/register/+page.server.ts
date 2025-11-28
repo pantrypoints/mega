@@ -1,4 +1,4 @@
-import * as bcrypt from 'bcrypt'; 
+import * as bcrypt from 'bcryptjs'; 
 import { encodeBase32LowerCase } from '@oslojs/encoding';
 import { fail, redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
