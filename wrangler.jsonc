@@ -10,5 +10,5 @@
 	"observability": {
 		"enabled": true
 	},
-    "vars": { "DATABASE_URL": "libsql://mega-pantrypoints.aws-ap-northeast-1.turso.io" }
+    "vars": { "DATABASE_URL": "libsql://mega2-pantrypoints.aws-ap-northeast-1.turso.io" }
 }
