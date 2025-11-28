@@ -1,0 +1,112 @@
+import { hash } from '@node-rs/argon2';
+import { encodeBase32LowerCase } from '@oslojs/encoding';
+import { fail, redirect } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
+import * as auth from '$lib/server/auth';
+import { db } from '$lib/server/db';
+import * as table from '$lib/server/db/schema';
+import type { Actions, PageServerLoad } from './$types';
+
+export const load: PageServerLoad = async (event) => {
+	if (event.locals.user) throw redirect(302, '/');
+	return {};
+};
+
+export const actions: Actions = {
+	register: async (event) => {
+		const form = await event.request.formData();
+
+		const username = form.get('username');
+		const codename = form.get('codename');
+		const pin = form.get('pin');
+		const pinConfirm = form.get('pinConfirm');
+		const password = form.get('password');
+		const passwordConfirm = form.get('passwordConfirm');
+
+		// ---------- VALIDATION ----------
+		if (!validateUsername(username)) return fail(400, { message: 'Invalid username' });
+		if (!validateCodename(codename)) return fail(400, { message: 'Invalid codename' });
+		if (!validatePassword(password)) return fail(400, { message: 'Password too weak' });
+		if (!validatePIN(pin)) return fail(400, { message: 'Invalid PIN' });
+
+		if (password !== passwordConfirm)
+			return fail(400, { message: 'Passwords do not match' });
+
+		if (pin !== pinConfirm)
+			return fail(400, { message: 'PIN does not match' });
+
+		// Check duplicate username OR codename
+		const exists = await db
+			.select()
+			.from(table.user)
+			.where(eq(table.user.username, username) || eq(table.user.codename, codename));
+
+		if (exists.length) return fail(400, { message: 'User or codename already exists' });
+
+		// ---------- HASH PASSWORD & PIN ----------
+		const passwordHash = await hash(password, {
+			memoryCost: 19456,
+			timeCost: 2,
+			outputLen: 32,
+			parallelism: 1
+		});
+
+		const pinHash = await hash(pin, {
+			memoryCost: 19456,
+			timeCost: 2,
+			outputLen: 32,
+			parallelism: 1
+		});
+
+		// ---------- INSERT USER ----------
+		try {
+			const userId = generateUserId();
+			await db.insert(table.user).values({
+				id: userId,
+				username,
+				codename,
+				pin: pinHash,
+				passwordHash,
+				avatar: null,
+				gender: null,
+				dateOfBirth: null,
+				email: null,
+				phone: null,
+				location: null
+			});
+
+			const sessionToken = auth.generateSessionToken();
+			const session = await auth.createSession(sessionToken, userId);
+			auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
+		} catch (err) {
+			console.error(err);
+			return fail(500, { message: 'Registration failed' });
+		}
+
+		throw redirect(302, '/');
+	}
+};
+
+// ---------- HELPERS ----------
+function generateUserId() {
+	const bytes = crypto.getRandomValues(new Uint8Array(15));
+	return encodeBase32LowerCase(bytes);
+}
+
+function validateUsername(str: unknown): str is string {
+	return typeof str === 'string' && /^[a-zA-Z0-9_-]{3,31}$/.test(str);
+}
+
+function validateCodename(str: unknown): str is string {
+	return typeof str === 'string' && /^[a-zA-Z0-9_-]{3,31}$/.test(str);
+}
+
+function validatePassword(str: unknown): str is string {
+	return typeof str === 'string' && str.length >= 6 && str.length <= 255;
+}
+
+function validatePIN(str: unknown): str is string {
+	return typeof str === 'string' && /^[0-9]{4,8}$/.test(str);
+}
+
+

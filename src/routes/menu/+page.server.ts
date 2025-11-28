@@ -3,8 +3,9 @@ import { fail, redirect } from '@sveltejs/kit';
 import { getRequestEvent } from '$app/server';
 import type { Actions, PageServerLoad } from './$types';
 
+ 
 export const load: PageServerLoad = async () => {
-	const user = requireLogin();
+	const user = requireLogin()
 	return { user };
 };
 
@@ -17,15 +18,15 @@ export const actions: Actions = {
 		auth.deleteSessionTokenCookie(event);
 
 		return redirect(302, '/demo/lucia/login');
-	}
+	},
 };
 
 function requireLogin() {
-	const { locals } = getRequestEvent();
+  const { locals } = getRequestEvent();
 
-	if (!locals.user) {
-		return redirect(302, '/demo/lucia/login');
-	}
+  if (!locals.user) {
+    return redirect(302, "/login");
+  }
 
-	return locals.user;
+  return locals.user;
 }

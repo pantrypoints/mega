@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1764296957645,
+      "tag": "0000_groovy_typhoid_mary",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1764303035863,
+      "tag": "0001_nappy_imperial_guard",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1764303303857,
+      "tag": "0002_volatile_raza",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1764306754052,
+      "tag": "0003_little_freak",
+      "breakpoints": true
+    }
+  ]
+}
