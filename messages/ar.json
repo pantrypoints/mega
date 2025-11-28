@@ -1,4 +1,13 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"hello_world": "Hello, {name} from ar!"
+	"menu_title": "قائمة لوحة التحكم",
+	"posts": "المنشورات",
+	"products": "المنتجات",
+	"services": "الخدمات",
+	"points": "النقاط",
+	"shops": "المتاجر",
+	"profile": "الملف الشخصي",
+	"stats": "الإحصائيات",
+	"back_to_posts": "العودة إلى المنشورات",
+	"sign_out": "تسجيل الخروج"
 }

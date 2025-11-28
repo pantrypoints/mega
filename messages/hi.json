@@ -1,4 +1,13 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"hello_world": "Hello, {name} from hi!"
+	"menu_title": "डैशबोर्ड मेनू",
+	"posts": "पोस्ट",
+	"products": "उत्पाद",
+	"services": "सेवाएं",
+	"points": "अंक",
+	"shops": "दुकानें",
+	"profile": "प्रोफाइल",
+	"stats": "आँकड़े",
+	"back_to_posts": "पोस्ट पर वापस",
+	"sign_out": "साइन आउट करें"
 }

@@ -1,0 +1,13 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"menu_title": "ダッシュボードメニュー",
+	"posts": "投稿",
+	"products": "製品",
+	"services": "サービス",
+	"points": "ポイント",
+	"shops": "ショップ",
+	"profile": "プロフィール",
+	"stats": "統計",
+	"back_to_posts": "投稿に戻る",
+	"sign_out": "サインアウト"
+}

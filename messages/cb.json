@@ -1,4 +1,13 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"hello_world": "Hello, {name} from cb!"
+	"menu_title": "Menu sa Dashboard",
+	"posts": "Mga Post",
+	"products": "Mga Produkto",
+	"services": "Mga Serbisyo",
+	"points": "Puntos",
+	"shops": "Tindahan",
+	"profile": "Profile",
+	"stats": "Istatistika",
+	"back_to_posts": "Balik sa Posts",
+	"sign_out": "Pag-logout"
 }

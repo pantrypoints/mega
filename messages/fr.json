@@ -1,4 +1,13 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"hello_world": "Hello, {name} from fr!"
+	"menu_title": "Menu du Tableau de Bord",
+	"posts": "Articles",
+	"products": "Produits",
+	"services": "Services",
+	"points": "Points",
+	"shops": "Boutiques",
+	"profile": "Profil",
+	"stats": "Statistiques",
+	"back_to_posts": "Retour aux Articles",
+	"sign_out": "Déconnexion"
 }

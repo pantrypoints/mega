@@ -1,0 +1,13 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"menu_title": "Меню панели",
+	"posts": "Посты",
+	"products": "Товары",
+	"services": "Услуги",
+	"points": "Баллы",
+	"shops": "Магазины",
+	"profile": "Профиль",
+	"stats": "Статистика",
+	"back_to_posts": "Назад к постам",
+	"sign_out": "Выйти"
+}

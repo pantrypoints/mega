@@ -1,0 +1,13 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"menu_title": "ড্যাশবোর্ড মেনু",
+	"posts": "পোস্টগুলি",
+	"products": "পণ্য",
+	"services": "পরিষেবা",
+	"points": "পয়েন্ট",
+	"shops": "দোকান",
+	"profile": "প্রোফাইল",
+	"stats": "পরিসংখ্যান",
+	"back_to_posts": "পোস্টগুলিতে ফিরে যান",
+	"sign_out": "সাইন আউট করুন"
+}
