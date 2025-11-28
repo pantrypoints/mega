@@ -9,7 +9,7 @@ export const user = sqliteTable('user', {
   pin: text('pin').notNull(),
   passwordHash: text('password_hash').notNull(),
   avatar: text('avatar'),
-  gender: text('gender'),
+  gender: text('gender').notNull(),
   dateOfBirth: text('date_of_birth'),
   email: text('email'),
   phone: text('phone'),

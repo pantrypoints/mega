@@ -104,11 +104,11 @@
             <div class="grid grid-cols-2 gap-4">
                 <!-- PIN Field -->
                 <label class="block">
-                    <span class="text-gray-700 font-medium">4-Digit PIN (Required)</span>
+                    <span class="text-gray-700 font-medium">6-Digit PIN (Required)</span>
                     <div class="relative mt-1">
                         <input 
                             name="pin"
-                            placeholder="1234"
+                            placeholder="123456"
                             required
                             maxlength="6"
                             class="block w-full pr-12 px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus"
@@ -123,7 +123,7 @@
                     <div class="relative mt-1">
                         <input 
                             name="pinConfirm"
-                            placeholder="1234"
+                            placeholder="123456"
                             required
                             maxlength="6"
                             class="block w-full pr-12 px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus"
@@ -132,7 +132,21 @@
                     </div>
                 </label>
             </div>
-            
+
+            <!-- Gender -->
+            <label class="block">
+                <span class="text-gray-700 font-medium">Gender</span>
+                <select 
+                    name="gender" 
+                    class="mt-1 block w-full px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus appearance-none"
+                >
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </label>
+
+
             <!-- Separator -->
             <div class="border-t border-sky-200 pt-6 mt-6"></div>
 
@@ -148,21 +162,6 @@
                         placeholder="https://example.com/avatar.png"
                         class="mt-1 block w-full px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus"
                     />
-                </label>
-
-                <!-- Gender -->
-                <label class="block">
-                    <span class="text-gray-700 font-medium">Gender</span>
-                    <select 
-                        name="gender" 
-                        class="mt-1 block w-full px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus appearance-none"
-                    >
-                        <option value="">Select Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                        <option value="not_say">Prefer not to say</option>
-                    </select>
                 </label>
 
                 <!-- Date of Birth -->
