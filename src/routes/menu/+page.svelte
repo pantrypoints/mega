@@ -22,21 +22,24 @@
         </div>
 
         <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">
-             {m.menu_title()} <!-- Placeholder for a message key like 'menu_title' -->
+             {m.menu_title()}
         </h2>
 
         <!-- Language Switch Buttons -->
         <div class="flex flex-wrap justify-center gap-2 mb-8">
+            <button class="px-3 py-1 bg-sky-100 rounded-lg hover:bg-sky-200 text-sm font-medium" onclick={() => setLocale('bn')}>BN</button>
+            <button class="px-3 py-1 bg-sky-100 rounded-lg hover:bg-sky-200 text-sm font-medium" onclick={() => setLocale('cb')}>CB</button>
             <button class="px-3 py-1 bg-sky-100 rounded-lg hover:bg-sky-200 text-sm font-medium" onclick={() => setLocale('en')}>EN</button>
             <button class="px-3 py-1 bg-sky-100 rounded-lg hover:bg-sky-200 text-sm font-medium" onclick={() => setLocale('es')}>ES</button>
             <button class="px-3 py-1 bg-sky-100 rounded-lg hover:bg-sky-200 text-sm font-medium" onclick={() => setLocale('fr')}>FR</button>
-            <button class="px-3 py-1 bg-sky-100 rounded-lg hover:bg-sky-200 text-sm font-medium" onclick={() => setLocale('zh')}>中文</button>
-            <button class="px-3 py-1 bg-sky-100 rounded-lg hover:bg-sky-200 text-sm font-medium" onclick={() => setLocale('bn')}>BN</button>
-            <button class="px-3 py-1 bg-sky-100 rounded-lg hover:bg-sky-200 text-sm font-medium" onclick={() => setLocale('tl')}>TL</button>
-            <button class="px-3 py-1 bg-sky-100 rounded-lg hover:bg-sky-200 text-sm font-medium" onclick={() => setLocale('cb')}>CB</button>
             <button class="px-3 py-1 bg-sky-100 rounded-lg hover:bg-sky-200 text-sm font-medium" onclick={() => setLocale('ps')}>PS</button>
-            <button class="px-3 py-1 bg-sky-100 rounded-lg hover:bg-sky-200 text-sm font-medium" onclick={() => setLocale('vi')}>VI</button>
             <button class="px-3 py-1 bg-sky-100 rounded-lg hover:bg-sky-200 text-sm font-medium" onclick={() => setLocale('ru')}>RU</button>
+            <button class="px-3 py-1 bg-sky-100 rounded-lg hover:bg-sky-200 text-sm font-medium" onclick={() => setLocale('tl')}>TL</button>
+            <button class="px-3 py-1 bg-sky-100 rounded-lg hover:bg-sky-200 text-sm font-medium" onclick={() => setLocale('vi')}>VI</button>
+            <button class="px-3 py-1 bg-sky-100 rounded-lg hover:bg-sky-200 text-sm font-medium" onclick={() => setLocale('zh')}>中文</button>
+            <button class="px-3 py-1 bg-sky-100 rounded-lg hover:bg-sky-200 text-sm font-medium" onclick={() => setLocale('jp')}>JP</button>
+            <button class="px-3 py-1 bg-sky-100 rounded-lg hover:bg-sky-200 text-sm font-medium" onclick={() => setLocale('ar')}>AR</button>
+            <button class="px-3 py-1 bg-sky-100 rounded-lg hover:bg-sky-200 text-sm font-medium" onclick={() => setLocale('hi')}>HI</button>
         </div>
 
         <!-- Menu Grid: Manually defined cards (now 3 columns for better spacing) -->

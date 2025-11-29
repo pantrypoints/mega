@@ -1,6 +1,3 @@
-<script lang="ts">
-</script>
-
 <!-- The main container uses the style you provided, adapted for a stats page -->
 <div class="min-h-screen bg-sky-50 flex items-center justify-center p-4">
     <div class="w-full max-w-4xl bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-teal-500 transform transition duration-500 hover:shadow-xl">
@@ -16,3 +13,5 @@
         </div>
     </div>
 </div>
+
+

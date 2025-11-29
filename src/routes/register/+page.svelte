@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import type { ActionData } from './$types';
+    
+    import { setLocale } from '$lib/paraglide/runtime';
+    import { m } from '$lib/paraglide/messages.js';
 
 	let { form }: { form: ActionData } = $props();
 
@@ -31,8 +34,8 @@
 <!-- Main Registration Card -->
 <div class="min-h-screen bg-sky-50 flex items-center justify-center p-4">
     <div class="w-full max-w-xl bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-teal-500 transform transition duration-500 hover:shadow-3xl">
-        <h1 class="text-3xl font-extrabold text-gray-800 text-center mb-1">Create Your Account</h1>
-        <p class="text-center text-gray-500 mb-8">Enter your details to get started.</p>
+        <h1 class="text-3xl font-extrabold text-gray-800 text-center mb-1">{m.create_account()}</h1>
+        <p class="text-center text-gray-500 mb-8">{m.enter_details()}</p>
 
         <!-- Display Server Message/Error -->
         {#if form?.message}
@@ -151,7 +154,7 @@
             <div class="border-t border-sky-200 pt-6 mt-6"></div>
 
             <!-- OPTIONAL FIELDS SECTION -->
-            <h2 class="text-xl font-bold text-gray-600 mb-4">Optional Details (For Profile)</h2>
+            <h2 class="text-xl font-bold text-gray-600 mb-4">{m.optional()}</h2>
 
             <div class="grid grid-cols-1 gap-4">
                 <!-- Avatar -->
@@ -166,7 +169,7 @@
 
                 <!-- Date of Birth -->
                 <label class="block">
-                    <span class="text-gray-700 font-medium">Date of Birth</span>
+                    <span class="text-gray-700 font-medium">{m.dob()}</span>
                     <input 
                         type="date"
                         name="dateOfBirth" 
@@ -187,7 +190,7 @@
 
                 <!-- Phone -->
                 <label class="block">
-                    <span class="text-gray-700 font-medium">Phone</span>
+                    <span class="text-gray-700 font-medium">{m.mobile()}</span>
                     <input 
                         type="tel"
                         name="phone" 
@@ -198,7 +201,7 @@
 
                 <!-- Location -->
                 <label class="block">
-                    <span class="text-gray-700 font-medium">Location</span>
+                    <span class="text-gray-700 font-medium">{m.location()}</span>
                     <input 
                         name="location" 
                         placeholder="City, Country"
@@ -212,15 +215,15 @@
                 class="w-full bg-teal-600 text-white font-bold px-4 py-3 rounded-xl shadow-lg hover:bg-teal-700 
                        focus:outline-none focus:ring-4 focus:ring-teal-300 transition duration-150 transform hover:scale-[1.01] mt-8"
                 >
-                Register
+                {m.register_here()}
             </button>
 
             <!-- Back to Login Link -->
             <div class="text-center pt-2">
                 <p class="text-sm text-gray-600">
-                    Already have an account? 
+                    {m.have_account()}
                     <a href="/login" class="font-semibold text-sky-600 hover:text-teal-500 transition duration-150">
-                        Sign In
+                        {m.sign_in()}
                     </a>
                 </p>
             </div>
