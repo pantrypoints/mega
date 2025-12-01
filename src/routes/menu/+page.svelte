@@ -1,7 +1,7 @@
 <script lang='ts'>
     import { enhance } from '$app/forms';
     import type { PageServerData } from './$types';
-    import { LogOut, ChartNoAxesCombined, CircleQuestionMark, CircleQuestionMark, Megaphone, Shirt, Utensils, Users, User, Tally5 } from 'lucide-svelte';
+    import { LogOut, ChartNoAxesCombined, CircleQuestionMark, Megaphone, Shirt, Utensils, Users, User, Tally5 } from 'lucide-svelte';
 
     let { data }: { data: PageServerData } = $props();
     
@@ -115,8 +115,6 @@
                     {m.shops()}
                 </div>
             </button>
-
-
             
             <!-- 6. Profile Card -->
             <button onclick={() => goto(`/users/${userId}`)} class="bg-sky-50 border border-sky-200 p-4 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center min-h-24 flex flex-col justify-center" >
