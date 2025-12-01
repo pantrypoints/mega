@@ -25,37 +25,27 @@
 </script>
 
 
-
-
-
-<!-- Forgot Password Modal -->
 {#if isModalOpen}
+<div 
+    class="fixed inset-0 bg-gray-900 bg-opacity-70 flex items-center justify-center z-50 transition-opacity"
+    role="dialog"
+    aria-modal="true"
+    onclick={() => isModalOpen = false}
+    onkeydown={(e) => e.key === 'Escape' && (isModalOpen = false)}
+    tabindex="-1"
+>
     <div 
-        class="fixed inset-0 bg-gray-900 bg-opacity-70 flex items-center justify-center z-50 transition-opacity"
-        aria-modal="true"
-        role="dialog"
-        onclick={() => isModalOpen = false}
+        class="bg-white p-8 rounded-xl shadow-2xl max-w-sm w-full transform transition-all duration-300 scale-100"
+        role="document"
+        onclick={(e) => e.stopPropagation()}
+        onkeydown={(e) => e.stopPropagation()}
     >
-        <div 
-            class="bg-white p-8 rounded-xl shadow-2xl max-w-sm w-full transform transition-all duration-300 scale-100"
-            onclick={(e) => e.stopPropagation()}
-        >
-            <h2 class="text-2xl font-bold text-teal-600 mb-4 border-b pb-2">Password Reset Instructions</h2>
-            <p class="text-gray-700 mb-4">
-                Password resets are currently handled manually by an administrator.
-            </p>
-            <p class="text-sm bg-sky-50 p-3 rounded-lg border border-sky-200">
-                Please chat with the admin directly or send an email to request a new password.
-            </p>
-            <button
-                class="mt-6 w-full bg-teal-500 text-white font-semibold py-2 rounded-lg hover:bg-teal-600 transition duration-150"
-                onclick={() => isModalOpen = false}
-            >
-                Close
-            </button>
-        </div>
+        <!-- Modal content -->
     </div>
+</div>
 {/if}
+
+
 
 <!-- Main Login Card -->
 <div class="min-h-screen bg-sky-50 flex items-center justify-center p-4">

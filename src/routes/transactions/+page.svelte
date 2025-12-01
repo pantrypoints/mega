@@ -67,9 +67,7 @@
 
         <!-- Product Summary Card (Always Visible) -->
         <div class="flex items-center space-x-4 p-4 bg-teal-50 rounded-xl mb-6 shadow-inner">
-            <img src={photo} alt={name} class="w-16 h-16 object-cover rounded-lg border border-teal-200"
-                 onerror="this.onerror=null;this.src='https://placehold.co/100x100/e5e7eb/6b7280?text=P'"
-            >
+            <img src={photo} alt={name} class="w-16 h-16 object-cover rounded-lg border border-teal-200">
             <div class="flex-grow">
                 <p class="font-bold text-lg text-teal-800 truncate">{name}</p>
                 <div class="flex items-center text-sm text-gray-600 gap-3">

@@ -69,15 +69,13 @@
     });
 </script> 
 
-<style>
-  body {background-color: gray}
-</style>
 
 
 <div class="flex items-center justify-center p-4">
     <div class="w-full max-w-4xl bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-teal-500">
-        <!-- The form uses the manual createPost handler attached to the submit event -->
-        <form on:submit={createPost} class="mb-8"> 
+        
+        <!-- The form uses the manual createPost handler attached to the submit event --> 
+        <form onsubmit={createPost} class="mb-8">
             <textarea 
                 bind:value={content}
                 name="content" 
@@ -128,3 +126,6 @@
         </div> 
     </div> 
 </div>
+
+
+
