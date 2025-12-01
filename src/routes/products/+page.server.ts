@@ -1,51 +1,70 @@
-// src/routes/products/+page.server.ts
-import type { PageServerLoad, Actions } from './$types';
-import { products, user } from '$lib/server/db/schema';
-import { eq, like, asc, desc, sql } from 'drizzle-orm';
+import { getDb } from '$lib/server/db';
+import { products } from '$lib/server/db/schema';
+import { like, sql, asc, desc } from 'drizzle-orm';
+import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ locals, url }) => {
-  const db = locals.db;
-  
-  // Get query parameters
-  const search = url.searchParams.get('search') || '';
-  const sortBy = url.searchParams.get('sort') || 'dateCreated';
-  const sortOrder = url.searchParams.get('order') || 'desc';
+// Define the shape of the sort parameter
+type SortKey = 'name' | 'points' | 'dateCreated';
+type SortDirection = 'asc' | 'desc';
 
-  // Build query
-  let query = db
-    .select({
-      id: products.id,
-      name: products.name,
-      measure: products.measure,
-      points: products.points,
-      category: products.category,
-      photo1: products.photo1,
-      headline: products.headline,
-      dateCreated: products.dateCreated,
-      username: user.username
-    })
-    .from(products)
-    .leftJoin(user, eq(products.userId, user.id))
-    .$dynamic();
+// This function loads the list of products with search, sort, and filter capabilities.
+export const load: PageServerLoad = async ({ url, platform }) => {
+    const db = getDb(platform?.env);
 
-  // Apply search filter
-  if (search) {
-    query = query.where(like(products.name, `%${search}%`));
-  }
+    // --- 1. Get Query Parameters ---
+    const search = url.searchParams.get('search') || '';
+    const sort = (url.searchParams.get('sort') as SortKey) || 'dateCreated';
+    const direction = (url.searchParams.get('direction') as SortDirection) || 'desc';
 
-  // Apply sorting
-  const sortColumn = sortBy === 'name' ? products.name 
-    : sortBy === 'points' ? products.points 
-    : products.dateCreated;
-  
-  query = query.orderBy(sortOrder === 'asc' ? asc(sortColumn) : desc(sortColumn));
+    // --- 2. Build Query Filters ---
+    let whereClause = undefined;
+    if (search) {
+        // Use ILIKE (or LIKE with lower()) for case-insensitive searching on name and description
+        const searchPattern = `%${search.toLowerCase()}%`;
+        whereClause = sql`${sql.raw('lower(name)')} like ${searchPattern} or ${sql.raw('lower(description)')} like ${searchPattern}`;
+    }
 
-  const allProducts = await query;
+    // --- 3. Determine Sorting Order ---
+    let orderByClause: any = undefined;
+    const sortColumn = products[sort];
 
-  return {
-    products: allProducts,
-    search,
-    sortBy,
-    sortOrder
-  };
+    if (sortColumn) {
+        orderByClause = direction === 'asc' ? asc(sortColumn) : desc(sortColumn);
+    } else {
+        // Fallback to default sort if an invalid column is provided
+        orderByClause = desc(products.dateCreated);
+    }
+
+    try {
+        // --- 4. Execute Query ---
+        const result = await db
+            .select()
+            .from(products)
+            .where(whereClause)
+            .orderBy(orderByClause);
+
+        const productList = result.map(p => ({
+            ...p,
+            // Expose the main photo for the list view
+            mainPhoto: p.photo1,
+        }));
+
+        // 5. Return the product list and current search/sort state
+        return {
+            products: productList,
+            search,
+            sort,
+            direction,
+        };
+    } catch (e) {
+        console.error("Database query failed:", e);
+        // Return an empty list or an error message on failure
+        return {
+            products: [],
+            search,
+            sort,
+            direction,
+            error: 'Failed to load products. Please check the database connection.',
+        };
+    }
 };
