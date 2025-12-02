@@ -1,12 +1,15 @@
 <script lang="ts">
   import type { PageData } from './$types';
-  import { Users, ArrowLeft, User, Star, Tag, MapPin, Calendar, Mail, Phone } from 'lucide-svelte';
+  import { MessageCircle, Users, ArrowLeft, User, Star, Tag, MapPin, Calendar, Mail, Phone } from 'lucide-svelte';
   import { page } from '$app/stores';
 
   export let data: PageData;
 
   const { user, products, services } = data;
-  
+
+  const currentUserId = data.currentUser?.id; // You might need to adjust based on how you pass your user session
+
+
   // Tab state - check URL hash or default to 'products'
   let activeTab: 'products' | 'services' = 'products';
   
@@ -117,6 +120,13 @@
             <User class="w-16 h-16 text-white" />
           </div>
         {/if}
+
+        {#if currentUserId !== user.id} 
+         <a href="/chat?with={user.id}" class="my-6 flex items-center justify-center gap-2 bg-teal-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md hover:bg-teal-700 transition transform hover:scale-105 text-center" >
+            <MessageCircle class="w-4 h-4" />
+            Chat
+          </a>
+        {/if}
       </div>
 
       <!-- User Info -->
@@ -124,6 +134,7 @@
         <h1 class="text-4xl font-extrabold text-gray-900 mb-2">
           {user.username}
         </h1>
+
         <p class="text-xl font-semibold text-teal-600 mb-4">@{user.codename}</p>
         
         <div class="flex flex-wrap gap-3 justify-center sm:justify-start text-sm text-gray-600">

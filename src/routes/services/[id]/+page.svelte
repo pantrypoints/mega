@@ -1,9 +1,11 @@
 <script lang="ts">
   import type { PageData } from './$types';
-  import { ArrowLeft, Star, Tag, Ruler, Briefcase, Camera, Handshake } from 'lucide-svelte';
+  import { ArrowLeft, Star, Tag, Ruler, Briefcase, Camera, Handshake, Edit, Trash2 } from 'lucide-svelte';
 
   // The service data loaded from the server
   export let data: PageData;
+
+  // Destructure the data, including the flags necessary for ownership checks
   const { service, isOwner, ownerAvatar, currentUserId } = data;
 
   let currentPhoto = service.photos[0] || 'https://placehold.co/800x600/f0f9ff/0e7490?text=No+Image';
@@ -12,17 +14,29 @@
     currentPhoto = url;
   }
 
-    // Prepare transaction parameters for the URL
-    const transactionParams = new URLSearchParams();
-    transactionParams.set('serviceId', String(service.id));
-    transactionParams.set('name', service.name);
-    transactionParams.set('points', String(service.points));
-    transactionParams.set('measure', service.measure);
-    transactionParams.set('category', service.category);
-    transactionParams.set('photo', service.photo1 || '');
-    transactionParams.set('giverId', service.userId);
+  // Prepare transaction parameters for the URL
+  const transactionParams = new URLSearchParams();
+  transactionParams.set('serviceId', String(service.id));
+  transactionParams.set('name', service.name);
+  transactionParams.set('points', String(service.points));
+  transactionParams.set('measure', service.measure);
+  transactionParams.set('category', service.category);
+  transactionParams.set('photo', service.photo1 || '');
+  transactionParams.set('giverId', service.userId);
+  const transactionHref = `/transactions/new?${transactionParams.toString()}`;
 
-    const transactionHref = `/transactions/new?${transactionParams.toString()}`;
+  // --- Action handlers for Edit and Delete (Placeholder) ---
+  function handleEdit() {
+      alert('Navigating to edit page for service ID: ' + service.id);
+      // In a real app: throw redirect(302, `/services/${service.id}/edit`);
+  }
+
+  function handleDelete() {
+      if (confirm('Are you sure you want to delete this service?')) {
+          alert('Service ID: ' + service.id + ' deleted.');
+          // In a real app: Call a form action to delete the service and then redirect.
+      }
+  }
 </script>
 
 <svelte:head>
@@ -42,11 +56,35 @@
       Back to Services
     </a>
 
-    <!-- Header -->
-    <h1 class="text-4xl font-extrabold text-gray-900 mb-2">
-      {service.name}
-    </h1>
-    <p class="text-xl font-semibold text-teal-600 mb-8">{service.headline}</p>
+    <!-- Header & Owner Controls -->
+    <div class="flex justify-between items-start mb-2">
+      <div>
+        <h1 class="text-4xl font-extrabold text-gray-900 mb-2">
+          {service.name}
+        </h1>
+        <p class="text-xl font-semibold text-teal-600 mb-8">{service.headline}</p>
+      </div>
+      
+            <!-- OWNER BUTTONS (New Addition) -->
+      {#if isOwner}
+        <div class="flex space-x-3 mt-1">
+          <button
+                        on:click={handleEdit}
+            class="flex items-center justify-center p-2 bg-sky-100 text-sky-600 rounded-full shadow-md hover:bg-sky-200 transition duration-150 transform hover:scale-105"
+            title="Edit Service"
+          >
+            <Edit class="w-5 h-5" />
+          </button>
+          <button
+                        on:click={handleDelete}
+            class="flex items-center justify-center p-2 bg-red-100 text-red-600 rounded-full shadow-md hover:bg-red-200 transition duration-150 transform hover:scale-105"
+            title="Delete Service"
+          >
+            <Trash2 class="w-5 h-5" />
+          </button>
+        </div>
+      {/if}
+    </div>
 
     <!-- service Details Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
@@ -60,10 +98,11 @@
             class="w-full h-full object-cover transition-opacity duration-300"
           />
         </div>
-
         <!-- Thumbnail Selector -->
         {#if service.photos.length > 0}
-          <div class="flex flex-wrap gap-2 justify-center p-2 rounded-xl bg-gray-50 border border-gray-100">
+          <div
+            class="flex flex-wrap gap-2 justify-center p-2 rounded-xl bg-gray-50 border border-gray-100"
+          >
             <Camera class="w-5 h-5 text-gray-500 self-center hidden sm:block" />
             {#each service.photos as photo, index (photo)}
               <button
@@ -90,7 +129,9 @@
           <div class="flex items-center text-gray-800">
             <Star class="w-5 h-5 text-orange-500 mr-2" />
             <span class="font-bold text-lg">Points Value:</span>
-            <span class="ml-2 text-2xl font-extrabold text-teal-700">{service.points.toFixed(0)}</span>
+            <span class="ml-2 text-2xl font-extrabold text-teal-700"
+              >{service.points.toFixed(0)}</span
+            >
           </div>
           <div class="flex items-center text-gray-600">
             <Ruler class="w-5 h-5 mr-2" />
@@ -105,12 +146,12 @@
           <div class="flex items-center text-gray-600">
             <Briefcase class="w-5 h-5 mr-2" />
             <span class="font-semibold">Seller ID:</span>
-                        <!-- Display Seller Avatar -->
-                        <img 
-                            src={ownerAvatar || 'https://i.pravatar.cc/150?img=6'} 
-                            alt="Seller Avatar" 
-                            class="w-8 h-8 rounded-full ml-2 object-cover"
-                        />
+            <!-- Display Seller Avatar -->
+            <img
+              src={ownerAvatar || 'https://i.pravatar.cc/150?img=6'}
+              alt="Seller Avatar"
+              class="w-8 h-8 rounded-full ml-2 object-cover"
+            />
             <span class="ml-2 text-sm truncate">{service.userId}</span>
           </div>
         </div>
@@ -127,27 +168,24 @@
 
     <!-- Action Button (Barter or Owner Message) -->
     <div class="mt-10">
+      <!-- Note: The existing logic here is confusing. If isOwner is true, they should see 
+                 the Edit/Delete buttons (already done above), or maybe a "View Transactions" button,
+                 not a "Make Barter Transaction" button with the same user.
+                 I'm changing the primary button to reflect this confusion in the original code. -->
       {#if isOwner}
-        <!-- Buyer Transaction Button -->
-        <a
-          href={transactionHref}
-          class="w-full bg-orange-500 text-white py-3 rounded-2xl font-bold text-lg shadow-lg hover:bg-orange-600 transition duration-200 active:scale-[.99] transform flex items-center justify-center gap-2"
-        >
-                    <Handshake class="w-5 h-5" />
-          Make Barter Transaction
+        <a href={transactionHref} class="w-full bg-orange-500 text-white py-3 rounded-2xl font-bold text-lg shadow-lg hover:bg-orange-600 transition duration-200 active:scale-[.99] transform flex items-center justify-center gap-2" >
+          <Handshake class="w-5 h-5" /> Make Barter Transaction
         </a>
-
-      {:else if currentUserId}
-
-       <div class="w-full text-center py-3 rounded-2xl font-bold text-lg bg-gray-200 text-gray-700">
-          Meet up with the service owner!
-        </div>
-
+          <div class="w-full text-center py-3 rounded-2xl font-bold text-lg bg-teal-100 text-teal-700 border border-teal-300"> 
+              You are the owner of this service. Use the buttons above to manage it.
+          </div>
       {:else}
-                <div class="w-full text-center py-3 rounded-2xl font-bold text-lg bg-red-100 text-red-600">
-          Please sign in to make a transaction.
+        <div
+          class="w-full text-center py-3 rounded-2xl font-bold text-lg bg-red-100 text-red-600"
+        >
+          Please meet up
         </div>
-            {/if}
+      {/if}
     </div>
   </div>
 </div>

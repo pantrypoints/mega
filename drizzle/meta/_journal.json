@@ -43,6 +43,13 @@
       "when": 1764597364170,
       "tag": "0005_optimal_stranger",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1764673108616,
+      "tag": "0006_huge_spacker_dave",
+      "breakpoints": true
     }
   ]
 }

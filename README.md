@@ -5,6 +5,10 @@ https://picsum.photos/800/600
 
 replace argon2 with bycriptjs 
 
+bun run db:generate
+bun run db:push
+bun run src/lib/server/db/seed.ts
+bun run db:seed
 bun src/lib/server/db/seed.ts
 
 node --loader ts-node/esm src/lib/server/db/seed.ts
@@ -111,3 +115,21 @@ info
 
 <svg version="1.1" id="Layer_1" fill="red" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve"> <g> <g> <path d="M256,0C114.841,0,0,114.841,0,256s114.841,256,256,256s256-114.841,256-256S397.159,0,256,0z M256,485.345 C129.539,485.345,26.655,382.461,26.655,256S129.539,26.655,256,26.655S485.345,129.539,485.345,256S382.461,485.345,256,485.345z "/> </g> </g> <g> <g> <path d="M338.722,115.086c-6.343-3.732-14.513-1.611-18.244,4.733s-1.613,14.513,4.733,18.244 c41.646,24.492,67.517,69.683,67.517,117.937c0,75.394-61.335,136.729-136.729,136.729c-75.393,0-136.729-61.337-136.729-136.729 c0-48.254,25.87-93.445,67.517-117.937c6.345-3.73,8.464-11.899,4.733-18.244c-3.73-6.345-11.898-8.462-18.244-4.733 C123.523,144.347,92.616,198.342,92.616,256c0,90.091,73.293,163.384,163.384,163.384S419.384,346.091,419.382,256 C419.382,198.343,388.475,144.347,338.722,115.086z"/> </g> </g> <g> <g> <path d="M256,74.832c-7.361,0-13.328,5.968-13.328,13.328V256c0,7.361,5.967,13.328,13.328,13.328 c7.361,0,13.328-5.967,13.328-13.328V88.16C269.328,80.801,263.361,74.832,256,74.832z"/> </g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> </svg>
 
+
+
+
+      {:else if currentUserId}
+                <!-- Buyer Transaction Button (If not owner and logged in) -->
+        <a
+          href={transactionHref}
+          class="w-full bg-orange-500 text-white py-3 rounded-2xl font-bold text-lg shadow-lg hover:bg-orange-600 transition duration-200 active:scale-[.99] transform flex items-center justify-center gap-2"
+        >
+          <Handshake class="w-5 h-5" /> Make Barter Transaction
+        </a>
+      {:else}
+        <div
+          class="w-full text-center py-3 rounded-2xl font-bold text-lg bg-red-100 text-red-600"
+        >
+          Please sign in to make a transaction.
+        </div>
+      {/if}

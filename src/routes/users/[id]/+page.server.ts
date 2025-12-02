@@ -4,7 +4,8 @@ import { getDb } from '$lib/server/db';
 import { user, products, services } from '$lib/server/db/schema';
 import { eq, desc } from 'drizzle-orm';
 
-export const load: PageServerLoad = async ({ params, platform }) => {
+
+export const load: PageServerLoad = async ({ params, platform, locals }) => {
   const userId = params.id;
 
   if (!userId) {
@@ -43,6 +44,7 @@ export const load: PageServerLoad = async ({ params, platform }) => {
 
     return {
       user: foundUser,
+      currentUser: locals.user,
       products: userProducts || [],
       services: userServices || []
     };
@@ -54,49 +56,3 @@ export const load: PageServerLoad = async ({ params, platform }) => {
     throw error(500, 'Failed to load user data');
   }
 };
-
-
-
-// import { error } from '@sveltejs/kit';
-// import { getDb } from '$lib/server/db';
-// import { user } from '$lib/server/db/schema';
-// import { eq } from 'drizzle-orm';
-// import type { PageServerLoad } from './$types';
-
-
-// export const load: PageServerLoad = async ({ params, platform }) => {
-
-//     const userId = params.id; 
-    
-//     // 1. Get the DB instance, handling the SvelteKit/Bun environment split
-//     const db = getDb(platform?.env);
-
-//     // 2. Extract and validate the product ID from the URL parameters
-//     if (!userId || isNaN(parseInt(userId))) {
-//         // This handles cases like /products/abc or /products/
-//         throw error(404, 'Invalid ID format.');
-//     }
-
-//     try {
-//         // 3. Query the database for the specific product
-//         // We parse to int since the DB ID is an integer
-//         const result = await db
-//             .select()
-//             .from(products)
-//             .where(eq(products.id, parseInt(userId)))
-//             .limit(1);
-
-//         const user = result[0];
-
-//         // 4. Handle 404 (Product not found)
-//         if (!user) {
-//             throw error(404, 'Product not found.');
-//         }
-
-//         // 5. Return the product data
-//         return {product};
-//     } catch (e) {
-//         console.error("Database query failed:", e);
-//         throw error(500, 'Could not load product data due to a server error.');
-//     }
-// };

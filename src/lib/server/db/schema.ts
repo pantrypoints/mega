@@ -43,6 +43,13 @@ export type Session = typeof session.$inferSelect;
 
 export type User = typeof user.$inferSelect;
 
+export const message = sqliteTable('message', {
+  id: text('id').primaryKey(),
+  content: text('content').notNull(),
+  sender: text('sender').notNull().references(() => user.id),
+  receiver: text('receiver').notNull().references(() => user.id),
+  dateCreated: text('date_created').default(sql`(CURRENT_TIMESTAMP)`)
+});
 
 export const posts = sqliteTable('posts', {
   id: integer('id').primaryKey({ autoIncrement: true }),
