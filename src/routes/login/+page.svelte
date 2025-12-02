@@ -57,14 +57,9 @@
 
         </div>
 
-        <!-- Language Switch Buttons -->
-        
-
-            <Lang />
-
-
-        
-        <h1 class="text-3xl font-extrabold text-gray-800 text-center mb-1">{m.welcome()}</h1>
+        <Lang />
+    
+        <h1 class="mt-8 text-3xl font-extrabold text-gray-800 text-center mb-1">{m.welcome()}</h1>
         <p class="text-center text-gray-500 mb-8">{m.sign_in_to_account()}</p>
 
         <!-- Display Server Message/Error -->
@@ -135,7 +130,7 @@
                 class="w-full bg-teal-600 text-white font-bold px-4 py-3 rounded-xl shadow-lg hover:bg-teal-700 
                        focus:outline-none focus:ring-4 focus:ring-teal-300 transition duration-150 transform hover:scale-[1.01]"
                 >
-                Login
+                {m.sign_in()}
             </button>
 
             <!-- Register Link/Button -->

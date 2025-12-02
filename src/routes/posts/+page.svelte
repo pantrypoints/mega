@@ -78,24 +78,24 @@
 
 
 <div class="flex items-center justify-center p-4">
-    <div class="w-full max-w-4xl bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-teal-500">
+    <div class="w-full max-w-4xl bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500">
         <!-- The form uses the manual createPost handler attached to the submit event -->
         <form onsubmit={createPost} class="mb-8">
             <textarea 
                 bind:value={content} 
                 name="content" 
                 required 
-                class="w-full p-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-teal-400 focus:outline-none" 
+                class="w-full p-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-sky-400 focus:outline-none" 
                 placeholder="What's happening in your universe?" 
                 disabled={loading}
             ></textarea>
             <button
-  type="submit"
-  disabled={loading || !content.trim()}
-  class="mt-3 w-full flex items-center justify-center
-         py-3 bg-teal-600 text-white font-bold rounded-full
-         shadow-md hover:bg-teal-700 transition transform hover:scale-105
-         disabled:bg-gray-400 disabled:cursor-not-allowed disabled:scale-100"
+              type="submit"
+              disabled={loading || !content.trim()}
+              class="mt-3 w-full flex items-center justify-center
+                     py-3 bg-teal-500 text-white font-bold rounded-xl
+                     shadow-md hover:bg-teal-600 transition transform hover:scale-105
+                     disabled:bg-gray-400 disabled:cursor-not-allowed disabled:scale-100"
 >
   <Megaphone class="w-5 h-5 mx-4" /> {loading ? 'Posting...' : 'Post'}
 </button>

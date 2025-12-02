@@ -65,7 +65,7 @@
 <div class="min-h-screen bg-gray-50 p-4 sm:p-8">
     <div class="w-full max-w-6xl mx-auto space-y-8">
         <!-- Header -->
-        <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl border-t-4 border-teal-500 mb-6">
+        <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl border-t-4 border-sky-500 mb-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                 <div>
                     <h1 class="text-3xl font-extrabold text-gray-800">Services</h1>
@@ -73,7 +73,7 @@
                 </div>
                 <a
                     href="/services/new"
-                    class="w-full sm:w-auto bg-teal-500 hover:bg-teal-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition duration-300 transform hover:scale-105 text-center"
+                    class="w-full sm:w-auto bg-sky-500 hover:bg-sky-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition duration-300 transform hover:scale-105 text-center"
                 >
                     + Create New service
                 </a>
@@ -87,14 +87,14 @@
                     <input
                         type="search"
                         bind:value={currentSearch}
-                        placeholder="Search by name or description..."
-                        class="w-full p-3 pl-10 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition"
+                        placeholder="Search by name or headline..."
+                        class="w-full p-3 pl-10 border border-gray-300 rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition"
                     />
                     <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 </div>
                 
                 <!-- Search Button -->
-                <button type="submit" class="sm:w-auto px-6 py-3 bg-teal-600 text-white rounded-xl font-semibold shadow-md hover:bg-teal-700 transition" >
+                <button type="submit" class="sm:w-auto px-6 py-3 bg-sky-600 text-white rounded-xl font-semibold shadow-md hover:bg-sky-700 transition" >
                     Search
                 </button>
             </form>
@@ -107,10 +107,10 @@
                     <button 
                         on:click={() => handleSort(key)} 
                         class="px-3 py-1.5 rounded-full transition duration-150 flex items-center gap-1"
-                        class:bg-teal-100={sort === key}
-                        class:text-teal-700={sort === key}
+                        class:bg-sky-100={sort === key}
+                        class:text-sky-700={sort === key}
                         class:bg-gray-100={sort !== key}
-                        class:hover:bg-teal-200={sort !== key}
+                        class:hover:bg-sky-200={sort !== key}
                     >
                         {key === 'dateCreated' ? 'Newest' : key.charAt(0).toUpperCase() + key.slice(1)}
                         <ArrowUpDown class="w-3 h-3" />
@@ -159,7 +159,7 @@
                                     <Star class="w-4 h-4 mr-1 fill-orange-500 text-orange-500" />
                                     {service.points.toFixed(0)} Points
                                 </div>
-                                <span class="flex items-center text-xs px-2 py-1 bg-teal-50 text-teal-600 rounded-full font-medium">
+                                <span class="flex items-center text-xs px-2 py-1 bg-sky-50 text-sky-600 rounded-full font-medium">
                                     <Tag class="w-3 h-3 mr-1" />
                                     {service.category}
                                 </span>

@@ -6,7 +6,7 @@
 </script>
 
 <div class="min-h-screen bg-sky-50 flex items-center justify-center p-4">
-  <div class="w-full max-w-2xl bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-teal-500 transform transition duration-500 hover:shadow-3xl">
+  <div class="w-full max-w-2xl bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500 transform transition duration-500 hover:shadow-3xl">
     <h1 class="text-3xl font-extrabold text-gray-800 text-center mb-1">Create New Service</h1>
     <p class="text-center text-gray-500 mb-8">Add a new service</p>
 
@@ -29,7 +29,7 @@
           name="name"
           required
           placeholder="Enter service name"
-          class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+          class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition"
         />
       </div>
 
@@ -44,7 +44,7 @@
           name="measure"
           required
           placeholder="e.g., kg, pcs, liters"
-          class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+          class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition"
         />
       </div>
 
@@ -62,7 +62,7 @@
             step="0.01"
             required
             placeholder="0.00"
-            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition"
           />
         </div>
 
@@ -77,7 +77,7 @@
             name="category"
             required
             placeholder="e.g., Electronics, Food"
-            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition"
           />
         </div>
       </div>
@@ -92,7 +92,7 @@
           id="headline"
           name="headline"
           placeholder="Short catchy headline"
-          class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+          class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition"
         />
       </div>
 
@@ -106,7 +106,7 @@
           id="photo1"
           name="photo1"
           placeholder="https://example.com/image.jpg"
-          class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+          class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition"
         />
       </div>
 
@@ -120,7 +120,7 @@
           name="description"
           rows="4"
           placeholder="Detailed service description..."
-          class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition resize-none"
+          class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition resize-none"
         ></textarea>
       </div>
 
@@ -128,8 +128,7 @@
       <div class="flex gap-4">
         <button
           type="submit"
-          class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 rounded-xl shadow-lg transition duration-300 transform hover:scale-105"
-        >
+          class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 rounded-xl shadow-lg transition duration-300 transform hover:scale-105">
           Create service
         </button>
         <a

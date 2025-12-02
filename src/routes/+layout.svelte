@@ -6,6 +6,13 @@
 	let { data, children } = $props();
 </script>
 
+<svelte:head>
+    <link rel="icon" href={favicon} sizes="any" type="image/svg+xml">
+    <!-- You can also add other sizes/formats for maximum compatibility -->
+    <!-- <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png"> -->
+</svelte:head>
+
+
 <!-- Page content -->
 <div class="min-h-screen relative">
 	{@render children()}
