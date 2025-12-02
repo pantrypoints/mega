@@ -69,7 +69,8 @@ async function seed() {
             dateOfBirth: "1995-01-05",
             email: "alice@example.com",
             phone: "+123456789",
-            location: "USA",
+            city: "Manila",
+            country: "Philippines",
             heart: 80, brain: 75, body: 65,
             luna: 50, mercury: 60, saturn: 40,
             apollo: 70, jupiter: 55, venus: 80, mars: 45
@@ -85,7 +86,8 @@ async function seed() {
             dateOfBirth: "1992-05-10",
             email: "bob@example.com",
             phone: "+987654321",
-            location: "Canada",
+            city: "Manila",
+            country: "Philippines",
             heart: 60, brain: 85, body: 70,
             luna: 45, mercury: 75, saturn: 65,
             apollo: 55, jupiter: 60, venus: 45, mars: 80
@@ -101,7 +103,8 @@ async function seed() {
             dateOfBirth: "1990-11-23",
             email: "carla@example.com",
             phone: "+1029384756",
-            location: "Philippines",
+            city: "Manila",
+            country: "Philippines",
             heart: 90, brain: 60, body: 85,
             luna: 55, mercury: 50, saturn: 45,
             apollo: 80, jupiter: 70, venus: 60, mars: 50

@@ -78,7 +78,8 @@ export const actions: Actions = {
 				dateOfBirth: form.get('dateOfBirth') as string | null, // Use form.get for optional fields
 				email: form.get('email') as string | null, // Use form.get for optional fields
 				phone: form.get('phone') as string | null, // Use form.get for optional fields
-				location: form.get('location') as string | null // Use form.get for optional fields
+				city: form.get('city') as string | null,
+				country: form.get('country') as string | null
 			});
 
 			// ✅ Pass db as first parameter
@@ -93,6 +94,7 @@ export const actions: Actions = {
 		throw redirect(302, '/');
 	}
 };
+
 
 // ---------- HELPERS ----------
 function generateUserId() {

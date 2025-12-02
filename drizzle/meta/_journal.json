@@ -36,6 +36,13 @@
       "when": 1764557172614,
       "tag": "0004_salty_sunspot",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1764597364170,
+      "tag": "0005_optimal_stranger",
+      "breakpoints": true
     }
   ]
 }

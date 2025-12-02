@@ -127,10 +127,10 @@
         <p class="text-xl font-semibold text-teal-600 mb-4">@{user.codename}</p>
         
         <div class="flex flex-wrap gap-3 justify-center sm:justify-start text-sm text-gray-600">
-          {#if user.location}
+          {#if user.city}
             <div class="flex items-center gap-1">
               <MapPin class="w-4 h-4" />
-              <span>{user.location}</span>
+              <span>{user.city}</span>
             </div>
           {/if}
           {#if user.email}

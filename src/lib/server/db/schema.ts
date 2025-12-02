@@ -13,7 +13,9 @@ export const user = sqliteTable('user', {
   dateOfBirth: text('date_of_birth'),
   email: text('email'),
   phone: text('phone'),
-  location: text('location'),
+  city: text('city'),
+  country: text('country'),
+  // location: text('location'),
   // Attribute points
   heart: real('heart'),
   brain: real('brain'),

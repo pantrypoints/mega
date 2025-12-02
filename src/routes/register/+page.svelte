@@ -203,8 +203,8 @@
                 <label class="block">
                     <span class="text-gray-700 font-medium">{m.location()}</span>
                     <input 
-                        name="location" 
-                        placeholder="City, Country"
+                        name="city" 
+                        placeholder="City"
                         class="mt-1 block w-full px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus"
                     />
                 </label>
