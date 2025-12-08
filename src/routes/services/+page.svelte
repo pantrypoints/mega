@@ -53,7 +53,6 @@
         if (sort !== key) return '';
         return direction === 'asc' ? '▲' : '▼';
     }
-    
 </script>
 
 <svelte:head>
@@ -104,14 +103,12 @@
             <div class="mt-4 flex flex-wrap gap-4 text-sm text-gray-600 pt-4 mt-4">
                 <span class="font-semibold self-center">Sort by:</span>
                 {#each ['dateCreated', 'name', 'points'] as key}
-                    <button 
-                        on:click={() => handleSort(key)} 
+                    <button on:click={() => handleSort(key)} 
                         class="px-3 py-1.5 rounded-full transition duration-150 flex items-center gap-1"
                         class:bg-sky-100={sort === key}
                         class:text-sky-700={sort === key}
                         class:bg-gray-100={sort !== key}
-                        class:hover:bg-sky-200={sort !== key}
-                    >
+                        class:hover:bg-sky-200={sort !== key}>
                         {key === 'dateCreated' ? 'Newest' : key.charAt(0).toUpperCase() + key.slice(1)}
                         <ArrowUpDown class="w-3 h-3" />
                         <span class="ml-1">{getSortArrow(key)}</span>
@@ -120,8 +117,6 @@
             </div>
         </div>
 
-        
-        <!-- Error Display -->
         {#if error}
             <div class="bg-red-100 text-red-700 p-4 rounded-xl font-medium">
                 {error}

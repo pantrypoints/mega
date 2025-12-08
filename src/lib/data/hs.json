@@ -1,0 +1,22 @@
+[
+  {
+    "section": "I",
+    "title": "Live Animals; Animal Products",
+    "chapters": [
+      {
+        "chapter": "01",
+        "title": "Live animals",
+        "headings": [
+          {
+            "heading": "0101",
+            "title": "Horses, asses, mules and hinnies",
+            "subheadings": [
+              { "code": "010121", "title": "Pure-bred breeding animals" },
+              { "code": "010129", "title": "Other" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

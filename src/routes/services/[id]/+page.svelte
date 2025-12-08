@@ -7,7 +7,7 @@
   export let data: PageData;
 
   // Destructure the data, including the flags necessary for ownership checks
-  const { service, isOwner, ownerAvatar, currentUserId } = data;
+  const { service, isOwner, owner, currentUserId } = data;
 
   let currentPhoto = service.photos[0] || 'https://placehold.co/800x600/f0f9ff/0e7490?text=No+Image';
 
@@ -26,12 +26,15 @@
   transactionParams.set('giverId', service.userId);
   const transactionHref = `/transactions/new?${transactionParams.toString()}`;
 
-
   function handleEdit() {
     // Use native browser redirect to the new edit route
     window.location.href = `/services/${service.id}/edit`; 
   }
 </script>
+
+
+
+
 
 <svelte:head>
   <title>{service.name} - Circle App</title>
@@ -73,7 +76,7 @@
           <!-- Delete Form Action -->
           <form 
               method="POST" 
-              action="?/deleteService" 
+              action="?/deleteService"
               on:submit={() => confirm('Are you sure you want to delete this service?')}
               use:enhance>
               <button type="submit" class="flex items-center justify-center p-2 bg-red-100 text-red-600 rounded-full shadow-md hover:bg-red-200 transition duration-150 transform hover:scale-105" title="Delete Service" >
@@ -140,10 +143,10 @@
                     </div>
                     <div class="flex items-center text-gray-600">
                         <Briefcase class="w-5 h-5 mr-2" />
-                        <span class="font-semibold">Seller ID:</span>
-                        <!-- Display Seller Avatar -->
-                        <img src={ownerAvatar || 'https://i.pravatar.cc/150?img=6'} alt="Seller Avatar" class="w-8 h-8 rounded-full ml-2 object-cover" />
-                        <span class="ml-2 text-sm truncate">{service.userId}</span>
+                        <span class="font-semibold">Seller:</span>
+                        <!-- Display Seller Avatar  || 'https://i.pravatar.cc/150?img=6'-->
+                        <img src={owner.avatar} alt="Seller Avatar" class="w-8 h-8 rounded-full ml-2 object-cover" />
+                        <span class="ml-2 text-sm truncate">{owner.username}</span>
                     </div>
                 </div>
                 <!-- Description -->

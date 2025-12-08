@@ -2,12 +2,22 @@
 
 https://picsum.photos/800/600
 
+todo:
+- translations
+- login change
+- chat notifs
+- transaction system
+- points system
+- prod serv new edit del 
+
+
+
+
+<!-- <Tag class="w-3 h-3 mr-1" />  -->
 
 replace argon2 with bycriptjs 
 
-bun run db:generate
-bun run db:push
-bun run src/lib/server/db/seed.ts
+bun run db:generate && bun run db:push && bun run src/lib/server/db/seed.ts
 bun run db:seed
 bun src/lib/server/db/seed.ts
 
@@ -133,3 +143,298 @@ info
           Please sign in to make a transaction.
         </div>
       {/if}
+
+
+
+<script lang="ts">
+  import './layout.css';
+  import favicon from '$lib/assets/favicon.svg';
+  import FAB from '$lib/components/FAB.svelte';
+    import { MessageSquare, Bell } from 'lucide-svelte'; 
+
+  let { data, children } = $props();
+</script>
+
+<svelte:head>
+  <link rel="icon" href={favicon} sizes="any" type="image/svg+xml">
+  <!-- <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png"> -->
+</svelte:head>
+
+
+<div class="min-h-screen relative">
+  {@render children()}
+</div>
+
+
+
+<FAB user={data.user}
+  class="fixed bottom-6 right-6 z-[9999]"
+    hasUnreadMessages={data.hasUnreadMessages} />      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- src/routes/products/new/+page.svelte -->
+<script lang="ts">
+  import { enhance } from '$app/forms';
+  import type { ActionData } from './$types';
+
+  // HS Data
+  import hsData from '$lib/data/hs.json';
+
+  // Dropdown states
+  let selectedSection: any = null;
+  let selectedChapter: any = null;
+  let selectedHeading: any = null;
+  let selectedSubheading: any = null;
+
+  // Reset cascading dropdowns
+  $effect(() => {
+    if (!selectedSection) {
+      selectedChapter = null;
+      selectedHeading = null;
+      selectedSubheading = null;
+    }
+  });
+
+  $effect(() => {
+    if (!selectedChapter) {
+      selectedHeading = null;
+      selectedSubheading = null;
+    }
+  });
+
+  $effect(() => {
+    if (!selectedHeading) {
+      selectedSubheading = null;
+    }
+  });
+
+  // Final HS Code
+  const hsCode = $derived(selectedSubheading?.code ?? "");
+
+
+// Final HS Code
+const hsCode = $derived(selectedSubheading?.code ?? "");
+
+// Svelte 5 runes props
+const { form } = $props<{
+    form: ActionData;
+}>();
+
+
+
+
+  const { form } = $props<{
+      form: ActionData;
+  }>();
+
+  // export let form: ActionData;
+</script>
+
+<div class="min-h-screen bg-sky-50 flex items-center justify-center p-4">
+  <div class="w-full max-w-2xl bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500">
+
+    <h1 class="text-3xl font-extrabold text-gray-800 text-center mb-1">Create New Product</h1>
+    <p class="text-center text-gray-500 mb-8">Add a new product to the catalog</p>
+
+    {#if form?.message}
+      <p class="text-sm bg-red-100 text-red-600 p-3 rounded-lg border border-red-300 mb-4 animate-pulse">
+        {form.message}
+      </p>
+    {/if}
+
+    <form method="POST" use:enhance class="space-y-6">
+
+      <!-- Product Name -->
+      <div>
+        <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
+          Product Name <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          required
+          placeholder="Enter product name"
+          class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-sky-500"
+        />
+      </div>
+
+      <!-- Measure -->
+      <div>
+        <label for="measure" class="block text-sm font-semibold text-gray-700 mb-2">
+          Unit of Measure <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          id="measure"
+          name="measure"
+          required
+          placeholder="e.g., kg, pcs, liters"
+          class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-sky-500"
+        />
+      </div>
+
+      <!-- Points + HS Code -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+        <!-- Points -->
+        <div>
+          <label for="points" class="block text-sm font-semibold text-gray-700 mb-2">
+            Points <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="number"
+            id="points"
+            name="points"
+            step="0.01"
+            required
+            placeholder="0.00"
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-sky-500"
+          />
+        </div>
+
+        <!-- HS Code Dropdowns -->
+        <div class="space-y-3">
+          <label class="block text-sm font-semibold text-gray-700">
+            HS Classification <span class="text-red-500">*</span>
+          </label>
+
+          <!-- Section -->
+          <select bind:value={selectedSection} class="w-full border p-2 rounded-lg">
+            <option value="">Select Section</option>
+            {#each hsData as section}
+              <option value={section}>{section.section} — {section.title}</option>
+            {/each}
+          </select>
+
+          <!-- Chapter -->
+          {#if selectedSection}
+            <select bind:value={selectedChapter} class="w-full border p-2 rounded-lg">
+              <option value="">Select Chapter</option>
+              {#each selectedSection.chapters as chapter}
+                <option value={chapter}>{chapter.chapter} — {chapter.title}</option>
+              {/each}
+            </select>
+          {/if}
+
+          <!-- Heading -->
+          {#if selectedChapter}
+            <select bind:value={selectedHeading} class="w-full border p-2 rounded-lg">
+              <option value="">Select Heading</option>
+              {#each selectedChapter.headings as heading}
+                <option value={heading}>{heading.heading} — {heading.title}</option>
+              {/each}
+            </select>
+          {/if}
+
+          <!-- Subheading -->
+          {#if selectedHeading}
+            <select bind:value={selectedSubheading} class="w-full border p-2 rounded-lg">
+              <option value="">Select Subheading</option>
+              {#each selectedHeading.subheadings as sub}
+                <option value={sub}>{sub.code} — {sub.title}</option>
+              {/each}
+            </select>
+          {/if}
+
+          <!-- Final HS Code -->
+          <input type="hidden" name="category" value={hsCode}>
+        </div>
+
+      </div>
+
+      <!-- Headline -->
+      <div>
+        <label for="headline" class="block text-sm font-semibold text-gray-700 mb-2">Headline</label>
+        <input
+          type="text"
+          id="headline"
+          name="headline"
+          placeholder="Short catchy headline"
+          class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-sky-500"
+        />
+      </div>
+
+      <!-- Photo URL -->
+      <div>
+        <label for="photo1" class="block text-sm font-semibold text-gray-700 mb-2">Photo URL</label>
+        <input
+          type="url"
+          id="photo1"
+          name="photo1"
+          placeholder="https://example.com/image.jpg"
+          class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-sky-500"
+        />
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+        <textarea
+          id="description"
+          name="description"
+          rows="4"
+          placeholder="Detailed product description..."
+          class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-sky-500 resize-none"
+        ></textarea>
+      </div>
+
+      <!-- Submit -->
+      <div class="flex gap-4">
+        <button
+          type="submit"
+          class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 rounded-xl shadow-lg hover:scale-105 transition"
+        >
+          Create Product
+        </button>
+
+        <a
+          href="/products"
+          class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 rounded-xl shadow-lg text-center transition"
+        >
+          Cancel
+        </a>
+      </div>
+
+    </form>
+  </div>
+</div>

@@ -71,10 +71,8 @@
                     <h1 class="text-3xl font-extrabold text-gray-800">Products</h1>
                     <p class="text-gray-500 mt-1">Browse and manage products</p>
                 </div>
-                <a
-                    href="/products/new"
-                    class="w-full sm:w-auto bg-sky-500 hover:bg-sky-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition duration-300 transform hover:scale-105 text-center"
-                >
+                <a href="/products/new"
+                    class="w-full sm:w-auto bg-teal-500 hover:bg-teal-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition duration-300 transform hover:scale-105 text-center">
                     + Create New Product
                 </a>
             </div>
@@ -93,16 +91,12 @@
                     <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 </div>
                 
-                <!-- Search Button -->
                 <button
                     type="submit"
-                    class="sm:w-auto px-6 py-3 bg-sky-600 text-white rounded-xl font-semibold shadow-md hover:bg-sky-700 transition"
-                >
+                    class="sm:w-auto px-6 py-3 bg-sky-600 text-white rounded-xl font-semibold shadow-md hover:bg-sky-700 transition">
                     Search
                 </button>
             </form>
-
-
 
 
             <!-- Sort Controls -->

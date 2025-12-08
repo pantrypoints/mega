@@ -50,6 +50,13 @@
       "when": 1764673108616,
       "tag": "0006_huge_spacker_dave",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1764791275678,
+      "tag": "0007_shiny_ezekiel",
+      "breakpoints": true
     }
   ]
 }

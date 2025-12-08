@@ -1,64 +1,75 @@
 import { error } from '@sveltejs/kit';
-import { services } from '$lib/server/db/schema'; // Assuming 'services' is the service table
+import { services, user } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
+import { CircleUser } from 'lucide-svelte';
+
+
 
 export const load: PageServerLoad = async ({ params, locals }) => {
-    // 1. Get the DB instance from locals and the logged-in user
-    const db = locals.db;
-    const currentUserId = locals.user?.id || null; // The ID of the currently logged-in user
+  const db = locals.db;
+  const currentUserId = locals.user?.id || null;
+  const serviceId = params.id;
 
-    // The service ID from the URL is typically text/string
-    const serviceId = params.id; 
+  if (!serviceId) {
+    throw error(404, 'Invalid service ID.');
+  }
 
-    if (!serviceId) {
-        throw error(404, 'Invalid service ID.');
-    }
-
-    try {
-        // NOTE: Since your component uses service.id, and your schema defines services.id as text
-        // we should query using the string id from params.
-        const result = await db
-            .select()
-            .from(services)
-            // Assuming services.id is TEXT, we compare with the string serviceId
-            .where(eq(services.id, serviceId)) 
-            .limit(1);
-
-        const service = result[0];
-
-        // 4. Handle 404 (service not found)
-        if (!service) {
-            throw error(404, 'Service not found.');
+  try {
+    // Join services with user table to get owner information
+    const result = await db
+      .select({
+        // Select all service fields
+        service: services,
+        // Select owner information
+        owner: {
+          id: user.id,
+          username: user.username,
+          avatar: user.avatar,
         }
-        
-        // 5. Calculate necessary client data
-        // Check if the service owner ID matches the logged-in user ID
-        const isOwner = currentUserId !== null && currentUserId === service.userId;
+      })
+      .from(services)
+      .leftJoin(user, eq(services.userId, user.id))
+      .where(eq(services.id, serviceId))
+      .limit(1);
 
-        // Mock owner avatar fetch for now
-        const ownerAvatar = `https://i.pravatar.cc/150?u=${service.userId}`; 
+    const data = result[0];
 
-        // 6. Return the service data and the required owner context
-        return {
-            service: {
-                // Ensure photo URLs are an array for easy iteration in the Svelte file
-                ...service,
-                photos: [
-                    service.photo1,
-                    service.photo2,
-                    service.photo3,
-                    service.photo4,
-                    service.photo5,
-                    service.photo6,
-                ].filter(url => url), // Filter out any null/undefined photos
-            },
-            isOwner,
-            ownerAvatar,
-            currentUserId, // Passed to the component
-        };
-    } catch (e) {
-        console.error("Database query failed:", e);
-        throw error(500, 'Could not load service data due to a server error.');
+    if (!data || !data.service) {
+      throw error(404, 'Service not found.');
     }
+
+    const service = data.service;
+    const owner = data.owner;
+
+    // Check if current user is the owner
+    const isOwner = currentUserId !== null && currentUserId === service.userId;
+
+    // Use actual avatar from database, with fallback
+    const ownerAvatar = owner?.avatar || '/user.svg'
+
+    return {
+      service: {
+        ...service,
+        photos: [
+          service.photo1,
+          service.photo2,
+          service.photo3,
+          service.photo4,
+          service.photo5,
+          service.photo6,
+        ].filter(url => url),
+      },
+      owner: {
+        id: owner?.id || service.userId,
+        username: owner?.username || 'Unknown User',
+        avatar: ownerAvatar,
+      },
+      isOwner,
+      currentUserId,
+    };
+  } catch (e) {
+    console.error("Database query failed:", e);
+    throw error(500, 'Could not load service data due to a server error.');
+  }
 };

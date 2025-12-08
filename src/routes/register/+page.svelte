@@ -48,10 +48,10 @@
             <div class="grid grid-cols-1 gap-4">
                 <!-- Username (Standard) -->
                 <label class="block">
-                    <span class="text-gray-700 font-medium">Username (Login ID)</span>
+                    <span class="text-gray-700 font-medium">{m.username()}</span>
                     <input 
                         name="username" 
-                        placeholder="e.g., jane_doe_99"
+                        placeholder="e.g. haruna"
                         required
                         class="mt-1 block w-full px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus"
                     />
@@ -59,10 +59,10 @@
 
                 <!-- Codename (Unique Required) -->
                 <label class="block">
-                    <span class="text-gray-700 font-medium">Codename (Required, Unique)</span>
+                    <span class="text-gray-700 font-medium">{m.codename()} ({m.required()}, {m.unique()})</span>
                     <input 
                         name="codename" 
-                        placeholder="e.g., Phoenix_Agent"
+                        placeholder="e.g. snakeeyes"
                         required
                         class="mt-1 block w-full px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus"
                     />
@@ -74,7 +74,7 @@
             <div class="grid grid-cols-2 gap-4">
                 <!-- Password Field -->
                 <label class="block">
-                    <span class="text-gray-700 font-medium">Password</span>
+                    <span class="text-gray-700 font-medium">{m.password()}</span>
                     <div class="relative mt-1">
                         <input 
                             type={passwordVisible ? 'text' : 'password'} 
@@ -89,7 +89,7 @@
 
                 <!-- Confirm Password Field -->
                 <label class="block">
-                    <span class="text-gray-700 font-medium">Confirm Password</span>
+                    <span class="text-gray-700 font-medium">{m.password_confirm()}</span>
                     <div class="relative mt-1">
                         <input 
                             type={confirmPasswordVisible ? 'text' : 'password'} 

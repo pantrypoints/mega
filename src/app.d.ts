@@ -23,6 +23,11 @@ export {};
 
 
 
+/// <reference types="@sveltejs/kit" />
+/// <reference types="@types/mdx" />
+
+
+
 
 // ORIG
 // declare global {

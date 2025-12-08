@@ -1,250 +1,79 @@
-// src/lib/server/db/seed.ts
-
-import { getDb } from './index'; 
+import { getDb } from './index';
 import { user, products, services, posts } from './schema';
 import { nanoid } from 'nanoid';
 import bcrypt from 'bcryptjs';
 import { sql } from 'drizzle-orm';
 
-// ------------------------------------
-// 🔥 IMAGE PLACEHOLDERS
-// ------------------------------------
-
-const AVATARS = [
-    'https://i.pravatar.cc/150?img=34', // Alice
-    'https://i.pravatar.cc/150?img=53', // Bob
-    'https://i.pravatar.cc/150?img=22', // Carla
-];
-
-// Reusable function to generate 6 unique product/service photos
-const generatePhotos = (seed: string) => [
-    `https://picsum.photos/seed/${seed}A/800/600`,
-    `https://picsum.photos/seed/${seed}B/800/601`,
-    `https://picsum.photos/seed/${seed}C/800/602`,
-    `https://picsum.photos/seed/${seed}D/800/603`,
-    `https://picsum.photos/seed/${seed}E/800/604`,
-    `https://picsum.photos/seed/${seed}F/800/605`,
-];
-
-const PRODUCT_IMAGE_SETS = [
-    generatePhotos('widget'), // For Product A
-    generatePhotos('tea'),    // For Product B
-    generatePhotos('guide'),  // For Product C
-];
-
-const SERVICE_IMAGE_SETS = [
-    generatePhotos('consult'), // For Service A
-    generatePhotos('review'),  // For Service B
-    generatePhotos('train'),   // For Service C
-];
-
-// Initialize the DB instance
 const db = getDb();
 
 async function seed() {
-    console.log("🌱 Seeding database...");
+  console.log("🌱 Seeding database...");
 
-    // --- 1. CLEAR TABLES ---
-    await db.delete(products);
-    await db.delete(services);
-    await db.delete(posts); 
-    await db.delete(user);
+  // --- 1. CLEAR TABLES ---
+  // Ensure child tables are deleted first due to foreign key constraints
+  await db.delete(products);
+  await db.delete(services);
+  await db.delete(posts);
+  await db.delete(user);
 
-    // Utility: hash password
-    const hash = (pwd: string) => bcrypt.hashSync(pwd, 10);
+  // Utility: hash password
+  const hash = (pwd: string) => bcrypt.hashSync(pwd, 10);
 
-    // -------------------------
-    // 2. USER DATA (Updated with AVATARS)
-    // -------------------------
+  // --- 2. CREATE USERS ---
+  const users = [
+    {id: nanoid(), username: "Pratap", codename: "wolf", pin: "123123", passwordHash: hash("123123"), avatar: "https://www.superphysics.org/icons/Pratap.jpg", gender: "male", dateOfBirth: "1995-01-05", email: "pratap@example.com", phone: "+123456789", city: "Manila", country: "Philippines" },
+    {id: nanoid(), username: "Dharma", codename: "dharma", pin: "123123", passwordHash: hash("123123"), avatar: "https://www.superphysics.org/icons/Dharmavedananda.jpg", gender: "male", dateOfBirth: "1992-05-10", email: "bob@example.com", phone: "+987654321", city: "Manila", country: "Philippines" },
+    {id: nanoid(), username: "Lam", codename: "lam", pin: "030493", passwordHash: hash("030493"), avatar: "https://www.superphysics.org/icons/Lavanya.jpg", gender: "female", dateOfBirth: "1993-04-03", email: "lam.nguyen.34.vn@gmail.com", phone: "+84328784517", city: "Manila", country: "Philippines" },
+    {id: nanoid(), username: "jun", codename: "jun", pin: "123123", passwordHash: hash("123123"), avatar: "https://www.superphysics.org/icons/Jun.jpg", gender: "male", dateOfBirth: "1980-09-08", email: "jundalisay@yahoo.com", phone: "+639..", city: "Manila", country: "Philippines" },
+    {id: nanoid(), username: "carla", codename: "asker", pin: "3333", passwordHash: hash("123123"), avatar: "https://www.superphysics.org/icons/Asker.jpg", gender: "female", dateOfBirth: "1990-11-23", email: "carla@example.com", phone: "+1029384756", city: "Manila", country: "Philippines" }
+  ];
+  
+  await db.insert(user).values(users);
+  console.log("✔ Users inserted");
 
-    const users = [
-        {
-            id: nanoid(),
-            username: "alice",
-            codename: "alpha-wolf",
-            pin: "1111",
-            passwordHash: hash("password123"),
-            avatar: AVATARS[0], // <-- Hotlinked Avatar
-            gender: "female",
-            dateOfBirth: "1995-01-05",
-            email: "alice@example.com",
-            phone: "+123456789",
-            city: "Manila",
-            country: "Philippines",
-            heart: 80, brain: 75, body: 65,
-            luna: 50, mercury: 60, saturn: 40,
-            apollo: 70, jupiter: 55, venus: 80, mars: 45
-        },
-        {
-            id: nanoid(),
-            username: "bob",
-            codename: "beta-eagle",
-            pin: "2222",
-            passwordHash: hash("password123"),
-            avatar: AVATARS[1], // <-- Hotlinked Avatar
-            gender: "male",
-            dateOfBirth: "1992-05-10",
-            email: "bob@example.com",
-            phone: "+987654321",
-            city: "Manila",
-            country: "Philippines",
-            heart: 60, brain: 85, body: 70,
-            luna: 45, mercury: 75, saturn: 65,
-            apollo: 55, jupiter: 60, venus: 45, mars: 80
-        },
-        {
-            id: nanoid(),
-            username: "carla",
-            codename: "gamma-panther",
-            pin: "3333",
-            passwordHash: hash("password123"),
-            avatar: AVATARS[2], // <-- Hotlinked Avatar
-            gender: "female",
-            dateOfBirth: "1990-11-23",
-            email: "carla@example.com",
-            phone: "+1029384756",
-            city: "Manila",
-            country: "Philippines",
-            heart: 90, brain: 60, body: 85,
-            luna: 55, mercury: 50, saturn: 45,
-            apollo: 80, jupiter: 70, venus: 60, mars: 50
-        }
-    ];
+  // --- 3. CREATE PRODUCTS ---
+  const productsToInsert = [
+    {name: "Organic Honey", measure: "liter", points: 20.0, category: "Food", photo1: "https://picsum.photos/seed/a/800/600", 
+        photo2: "https://picsum.photos/seed/b/800/600", photo3: "https://picsum.photos/seed/c/800/600", 
+        photo4: "https://picsum.photos/seed/d/800/600", description: "Pure, local, and organic honey from the mountains.", headline: "The Sweetest Deal!", userId: users[2].id },
+    {name: "Tomatoes", measure: "kilo", points: 2, category: "Food", photo1: "https://picsum.photos/400/300?random=tomato", photo2: "https://picsum.photos/seed/e/800/600", 
+        photo3: "https://picsum.photos/seed/f/800/600", photo4: "https://picsum.photos/seed/g/800/600", description: "Home grown tomatoes.", headline: "Fresh and Healthy!", userId: users[3].id }
+  ];
+  
+  await db.insert(products).values(productsToInsert);
 
-    await db.insert(user).values(users);
-    console.log("✔ Users inserted");
+  // --- 4. CREATE SERVICES (You need service IDs for the post links) ---
+  const insertedServices = await db.insert(services).values([
+    {name: "Cargo Flight Service", measure: "km", points: 50.0, category: "Logistics", photo1: "https://picsum.photos/400/300?random=cargo", 
+        photo2: "https://picsum.photos/seed/h/800/600", photo3: "https://picsum.photos/seed/i/800/600", 
+        photo4: "https://picsum.photos/seed/j/800/600", description: "Air cargo service between Manila and Vietnam.", headline: "Fast International Shipping", userId: users[2].id },
+    {name: "Flutter App Development", measure: "project", points: 100.0, category: "Technology", photo1: "https://picsum.photos/400/300?random=flutter", 
+        photo2: "https://picsum.photos/seed/k/800/600", photo3: "https://picsum.photos/seed/l/800/600", 
+        photo4: "https://picsum.photos/seed/m/800/600", description: "Cross-platform mobile app development (Android/iOS).", headline: "Your App Idea, Realized.", userId: users[3].id }
+  ]).returning({ id: services.id }); // Get the IDs of the newly inserted services
 
-    // -------------------------
-    // 3. SEED RELATIONAL DATA (Products, Services, Posts)
-    // -------------------------
+  // --- 5. CREATE POSTS ---
+  const postsToInsert = [
+    {// Post 1: Cargo Flights (owned by Pratap/users[0]) 
+      content: `# ✨ We are adding new cargo flights to and from Vietnam! Please [send me a message](/users/${users[0].id}) ## Check it out [here](/services/${insertedServices[0].id}) ![image](https://picsum.photos/400/300?random=airplane)`,
+      userId: users[2].id,
+    },
+    {// Post 2: Flutter Apps (owned by Dharma/users[1]) 
+      content: `# I'm free to make Flutter apps for Android! Please [send me a message](/users/${users[1].id}) ## Check it out [here](/services/${insertedServices[1].id}) ![image](https://picsum.photos/400/300?random=android)`,
+      userId: users[3].id,
+    },
+  ];
 
-    await db.transaction(async (tx) => {
-        for (const u of users) {
-            const userId = u.id;
+  // Insert all posts in one transaction
+  await db.insert(posts).values(postsToInsert);
 
-            // Helper function to merge base data with photo data
-            const addPhotos = (baseData: any, photoSet: string[]) => ({
-                ...baseData,
-                photo1: photoSet[0],
-                photo2: photoSet[1],
-                photo3: photoSet[2],
-                photo4: photoSet[3],
-                photo5: photoSet[4],
-                photo6: photoSet[5],
-            });
-
-
-            // --- A. PRODUCTS (3 per user) ---
-            const baseProducts = [
-                {
-                    name: `Premium Widget A`,
-                    measure: "kg",
-                    points: 10,
-                    category: "1001",
-                    description: "Ultra-durable, premium quality item for daily use.",
-                    headline: "🏆 Bestselling Gear",
-                    userId: userId
-                },
-                {
-                    name: `Organic Tea Blend`,
-                    measure: "pcs",
-                    points: 20,
-                    category: "1002",
-                    description: "Hand-picked organic blend for maximum relaxation.",
-                    headline: "🌱 Natural & Fresh",
-                    userId: userId
-                },
-                {
-                    name: `Digital Guide Book`,
-                    measure: "box",
-                    points: 30,
-                    category: "1003",
-                    description: "Complete digital guide to mastering any skill.",
-                    headline: "💡 Instant Download",
-                    userId: userId
-                }
-            ];
-            
-            // Map base data to include the photo URLs
-            const userProducts = baseProducts.map((p, i) => addPhotos(p, PRODUCT_IMAGE_SETS[i]));
-
-
-            const insertedProducts = await tx.insert(products).values(userProducts).returning({ id: products.id, name: products.name });
-
-            // --- B. SERVICES (3 per user) ---
-            const baseServices = [
-                {
-                    name: `1-Hour Consultation`,
-                    measure: "hour",
-                    points: 15,
-                    category: "5411",
-                    description: "Deep dive consultation on strategy and execution.",
-                    headline: "📞 Direct Access",
-                    userId: userId
-                },
-                {
-                    name: `Expert Code Review`,
-                    measure: "hour",
-                    points: 25,
-                    category: "7399",
-                    description: "Thorough review of your codebase with actionable feedback.",
-                    headline: "💻 Flawless Execution",
-                    userId: userId
-                },
-                {
-                    name: `Personalized Training`,
-                    measure: "job",
-                    points: 35,
-                    category: "8999",
-                    description: "Customized training program tailored to your needs.",
-                    headline: "💪 Achieve Your Goals",
-                    userId: userId
-                }
-            ];
-            
-            // Map base data to include the photo URLs
-            const userServices = baseServices.map((s, i) => addPhotos(s, SERVICE_IMAGE_SETS[i]));
-
-
-            const insertedServices = await tx.insert(services).values(userServices).returning({ id: services.id, name: services.name });
-
-            // --- C. POST (1 per user) ---
-            
-            const postContent = `
-# ✨ New Arrivals from ${u.username}!
-
-Hey everyone! I'm ${u.codename} and I've just stocked up my shop with some amazing items and services. Don't miss out on these exclusive offers!
-
-## 🛒 Featured Product
-**[${insertedProducts[0].name}](/products/${insertedProducts[0].id})**
-> ${userProducts[0].description}
-
-## 🚀 Top Service
-**[${insertedServices[0].name}](/services/${insertedServices[0].id})**
-> ${userServices[0].description}
-
----
-
-Check out my full collection:
-* [All Products here!](/products)
-* [Book a Service now!](/services)
-
-Happy shopping! 🛍️
-            `;
-
-            await tx.insert(posts).values({
-                content: postContent,
-                userId: userId
-            });
-
-        }
-    });
-
-    console.log("✔ Products, services, and posts inserted within a transaction.");
-    console.log("🌱 Database seeding complete!");
+  console.log("✨ Seeding complete! Users, Products, Services, and Posts created.");
 }
 
-seed().catch((e) => {
-    console.error(e);
-    process.exit(1);
+// --------------------------------------------------------
+// THE FIX: Call the async function and handle errors
+// --------------------------------------------------------
+seed().catch((err) => {
+  console.error("❌ Seeding failed:", err);
+  process.exit(1); // Exit with a non-zero code to indicate failure
 });

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { ActionData, PageData } from './$types';
-	import { Handshake, User, Lock, Ruler, Star, CheckCircle, XCircle } from 'lucide-svelte';
+	import { Handshake, User, Lock, Ruler, Star, CheckCircle, XCircle, Tag } from 'lucide-svelte';
     import { enhance } from '$app/forms';
     import { scale } from 'svelte/transition';
 
@@ -72,7 +72,8 @@
                 <p class="font-bold text-lg text-teal-800 truncate">{name}</p>
                 <div class="flex items-center text-sm text-gray-600 gap-3">
                     <span class="flex items-center"><Star class="w-3 h-3 mr-1 text-orange-500 fill-orange-500" /> {points.toFixed(0)} Points/{measure}</span>
-                    <span class="flex items-center"><Tag class="w-3 h-3 mr-1" /> {category}</span>
+                    <!-- <Tag class="w-3 h-3 mr-1" />  -->
+                    <span class="flex items-center">{category}</span>
                 </div>
             </div>
         </div>
