@@ -1,3 +1,5 @@
+// from gemini jundalisay ata 
+
 import { getDb } from "$lib/server/db";
 import { products } from "$lib/server/db/schema";
 import { redirect, fail } from "@sveltejs/kit";

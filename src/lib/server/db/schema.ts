@@ -120,7 +120,7 @@ export const transactions = sqliteTable('transactions', {
   notes: text('notes'),
   kind: text('kind').notNull(), // 'debt' or 'credit'
   category: text('category').notNull(), // HS Code or MCC Code
-  status: text('status').notNull().default('pending'), // 'pending', 'accepted', 'cancelled', 'transferred'
+  status: text('status').notNull().default('accepted'), // 'pending', 'accepted', 'cancelled', 'transferred'
   giverId: text('giver_id').notNull().references(() => user.id), // seller
   getterId: text('getter_id').notNull().references(() => user.id), // buyer
   transfereeId: text('transferee_id').references(() => user.id),

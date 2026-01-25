@@ -1,9 +1,61 @@
-# Hello from MDX 👋
-
-This is **Markdown + Svelte components**.
-
-<Button>Click me</Button>
-
 <script>
-	import Button from '$lib/components/Button.svelte';
+  import { setLocale } from '$lib/paraglide/runtime';
+  import { m } from '$lib/paraglide/messages.js';
+
+
+  const topics = [
+    {
+      slug: "transactions",
+      title: "Transactions",
+      summary: m.welcome(),
+      image: "https://picsum.photos/800/600"
+    },
+    {
+      slug: "images",
+      title: "Images",
+      summary: "How to install, configure, and structure your environment.",
+      image: "https://picsum.photos/800/600"
+    },
+    {
+      slug: "team",
+      title: "Team",
+      summary: "Understanding how SvelteKit loads pages, layouts, and endpoints.",
+      image: "https://picsum.photos/800/600"
+    }
+  ];
 </script>
+
+
+<div class="min-h-screen bg-gray-50 p-4 sm:p-8">
+  <div class="w-full max-w-6xl mx-auto space-y-8">
+
+    <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl border-t-4 border-sky-500 mb-6">
+      <h1 class="text-3xl font-extrabold text-gray-800">Topics</h1>
+      <p class="text-gray-500 mt-1">Browse the How-To Guide</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      {#each topics as t}
+        <a href={`/how/${t.slug}`} class="group">
+          <div class="bg-white rounded-2xl shadow-xl overflow-hidden transform transition duration-300 hover:shadow-2xl hover:-translate-y-1">
+
+            <div class="h-48 overflow-hidden bg-gray-100">
+              <img src={t.image} alt={t.title} class="w-full h-full object-cover transition duration-500 group-hover:scale-105" />
+            </div>
+
+            <div class="p-6 space-y-3">
+              <h3 class="text-xl font-bold text-gray-900 truncate">{t.title}</h3>
+              <p class="text-sm text-gray-500 line-clamp-2">{t.summary}</p>
+            </div>
+
+          </div>
+        </a>
+      {/each}
+
+    </div>
+  </div>
+</div>
+
+
+

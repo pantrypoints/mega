@@ -11,8 +11,6 @@ todo:
 - prod serv new edit del 
 
 
-
-
 <!-- <Tag class="w-3 h-3 mr-1" />  -->
 
 replace argon2 with bycriptjs 
@@ -20,6 +18,70 @@ replace argon2 with bycriptjs
 bun run db:generate && bun run db:push && bun run src/lib/server/db/seed.ts
 bun run db:seed
 bun src/lib/server/db/seed.ts
+
+
+  <!-- Photo -->
+                {#if transaction.photo}
+                  <div class="flex-shrink-0">
+                    <img
+                      src={transaction.photo}
+                      alt={transaction.name}
+                      class="w-full sm:w-24 h-24 rounded-xl object-cover shadow-md group-hover:shadow-lg transition-shadow"
+                    />
+                  </div>
+                {/if}
+              
+
+              
+                    {#if transaction.dateAccepted}
+                      <div class="text-sm text-gray-600">
+                        Accepted: <span class="font-semibold">{formatDate(transaction.dateAccepted)}</span>
+                      </div>
+                    {/if}
+
+
+              {sortField === 'dateCreated' && (
+                {#if sortDirection === 'asc'}
+                  <ChevronUp class="w-4 h-4" />
+                {:else}
+                  <ChevronDown class="w-4 h-4" />
+                {/if}
+              )}
+
+              {sortField === 'points' && (
+                {#if sortDirection === 'asc'}
+                  <ChevronUp class="w-4 h-4" />
+                {:else}
+                  <ChevronDown class="w-4 h-4" />
+                {/if}
+              )}
+
+
+            <button
+              class={`flex items-center gap-2 px-4 py-3 rounded-xl border transition-all ${
+                sortField === 'name'
+                  ? 'bg-teal-100 border-teal-300 text-teal-700'
+                  : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
+              }`}
+              on:click={() => handleSort('name')}
+            >
+
+
+                          {sortField === 'name' && (
+                {#if sortDirection === 'asc'}
+                  <ChevronUp class="w-4 h-4" />
+                {:else}
+                  <ChevronDown class="w-4 h-4" />
+                {/if}
+              )}
+
+
+                                        {transaction.measure && (
+                            <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-sm font-medium">
+                              {transaction.measure}
+                            </span>
+                          )}
+
 
 node --loader ts-node/esm src/lib/server/db/seed.ts
 

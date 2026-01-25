@@ -52,6 +52,7 @@
 	"pass_details": "We change passwords manually to ensure security since we do not require email or mobile phones. Please chat us through Facebook at https://www.facebook.com/pantrypoints/ or email pantrypoints@gmail.com or visit our location.",
 	"photo_url": "Photo URL",
 	"points": "Points",
+	"points_value": "Points Value",
 	"posts": "Posts",
 	"post_announcements": "Post your announcements here..",
 	"product_name": "Product Name",
@@ -73,11 +74,16 @@
 	"sort_by": "Sort By",
 	"stats": "Stats",
 	"total_bal": "Total Balance Per User",
+	"transactions": "Transactions", 
 	"tx": "Transactions",
 	"unique": "Unique",
 	"username": "Username",
 	"users": "Users",
 	"visible": "Publicly Visible",
 	"chat": "Chat",
-	"welcome": "Welcome!"
+	"welcome": "Welcome!",
+  	"a-images": {
+      "title": "How to Add Images",
+      "summary": "We use hotlinks to show images"
+  	}
 }

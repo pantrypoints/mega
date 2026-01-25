@@ -1,7 +1,7 @@
 <script lang='ts'>
     import { enhance } from '$app/forms';
     import type { PageServerData } from './$types';
-    import { Bell, MessageCircle, LogOut, ChartNoAxesCombined, CircleQuestionMark, Megaphone, Shirt, Utensils, Users, User, Tally5 } from 'lucide-svelte';
+    import { Bell, MessageCircle, LogOut, ScrollText, ChartNoAxesCombined, CircleQuestionMark, Megaphone, Shirt, Utensils, Users, User, Tally5 } from 'lucide-svelte';
     import Lang from '$lib/components/Lang.svelte';
 
     import { goto } from '$app/navigation';
@@ -49,6 +49,7 @@
                 </div>
             </button>
             
+
             <!-- 2. Products Card -->
             <button 
                 onclick={() => goto('/products')} 
@@ -62,6 +63,7 @@
                 </div>
             </button>
             
+
             <!-- 3. Services Card -->
             <button 
                 onclick={() => goto('/services')} 
@@ -75,6 +77,7 @@
                 </div>
             </button>
             
+
             <!-- 4. Points Card (Tally5) -->
             <button 
                 onclick={() => goto('/points')} 
@@ -88,6 +91,20 @@
                 </div>
             </button>
             
+
+            <!-- 5. Scroll Card -->
+            <button 
+                onclick={() => goto('/transactions')} 
+                class="bg-sky-50 border border-sky-200 p-3 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center min-h-24 flex flex-col justify-center items-center">
+                <div class="p-2 mb-1">
+                    <ScrollText class="w-10 h-10 sm:w-12 sm:h-12 text-gray-500" />
+                </div>
+                <div class="text-gray-800 font-semibold text-xs sm:text-sm whitespace-nowrap">
+                    {m.tx()}
+                </div>
+            </button>
+
+
             <!-- 5. Chat Card (MessageCircle) -->
             <button
                 onclick={() => goto('/chat')} 

@@ -130,7 +130,16 @@
                 <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1">
                     <Ruler class="w-4 h-4" /> Unit of Measure <span class="text-red-500">*</span>
                 </label>
-                <select
+                <input
+                    type="text"
+                    name="measure"
+                    bind:value={measure}
+                    maxlength="100"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2
+                    focus:ring-teal-500 focus:border-transparent transition"
+                />
+
+                <!-- <select
                     name="measure"
                     bind:value={measure}
                     required
@@ -140,7 +149,7 @@
                     {#each measures as m}
                         <option value={m}>{m}</option>
                     {/each}
-                </select>
+                </select> -->
             </div>
 
             <!-- Image Gallery -->
@@ -161,7 +170,7 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">{field.label}</label>
                         <input
-                            type="url"
+                            type="text"
                             name={field.name}
                             bind:value={field.bind}
                             placeholder="https://example.com/image.jpg"
@@ -177,9 +186,8 @@
             <div class="flex gap-4 pt-4">
                 <button
                     type="submit"
-                    class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 rounded-xl shadow-lg transition duration-300 transform hover:scale-105 flex items-center justify-center gap-2"
-                >
-                    <Save class="w-5 h-5"/> Save Changes
+                    class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 rounded-xl shadow-lg transition duration-300 transform hover:scale-105 flex items-center justify-center gap-2">
+                    <Save class="w-5 h-5"/>{m.save_changes()}
                 </button>
 
                 <a

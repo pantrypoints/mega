@@ -2,6 +2,8 @@
   import type { PageData } from './$types';
   import { ArrowLeft, Star, Tag, Ruler, Briefcase, Camera, Handshake, Edit, Trash2 } from 'lucide-svelte';
   import { enhance } from '$app/forms';
+  import { m } from '$lib/paraglide/messages.js';
+
 
   // The service data loaded from the server
   export let data: PageData;
@@ -128,17 +130,17 @@
                 <div class="space-y-3 p-5 bg-sky-50 rounded-2xl border-l-4 border-sky-400">
                     <div class="flex items-center text-gray-800">
                         <Star class="w-5 h-5 text-orange-500 mr-2" />
-                        <span class="font-bold text-lg">Points Value:</span>
+                        <span class="font-bold text-lg">{m.points_value()}:</span>
                         <span class="ml-2 text-2xl font-extrabold text-sky-700">{service.points.toFixed(0)}</span>
                     </div>
                     <div class="flex items-center text-gray-600">
                         <Ruler class="w-5 h-5 mr-2" />
-                        <span class="font-semibold">Measure Unit:</span>
+                        <span class="font-semibold">{m.measure()}:</span>
                         <span class="ml-2 uppercase">{service.measure}</span>
                     </div>
                     <div class="flex items-center text-gray-600">
                         <Tag class="w-5 h-5 mr-2" />
-                        <span class="font-semibold">Category (HS Code):</span>
+                        <span class="font-semibold">{m.category()}:</span>
                         <span class="ml-2">{service.category}</span>
                     </div>
                     <div class="flex items-center text-gray-600">
@@ -151,7 +153,7 @@
                 </div>
                 <!-- Description -->
                 <div class="p-5 bg-gray-50 rounded-2xl border-t border-gray-100">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-3 border-b pb-2">Description</h3>
+                    <!-- <h3 class="text-2xl font-bold text-gray-800 mb-3 border-b pb-2">Description</h3> -->
                     <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">
                         {service.description || 'No detailed description provided for this service.'}
                     </p>
@@ -174,3 +176,5 @@
     </div>
   </div>
 </div>
+
+

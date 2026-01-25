@@ -14,7 +14,7 @@
 
     // Prepare transaction parameters for the URL
     const transactionParams = new URLSearchParams();
-    transactionParams.set('productId', String(product.id));
+    // transactionParams.set('productId', String(product.id));
     transactionParams.set('name', product.name);
     transactionParams.set('points', String(product.points));
     transactionParams.set('measure', product.measure);

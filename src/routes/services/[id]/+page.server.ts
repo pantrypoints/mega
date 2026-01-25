@@ -73,3 +73,5 @@ export const load: PageServerLoad = async ({ params, locals }) => {
     throw error(500, 'Could not load service data due to a server error.');
   }
 };
+
+

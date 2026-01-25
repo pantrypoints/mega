@@ -1,3 +1,4 @@
+// from gemini jundalisay ata
 import { getDb } from '$lib/server/db';
 import { products } from '$lib/server/db/schema';
 import { like, sql, asc, desc } from 'drizzle-orm';

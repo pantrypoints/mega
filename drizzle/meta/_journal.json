@@ -57,6 +57,13 @@
       "when": 1764791275678,
       "tag": "0007_shiny_ezekiel",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1769330658250,
+      "tag": "0008_spooky_red_ghost",
+      "breakpoints": true
     }
   ]
 }
