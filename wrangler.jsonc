@@ -10,5 +10,5 @@
 	"observability": {
 		"enabled": true
 	},
-    "vars": { "DATABASE_URL": "libsql://chat-pantrypoints.aws-ap-northeast-1.turso.io" }
+    "vars": { "DATABASE_URL": "libsql://01-2026-jundalisay.aws-ap-northeast-1.turso.io" }
 }
