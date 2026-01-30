@@ -3,19 +3,19 @@
     import { goto } from '$app/navigation'; 
     
     const languageNames: Record<string, string> = {
-        'bn': 'বাংলা (Bangla)',      // Bengali
-        'cb': 'Cebuano',             // Cebuano (Assuming CB refers to Cebuano)
+        // 'bn': 'বাংলা (Bangla)',      // Bengali
+        // 'cb': 'Cebuano',             // Cebuano (Assuming CB refers to Cebuano)
         'en': 'English',
         'es': 'Español',             // Spanish
-        'fr': 'Français',            // French
+        //'fr': 'Français',            // French
         'ps': 'پښتو (Pashto)',       // Pashto
-        'ru': 'Русский (Russkiy)',   // Russian
+        // 'ru': 'Русский (Russkiy)',   // Russian
         'tl': 'Tagalog',             // Tagalog/Filipino
         'vi': 'Tiếng Việt',          // Vietnamese
         'zh': '中文 (Zhōngwén)',      // Chinese (Mandarin)
-        'jp': '日本語 (Nihongo)',    // Japanese
-        'ar': 'العربية (Arabic)',     // Arabic
-        'hi': 'हिन्दी (Hindi)'       // Hindi
+        // 'jp': '日本語 (Nihongo)',    // Japanese
+        //'ar': 'العربية (Arabic)',     // Arabic
+        // 'hi': 'हिन्दी (Hindi)'       // Hindi
     };
 
 

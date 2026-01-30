@@ -53,17 +53,14 @@
 
 
       <!-- Edit Button -->
-      <a
-        href={`/products/${product.id}/edit`}
-        class="bg-sky-500 hover:bg-sky-600 text-white text-sm font-bold px-4 py-2 rounded-xl shadow-md transition"
-      >
+      <a href={`/products/${product.id}/edit`}
+        class="bg-sky-500 hover:bg-sky-600 text-white text-sm font-bold px-4 py-2 rounded-xl shadow-md transition">
         Edit
       </a>
 
       <button
         type="submit"
-        class="bg-red-500 hover:bg-red-600 text-white text-sm font-bold px-4 py-2 rounded-xl shadow-md transition"
-      >
+        class="bg-red-500 hover:bg-red-600 text-white text-sm font-bold px-4 py-2 rounded-xl shadow-md transition">
         Delete
       </button>
     </form>
@@ -143,15 +140,14 @@
             <span class="ml-2 text-sm truncate">{owner.username}</span>
           </div>
         </div>
-
+      </div>
         <!-- Description -->
-        <div class="p-5 bg-gray-50 rounded-2xl border-t border-gray-100">
+        <div class="p-5 lg:col-span-2 bg-gray-50 rounded-2xl border-t border-gray-100">
           <h3 class="text-2xl font-bold text-gray-800 mb-3 border-b pb-2">Description</h3>
           <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">
             {product.description || 'No detailed description provided for this product.'}
           </p>
-        </div>
-      </div>
+        </div>      
     </div>
 
 

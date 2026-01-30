@@ -20,6 +20,11 @@ bun run db:seed
 bun src/lib/server/db/seed.ts
 
 
+user reg:
+- avatar is unique
+
+gold is rising because it has fast spin and people are afraid 
+
   <!-- Photo -->
                 {#if transaction.photo}
                   <div class="flex-shrink-0">

@@ -49,7 +49,7 @@
 
 <!-- Main Login Card -->
 <div class="min-h-screen bg-sky-50 flex items-center justify-center p-4">
-    <div class="w-full max-w-md bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-teal-500 transform transition duration-500 hover:shadow-3xl">
+    <div class="w-full max-w-md bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500 transform transition duration-500 hover:shadow-3xl">
 
         <!-- Centered SVG Icon -->
         <div class="flex justify-center mb-6">
@@ -76,7 +76,7 @@
                     name="username" 
                     placeholder="{m.enter_username()}"
                     class="mt-1 block w-full px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800
-                           focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition duration-150"
+                           focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition duration-150"
                 />
             </label>
 
@@ -89,11 +89,11 @@
                         name="password"
                         placeholder="••••••••"
                         class="block w-full pr-12 px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800
-                               focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition duration-150"
+                               focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition duration-150"
                     />
                     <button 
                         type="button" 
-                        class="absolute inset-y-0 right-0 flex items-center px-4 text-gray-400 hover:text-teal-500 transition"
+                        class="absolute inset-y-0 right-0 flex items-center px-4 text-gray-400 hover:text-sky-500 transition"
                         onclick={togglePasswordVisibility}
                         aria-label={passwordVisible ? 'Hide password' : 'Show password'}
                     >

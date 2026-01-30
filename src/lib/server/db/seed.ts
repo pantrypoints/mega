@@ -23,11 +23,12 @@ async function seed() {
 
   // --- 2. CREATE USERS ---
   const users = [
-    {id: nanoid(), username: "Pratap", codename: "wolf", pin: hash("111111"), passwordHash: hash("123123"), avatar: "https://www.superphysics.org/icons/Pratap.jpg", gender: "male", dateOfBirth: "1995-01-05", email: "pratap@example.com", phone: "+123456789", city: "Manila", country: "Philippines" },
-    {id: nanoid(), username: "Dharma", codename: "dharma", pin: hash("222222"), passwordHash: hash("123123"), avatar: "https://www.superphysics.org/icons/Dharmavedananda.jpg", gender: "male", dateOfBirth: "1992-05-10", email: "bob@example.com", phone: "+987654321", city: "Manila", country: "Philippines" },
-    {id: nanoid(), username: "Lam", codename: "lam", pin: hash("333333"), passwordHash: hash("030493"), avatar: "https://www.superphysics.org/icons/Lavanya.jpg", gender: "female", dateOfBirth: "1993-04-03", email: "lam.nguyen.34.vn@gmail.com", phone: "+84328784517", city: "Manila", country: "Philippines" },
-    {id: nanoid(), username: "jun", codename: "jun", pin: hash("123123"), passwordHash: hash("123123"), avatar: "https://www.superphysics.org/icons/Jun.jpg", gender: "male", dateOfBirth: "1980-09-08", email: "jundalisay@yahoo.com", phone: "+639..", city: "Manila", country: "Philippines" },
-    {id: nanoid(), username: "carla", codename: "asker", pin: hash("444444"), passwordHash: hash("123123"), avatar: "https://www.superphysics.org/icons/Asker.jpg", gender: "female", dateOfBirth: "1990-11-23", email: "carla@example.com", phone: "+1029384756", city: "Manila", country: "Philippines" }
+    {id: nanoid(), username: "jose", codename: "jose", pin: hash("111111"), passwordHash: hash("123123"), avatar: "/jose.jpg", gender: "male", dateOfBirth: "1995-01-05", email: "jose@example.com", phone: "+123456789", city: "Manila", country: "Philippines" },
+    {id: nanoid(), username: "jing", codename: "jing", pin: hash("111111"), passwordHash: hash("123123"), avatar: "/jing.jpg", gender: "male", dateOfBirth: "1995-01-05", email: "jing@example.com", phone: "+123456789", city: "Manila", country: "Philippines" },
+    {id: nanoid(), username: "ehmil", codename: "ehmil", pin: hash("222222"), passwordHash: hash("123123"), avatar: "/ehmil.jpg", gender: "male", dateOfBirth: "1992-05-10", email: "ehmil@example.com", phone: "+987654321", city: "Manila", country: "Philippines" },
+    {id: nanoid(), username: "lam", codename: "lam", pin: hash("030493"), passwordHash: hash("030493"), avatar: "/lam.jpg", gender: "female", dateOfBirth: "1993-04-03", email: "lam.nguye n.34.vn@gmail.com", phone: "+84328784517", city: "Manila", country: "Philippines" },
+    {id: nanoid(), username: "jun", codename: "jun", pin: hash("123123"), passwordHash: hash("123123"), avatar: "/jun.jpg", gender: "male", dateOfBirth: "1980-09-08", email: "jundalisay@yahoo.com", phone: "+639..", city: "Manila", country: "Philippines" },
+    {id: nanoid(), username: "anh", codename: "anh", pin: hash("444444"), passwordHash: hash("123123"), avatar: "/anh.jpg", gender: "female", dateOfBirth: "1990-11-23", email: "carla@example.com", phone: "+1029384756", city: "Manila", country: "Philippines" }
   ];
   
   await db.insert(user).values(users);
