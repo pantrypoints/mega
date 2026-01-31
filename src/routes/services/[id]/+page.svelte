@@ -3,6 +3,7 @@
   import { ArrowLeft, Star, Tag, Ruler, Briefcase, Camera, Handshake, Edit, Trash2 } from 'lucide-svelte';
   import { enhance } from '$app/forms';
 
+  import { getNAICSDescription } from '$lib/data/naicsData';
   import { setLocale } from '$lib/paraglide/runtime';
   import { m } from '$lib/paraglide/messages.js';
   
@@ -145,15 +146,20 @@
                 <span class="font-semibold">{m.measure()}:</span>
                 <span class="ml-2 uppercase">{service.measure}</span>
             </div>
+
             <div class="flex items-center text-gray-600">
-                <Tag class="w-5 h-5 mr-2" />
-                <span class="font-semibold">{m.category()}:</span>
-                <span class="ml-2">{service.category}</span>
+              <!-- <Tag class="w-5 h-5 mr-2" /> -->
+              <span class="font-semibold">{m.category()}:</span>
+              <span class="ml-2">
+                {getNAICSDescription(service.category)} ({service.category})
+              </span>
             </div>
 
 
+
+
             <div class="flex items-center text-gray-600">
-              <Briefcase class="w-5 h-5 mr-2" />
+              <!-- <Briefcase class="w-5 h-5 mr-2" /> -->
               <span class="font-semibold">{m.seller()}:</span>
               <a href={`/users/${owner.id}`} class="flex items-center ml-2 hover:bg-sky-50 p-1 rounded-lg transition-colors duration-200">
                 <img src={owner.avatar} alt="Seller Avatar" class="w-8 h-8 rounded-full object-cover" />
@@ -168,13 +174,13 @@
     </div>
 
 
-      <!-- Description -->
-      <div class="p-5 mt-5 bg-gray-50 rounded-2xl border-t border-gray-100 lg:col-span-2">
-          <!-- <h3 class="text-2xl font-bold text-gray-800 mb-3 border-b pb-2">Description</h3> -->
-          <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">
-              {service.description || 'No detailed description provided for this service.'}
-          </p>
-      </div>
+    <!-- Description -->
+    <div class="p-5 mt-5 bg-gray-50 rounded-2xl border-t border-gray-100 lg:col-span-2">
+        <!-- <h3 class="text-2xl font-bold text-gray-800 mb-3 border-b pb-2">Description</h3> -->
+        <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">
+            {service.description || 'No detailed description provided for this service.'}
+        </p>
+    </div>
 
 
         <!-- Action Button (Barter or Owner Message) -->
