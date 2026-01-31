@@ -1,4 +1,5 @@
 <script lang='ts'>
+    import favicon from '$lib/assets/favicon.svg';    
     import { enhance } from '$app/forms';
     import type { PageServerData } from './$types';
     import { Bell, MessageCircle, LogOut, ScrollText, ChartNoAxesCombined, CircleQuestionMark, Megaphone, Shirt, Utensils, Users, User, Tally5 } from 'lucide-svelte';
@@ -31,6 +32,12 @@
             </h1>
             <p class="text-sm text-gray-500 mb-4">Your user ID is {data.user.id}.</p>
         </div>
+        
+        <!-- Centered SVG Icon -->
+        <div class="flex justify-center mb-6">
+            <img src={favicon} alt="Menu" class="" />
+        </div>
+
         <Lang />
         
         <!-- Menu Grid: Optimized for mobile (2 columns default, 3 on medium screens) -->

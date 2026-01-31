@@ -2,6 +2,35 @@
   import type { PageData } from './$types';
   import { ArrowLeft, Star, Tag, Ruler, Briefcase, Camera, Handshake, Edit, Trash2 } from 'lucide-svelte';
 
+  import { hsChapters, hsSubcategories, hsDetails } from '$lib/data/hsData';
+
+  export function getHSDescription(code: string): string {
+    if (!code) return 'Not Classified';
+
+    // 1. Clean the code for logic (remove dots for length checks)
+    const cleanCode = code.replace(/\D/g, '');
+    const chapter = cleanCode.substring(0, 2);
+    const subcategory = cleanCode.substring(0, 4);
+
+    // 2. Check Detail Level (6+ digits, e.g., 2901.10)
+    // We use the provided 'code' here because your hsDetails keys include dots
+    if (hsDetails[subcategory]?.[code]) {
+      return hsDetails[subcategory][code];
+    }
+
+    // 3. Check Subcategory Level (4 digits, e.g., 2901)
+    if (hsSubcategories[chapter]?.[subcategory]) {
+      return hsSubcategories[chapter][subcategory];
+    }
+
+    // 4. Check Chapter Level (2 digits, e.g., 01)
+    if (hsChapters[chapter]) {
+      return hsChapters[chapter];
+    }
+
+    return 'Unknown Category';
+  }
+
   // The product data loaded from the server
   export let data: PageData;
   const { product, isOwner, owner, currentUserId } = data;
@@ -12,19 +41,19 @@
     currentPhoto = url;
   }
 
-    import { setLocale } from '$lib/paraglide/runtime';
-    import { m } from '$lib/paraglide/messages.js';
+  import { setLocale } from '$lib/paraglide/runtime';
+  import { m } from '$lib/paraglide/messages.js';
 
-    // Prepare transaction parameters for the URL
-    const transactionParams = new URLSearchParams();
-    transactionParams.set('name', product.name);
-    transactionParams.set('points', String(product.points));
-    transactionParams.set('measure', product.measure);
-    transactionParams.set('category', product.category);
-    transactionParams.set('photo', product.photo1 || '');
-    transactionParams.set('giverId', product.userId);
+  // Prepare transaction parameters for the URL
+  const transactionParams = new URLSearchParams();
+  transactionParams.set('name', product.name);
+  transactionParams.set('points', String(product.points));
+  transactionParams.set('measure', product.measure);
+  transactionParams.set('category', product.category);
+  transactionParams.set('photo', product.photo1 || '');
+  transactionParams.set('giverId', product.userId);
 
-    const transactionHref = `/transactions/new?${transactionParams.toString()}`;
+  const transactionHref = `/transactions/new?${transactionParams.toString()}`;
 </script>
 
 
@@ -43,54 +72,44 @@
       Back to Products
     </a>
 
+    <div class="flex items-start justify-between gap-4 mb-2">
+      <h1 class="text-4xl font-extrabold text-gray-900">
+        {product.name}
+      </h1>
 
+      {#if isOwner}
+        <div class="flex space-x-3 mt-1">
+            <!-- Edit Button -->
+            <a 
+                href={`/products/${product.id}/edit`}
+                class="flex items-center justify-center p-2 bg-sky-100 text-sky-600 rounded-full shadow-md hover:bg-sky-200 transition duration-150 transform hover:scale-105"
+                title="Edit Product">
+                <Edit class="w-5 h-5" />
+            </a>
 
-<div class="flex items-start justify-between gap-4 mb-2">
-  <h1 class="text-4xl font-extrabold text-gray-900">
-    {product.name}
-  </h1>
-
-
-{#if isOwner}
-    <div class="flex space-x-3 mt-1">
-        <!-- Edit Button -->
-        <a 
-            href={`/products/${product.id}/edit`}
-            class="flex items-center justify-center p-2 bg-sky-100 text-sky-600 rounded-full shadow-md hover:bg-sky-200 transition duration-150 transform hover:scale-105"
-            title="Edit Product"
-        >
-            <Edit class="w-5 h-5" />
-        </a>
-
-        <!-- Delete Button -->
-        <form 
-            method="POST" 
-            action="?/delete"
-            on:submit={() => confirm('Delete this product permanently?')}
-            use:enhance
-        >
-            <button 
-                type="submit"
-                class="flex items-center justify-center p-2 bg-red-100 text-red-600 rounded-full shadow-md hover:bg-red-200 transition duration-150 transform hover:scale-105"
-                title="Delete Product"
-            >
-                <Trash2 class="w-5 h-5" />
-            </button>
-        </form>
+            <!-- Delete Button -->
+            <form 
+                method="POST" 
+                action="?/delete"
+                on:submit={() => confirm('Delete this product permanently?')}
+                use:enhance>
+                <button 
+                    type="submit"
+                    class="flex items-center justify-center p-2 bg-red-100 text-red-600 rounded-full shadow-md hover:bg-red-200 transition duration-150 transform hover:scale-105"
+                    title="Delete Product">
+                    <Trash2 class="w-5 h-5" />
+                </button>
+            </form>
+        </div>
+      {/if}
     </div>
-{/if}
 
 
+    <p class="text-xl font-semibold text-sky-600 mb-8">
+      {product.headline}
+    </p>
 
-</div>
-
-
-
-<p class="text-xl font-semibold text-sky-600 mb-8">
-  {product.headline}
-</p>
-
-
+    
     <!-- Product Details Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
       <!-- Image Gallery -->
@@ -135,22 +154,28 @@
         <!-- Core Info -->
         <div class="space-y-3 p-5 bg-sky-50 rounded-2xl border-l-4 border-sky-400">
           <div class="flex items-center text-gray-800">
-            <Star class="w-5 h-5 text-orange-500 mr-2" />
+            <!-- <Star class="w-5 h-5 text-orange-500 mr-2" /> -->
             <span class="font-bold text-lg">{m.points_value()}:</span>
             <span class="ml-2 text-2xl font-extrabold text-sky-700">{product.points.toFixed(0)}</span>
           </div>
           <div class="flex items-center text-gray-600">
-            <Ruler class="w-5 h-5 mr-2" />
+            <!-- <Ruler class="w-5 h-5 mr-2" /> -->
             <span class="font-semibold">Measure Unit:</span>
             <span class="ml-2 uppercase">{product.measure}</span>
           </div>
-          <div class="flex items-center text-gray-600">
-            <Tag class="w-5 h-5 mr-2" />
+                
+          <div class="text-gray-600">
+            <!-- <span><Tag class="w-5 h-5 mr-2" /></span> -->
             <span class="font-semibold">Category (HS Code):</span>
-            <span class="ml-2">{product.category}</span>
+            <span class="ml-2">
+              {getHSDescription(product.category)} ({product.category})
+            </span>
           </div>
+
+
+
           <div class="flex items-center text-gray-600">
-            <Briefcase class="w-5 h-5 mr-2" />
+            <!-- <Briefcase class="w-5 h-5 mr-2" /> -->
             <span class="font-semibold">Owner:</span>          
               <img src={owner.avatar || '/user.svg'} 
                 alt="Seller Avatar" 
@@ -167,6 +192,7 @@
           {product.description || 'No detailed description provided for this product.'}
         </p>
       </div>      
+
     </div>
 
 

@@ -43,6 +43,7 @@
   <title>Service: {service.name}</title>
 </svelte:head>
 
+
 <div class="min-h-screen bg-sky-50 flex flex-col items-center p-4 sm:p-8">
   <div
     class="w-full max-w-4xl bg-white p-6 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500 transform transition duration-500 hover:shadow-3xl"
@@ -135,12 +136,12 @@
         <!-- Core Info -->
         <div class="space-y-3 p-5 bg-sky-50 rounded-2xl border-l-4 border-sky-400">
             <div class="flex items-center text-gray-800">
-                <Star class="w-5 h-5 text-orange-500 mr-2" />
+                <!-- <Star class="w-5 h-5 text-orange-500 mr-2" /> -->
                 <span class="font-bold text-lg">{m.points_value()}:</span>
                 <span class="ml-2 text-2xl font-extrabold text-sky-700">{service.points.toFixed(0)}</span>
             </div>
             <div class="flex items-center text-gray-600">
-                <Ruler class="w-5 h-5 mr-2" />
+                <!-- <Ruler class="w-5 h-5 mr-2" /> -->
                 <span class="font-semibold">{m.measure()}:</span>
                 <span class="ml-2 uppercase">{service.measure}</span>
             </div>

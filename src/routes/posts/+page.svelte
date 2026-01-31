@@ -77,69 +77,107 @@
 </script>
 
 
+<div class="min-h-screen bg-sky-50 flex flex-col items-center p-4 sm:p-8">
+ 
+    <!-- Header -->
+    <div class="w-full max-w-4xl mb-8 text-center">
+        <h1 class="text-4xl font-extrabold text-gray-900 mb-2">
+            Posts
+        </h1>
+        <p class="text-lg text-gray-600">
+            What's happening?
+        </p>
+    </div>
 
-
-<div class="flex items-center justify-center p-4">
-    <div class="w-full max-w-4xl bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500">
-        <!-- The form uses the manual createPost handler attached to the submit event -->
-        <form onsubmit={createPost} class="mb-8">
+    <!-- Create Post Card -->
+    <div class="w-full max-w-4xl bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500 transform transition duration-500 hover:shadow-3xl mb-10">
+        <form onsubmit={createPost} class="space-y-4">
             <textarea 
                 bind:value={content} 
                 name="content" 
                 required 
-                class="w-full p-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-sky-400 focus:outline-none" 
-                placeholder="What's happening in your universe?" 
+                rows="4"
+                class="w-full p-5 rounded-2xl border-2 border-gray-200 focus:border-sky-400 focus:ring-2 focus:ring-sky-100 focus:outline-none transition duration-200 resize-none"
+                placeholder="What's happening in your universe? Share your thoughts, announcements, or updates..."
                 disabled={loading}
             ></textarea>
+            
+            {#if error}
+                <div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-2xl text-sm font-medium">
+                    {error}
+                </div>
+            {/if}
+            
             <button
-              type="submit"
-              disabled={loading || !content.trim()}
-              class="mt-3 w-full flex items-center justify-center
-                     py-3 bg-teal-500 text-white font-bold rounded-xl
-                     shadow-md hover:bg-teal-600 transition transform hover:scale-105
-                     disabled:bg-gray-400 disabled:cursor-not-allowed disabled:scale-100">
-                <Megaphone class="w-5 h-5 mx-4" /> {loading ? 'Posting...' : 'Post'}
+                type="submit"
+                disabled={loading || !content.trim()}
+                class="w-full flex items-center justify-center py-2 bg-teal-600 text-white font-bold text-lg rounded-2xl shadow-lg hover:bg-teal-700 transition duration-200 active:scale-[.99] transform disabled:bg-gray-400 disabled:cursor-not-allowed disabled:scale-100"
+            >
+                <Megaphone class="w-5 h-5 mr-3" />
+                {loading ? 'Posting...' : 'Create Post'}
             </button>
         </form>
+    </div>
 
-
-        {#if error}
-            <div class="bg-red-100 text-red-700 p-2 rounded mb-3 text-sm">
-                {error}
-            </div>
-        {/if}
-
-        <div class="space-y-5">
+    <!-- Posts Feed -->
+    <div class="w-full max-w-4xl">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Recent Posts</h2>
+        
+        <div class="space-y-6">
             {#each posts as post}
-                <div class="p-5 bg-sky-100 rounded-2xl shadow-inner border border-sky-200">
-                    <div class="flex items-center gap-3 mb-3">
+                <div class="bg-white p-8 rounded-3xl shadow-2xl transform transition duration-500 hover:shadow-3xl">
+                    <!-- Post Header -->
+                    <div class="flex items-center gap-4 mb-6">
                         {#if post.avatar}
-                            <img src={post.avatar} alt="avatar" class="w-10 h-10 rounded-full border border-gray-300 object-cover" />
+                            <img 
+                                src={post.avatar} 
+                                alt="User avatar" 
+                                class="w-14 h-14 rounded-full border-2 border-sky-100 object-cover shadow-sm"
+                            />
                         {:else}
-                            <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-600">
-                                ?
+                            <div class="w-14 h-14 rounded-full bg-gradient-to-br from-sky-400 to-teal-500 flex items-center justify-center text-white text-xl font-bold border-2 border-sky-100 shadow-sm">
+                                {post.username?.charAt(0).toUpperCase() || '?'}
                             </div>
                         {/if}
-                        <div>
-                            <p class="font-semibold text-gray-800">
+                        
+                        <div class="flex-1">
+                            <p class="font-bold text-lg text-gray-900">
                                 {post.username ?? "Unknown User"}
                             </p>
-                            <p class="text-xs text-gray-500">
-                                {new Date(post.dateCreated).toLocaleString()}
+                            <p class="text-sm text-gray-500">
+                                {new Date(post.dateCreated).toLocaleString([], {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                })}
                             </p>
                         </div>
                     </div>
                     
-                    <!-- NEW: Markdown rendering using {@html} -->
-                    <div class="markdown-content text-gray-800">
+                    <!-- Post Content -->
+                    <div class="markdown-content text-gray-800 leading-relaxed mb-6 p-4 bg-gray-50 rounded-2xl border border-gray-100">
                         {@html marked.parse(post.content)}
                     </div>
                     
+                    <!-- Post Footer (Optional: Add actions like like, comment, share) -->
+                    <!-- <div class="flex items-center gap-4 pt-4 border-t border-gray-100">
+                        <button class="flex items-center gap-2 text-gray-600 hover:text-sky-600 transition">
+                            <Heart class="w-5 h-5" />
+                            <span>Like</span>
+                        </button>
+                        <button class="flex items-center gap-2 text-gray-600 hover:text-sky-600 transition">
+                            <MessageCircle class="w-5 h-5" />
+                            <span>Comment</span>
+                        </button>
+                    </div> -->
                 </div>
             {/each}
         </div>
     </div>
 </div>
+
 
 <!-- <style>
     .markdown-content :global(h2) {

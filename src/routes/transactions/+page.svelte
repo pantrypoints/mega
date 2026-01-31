@@ -82,16 +82,16 @@
     
     <!-- Header -->
     <div class="mb-8 text-center">
-      <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-2">
         Transaction History
       </h1>
-      <p class="text-xl text-gray-600">
+      <p class="text-lg text-gray-600">
         View and manage all your barter transactions
       </p>
     </div>
 
     <!-- Main Content Card -->
-    <div class="bg-white rounded-3xl shadow-2xl border-t-4 border-teal-500 overflow-hidden">
+    <div class="bg-white rounded-3xl shadow-2xl border-t-4 border-sky-500 overflow-hidden">
       
       <!-- Tabs -->
       <div class="border-b border-gray-200 bg-gray-50">
@@ -154,7 +154,7 @@
           <button
             on:click={() => toggleSort('partner')}
             class="inline-flex items-center gap-1 px-4 py-2 rounded-xl font-medium text-sm transition-all duration-200"
-            class:bg-teal-600={sortBy === 'partner'}
+            class:bg-sky-600={sortBy === 'partner'}
             class:text-white={sortBy === 'partner'}
             class:bg-gray-200={sortBy !== 'partner'}
             class:text-gray-700={sortBy !== 'partner'}
@@ -171,7 +171,7 @@
           <button
             on:click={() => toggleSort('date')}
             class="inline-flex items-center gap-1 px-4 py-2 rounded-xl font-medium text-sm transition-all duration-200"
-            class:bg-teal-600={sortBy === 'date'}
+            class:bg-sky-600={sortBy === 'date'}
             class:text-white={sortBy === 'date'}
             class:bg-gray-200={sortBy !== 'date'}
             class:text-gray-700={sortBy !== 'date'}
@@ -188,7 +188,7 @@
           <button
             on:click={() => toggleSort('points')}
             class="inline-flex items-center gap-1 px-4 py-2 rounded-xl font-medium text-sm transition-all duration-200"
-            class:bg-teal-600={sortBy === 'points'}
+            class:bg-sky-600={sortBy === 'points'}
             class:text-white={sortBy === 'points'}
             class:bg-gray-200={sortBy !== 'points'}
             class:text-gray-700={sortBy !== 'points'}
