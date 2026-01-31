@@ -16,7 +16,6 @@ export const user = sqliteTable('user', {
   city: text('city'),
   country: text('country'),
   // location: text('location'),
-  // Attribute points
   heart: real('heart'),
   brain: real('brain'),
   body: real('body'),

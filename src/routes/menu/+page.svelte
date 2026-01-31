@@ -23,6 +23,7 @@
 
 <div class="min-h-screen bg-sky-50 flex items-center justify-center p-4">
     <div class="w-full max-w-lg bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500 transform transition duration-500 hover:shadow-3xl">
+
         <!-- User Info and Logout -->
         <div class="text-center mb-4">
             <h1 class="text-3xl font-extrabold text-gray-800 mb-1">

@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { PageData } from './$types';
-  import { ArrowLeft, Star, Tag, Ruler, Briefcase, Camera, Handshake } from 'lucide-svelte';
+  import { ArrowLeft, Star, Tag, Ruler, Briefcase, Camera, Handshake, Edit, Trash2 } from 'lucide-svelte';
 
   // The product data loaded from the server
   export let data: PageData;
@@ -12,9 +12,11 @@
     currentPhoto = url;
   }
 
+    import { setLocale } from '$lib/paraglide/runtime';
+    import { m } from '$lib/paraglide/messages.js';
+
     // Prepare transaction parameters for the URL
     const transactionParams = new URLSearchParams();
-    // transactionParams.set('productId', String(product.id));
     transactionParams.set('name', product.name);
     transactionParams.set('points', String(product.points));
     transactionParams.set('measure', product.measure);
@@ -33,10 +35,10 @@
 
 
 <div class="min-h-screen bg-sky-50 flex flex-col items-center p-4 sm:p-8">
-  <div class="w-full max-w-4xl bg-white p-6 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-teal-500 transform transition duration-500 hover:shadow-3xl">
+  <div class="w-full max-w-4xl bg-white p-6 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500 transform transition duration-500 hover:shadow-3xl">
 
     <a href="/products"
-      class="inline-flex items-center text-teal-600 hover:text-teal-800 transition mb-6 font-medium">
+      class="inline-flex items-center text-sky-600 hover:text-teal-800 transition mb-6 font-medium">
       <ArrowLeft class="w-4 h-4 mr-1" />
       Back to Products
     </a>
@@ -48,29 +50,43 @@
     {product.name}
   </h1>
 
-  {#if isOwner}
-    <form method="POST" action="?/delete" on:submit={() => confirm('Delete this product permanently?')}>
+
+{#if isOwner}
+    <div class="flex space-x-3 mt-1">
+        <!-- Edit Button -->
+        <a 
+            href={`/products/${product.id}/edit`}
+            class="flex items-center justify-center p-2 bg-sky-100 text-sky-600 rounded-full shadow-md hover:bg-sky-200 transition duration-150 transform hover:scale-105"
+            title="Edit Product"
+        >
+            <Edit class="w-5 h-5" />
+        </a>
+
+        <!-- Delete Button -->
+        <form 
+            method="POST" 
+            action="?/delete"
+            on:submit={() => confirm('Delete this product permanently?')}
+            use:enhance
+        >
+            <button 
+                type="submit"
+                class="flex items-center justify-center p-2 bg-red-100 text-red-600 rounded-full shadow-md hover:bg-red-200 transition duration-150 transform hover:scale-105"
+                title="Delete Product"
+            >
+                <Trash2 class="w-5 h-5" />
+            </button>
+        </form>
+    </div>
+{/if}
 
 
-      <!-- Edit Button -->
-      <a
-        href={`/products/${product.id}/edit`}
-        class="bg-sky-500 hover:bg-sky-600 text-white text-sm font-bold px-4 py-2 rounded-xl shadow-md transition"
-      >
-        Edit
-      </a>
 
-      <button
-        type="submit"
-        class="bg-red-500 hover:bg-red-600 text-white text-sm font-bold px-4 py-2 rounded-xl shadow-md transition"
-      >
-        Delete
-      </button>
-    </form>
-  {/if}
 </div>
 
-<p class="text-xl font-semibold text-teal-600 mb-8">
+
+
+<p class="text-xl font-semibold text-sky-600 mb-8">
   {product.headline}
 </p>
 
@@ -114,15 +130,14 @@
         {/if}
       </div>
 
-
       <!-- Info and Description -->
       <div class="space-y-6">
         <!-- Core Info -->
-        <div class="space-y-3 p-5 bg-teal-50 rounded-2xl border-l-4 border-teal-400">
+        <div class="space-y-3 p-5 bg-sky-50 rounded-2xl border-l-4 border-sky-400">
           <div class="flex items-center text-gray-800">
             <Star class="w-5 h-5 text-orange-500 mr-2" />
-            <span class="font-bold text-lg">Points Value:</span>
-            <span class="ml-2 text-2xl font-extrabold text-teal-700">{product.points.toFixed(0)}</span>
+            <span class="font-bold text-lg">{m.points_value()}:</span>
+            <span class="ml-2 text-2xl font-extrabold text-sky-700">{product.points.toFixed(0)}</span>
           </div>
           <div class="flex items-center text-gray-600">
             <Ruler class="w-5 h-5 mr-2" />
@@ -143,15 +158,15 @@
             <span class="ml-2 text-sm truncate">{owner.username}</span>
           </div>
         </div>
-
-        <!-- Description -->
-        <div class="p-5 bg-gray-50 rounded-2xl border-t border-gray-100">
-          <h3 class="text-2xl font-bold text-gray-800 mb-3 border-b pb-2">Description</h3>
-          <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">
-            {product.description || 'No detailed description provided for this product.'}
-          </p>
-        </div>
       </div>
+      
+      <!-- Description -->
+      <div class="lg:col-span-2 p-5 bg-gray-50 rounded-2xl border-t border-gray-100">
+        <h3 class="text-2xl font-bold text-gray-800 mb-3 border-b pb-2">Description</h3>
+        <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">
+          {product.description || 'No detailed description provided for this product.'}
+        </p>
+      </div>      
     </div>
 
 

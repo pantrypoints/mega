@@ -2,9 +2,10 @@
   import type { PageData } from './$types';
   import { ArrowLeft, Star, Tag, Ruler, Briefcase, Camera, Handshake, Edit, Trash2 } from 'lucide-svelte';
   import { enhance } from '$app/forms';
+
+  import { setLocale } from '$lib/paraglide/runtime';
   import { m } from '$lib/paraglide/messages.js';
-
-
+  
   // The service data loaded from the server
   export let data: PageData;
 
@@ -39,24 +40,23 @@
 
 
 <svelte:head>
-  <title>{service.name} - Circle App</title>
+  <title>Service: {service.name}</title>
 </svelte:head>
 
 <div class="min-h-screen bg-sky-50 flex flex-col items-center p-4 sm:p-8">
   <div
     class="w-full max-w-4xl bg-white p-6 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500 transform transition duration-500 hover:shadow-3xl"
   >
-    <!-- Back Button -->
-    <a
-      href="/services"
-      class="inline-flex items-center text-sky-600 hover:text-sky-800 transition mb-6 font-medium"
-    >
+
+    <a href="/services"
+      class="inline-flex items-center text-sky-600 hover:text-sky-800 transition mb-6 font-medium">
       <ArrowLeft class="w-4 h-4 mr-1" />
-      Back to Services
+        {m.back_to_services()}
     </a>
 
     <!-- Header & Owner Controls -->
     <div class="flex justify-between items-start mb-2">
+
       <div>
         <h1 class="text-4xl font-extrabold text-gray-900 mb-2">
           {service.name}
@@ -89,8 +89,10 @@
       {/if}
     </div>
 
+
     <!-- service Details Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+
       <!-- Image Gallery -->
       <div class="space-y-4">
         <!-- Main Display Image -->
@@ -101,6 +103,7 @@
             class="w-full h-full object-cover transition-opacity duration-300"
           />
         </div>
+
         <!-- Thumbnail Selector -->
         {#if service.photos.length > 0}
           <div
@@ -124,42 +127,55 @@
           </div>
         {/if}
       </div>
-            <!-- Info and Description -->
-            <div class="space-y-6">
-                <!-- Core Info -->
-                <div class="space-y-3 p-5 bg-sky-50 rounded-2xl border-l-4 border-sky-400">
-                    <div class="flex items-center text-gray-800">
-                        <Star class="w-5 h-5 text-orange-500 mr-2" />
-                        <span class="font-bold text-lg">{m.points_value()}:</span>
-                        <span class="ml-2 text-2xl font-extrabold text-sky-700">{service.points.toFixed(0)}</span>
-                    </div>
-                    <div class="flex items-center text-gray-600">
-                        <Ruler class="w-5 h-5 mr-2" />
-                        <span class="font-semibold">{m.measure()}:</span>
-                        <span class="ml-2 uppercase">{service.measure}</span>
-                    </div>
-                    <div class="flex items-center text-gray-600">
-                        <Tag class="w-5 h-5 mr-2" />
-                        <span class="font-semibold">{m.category()}:</span>
-                        <span class="ml-2">{service.category}</span>
-                    </div>
-                    <div class="flex items-center text-gray-600">
-                        <Briefcase class="w-5 h-5 mr-2" />
-                        <span class="font-semibold">Seller:</span>
-                        <!-- Display Seller Avatar  || 'https://i.pravatar.cc/150?img=6'-->
-                        <img src={owner.avatar} alt="Seller Avatar" class="w-8 h-8 rounded-full ml-2 object-cover" />
-                        <span class="ml-2 text-sm truncate">{owner.username}</span>
-                    </div>
-                </div>
-                <!-- Description -->
-                <div class="p-5 bg-gray-50 rounded-2xl border-t border-gray-100">
-                    <!-- <h3 class="text-2xl font-bold text-gray-800 mb-3 border-b pb-2">Description</h3> -->
-                    <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                        {service.description || 'No detailed description provided for this service.'}
-                    </p>
-                </div>
+
+
+
+      <!-- Info and Description -->
+      <div class="space-y-6">
+        <!-- Core Info -->
+        <div class="space-y-3 p-5 bg-sky-50 rounded-2xl border-l-4 border-sky-400">
+            <div class="flex items-center text-gray-800">
+                <Star class="w-5 h-5 text-orange-500 mr-2" />
+                <span class="font-bold text-lg">{m.points_value()}:</span>
+                <span class="ml-2 text-2xl font-extrabold text-sky-700">{service.points.toFixed(0)}</span>
             </div>
+            <div class="flex items-center text-gray-600">
+                <Ruler class="w-5 h-5 mr-2" />
+                <span class="font-semibold">{m.measure()}:</span>
+                <span class="ml-2 uppercase">{service.measure}</span>
+            </div>
+            <div class="flex items-center text-gray-600">
+                <Tag class="w-5 h-5 mr-2" />
+                <span class="font-semibold">{m.category()}:</span>
+                <span class="ml-2">{service.category}</span>
+            </div>
+
+
+            <div class="flex items-center text-gray-600">
+              <Briefcase class="w-5 h-5 mr-2" />
+              <span class="font-semibold">{m.seller()}:</span>
+              <a href={`/users/${owner.id}`} class="flex items-center ml-2 hover:bg-sky-50 p-1 rounded-lg transition-colors duration-200">
+                <img src={owner.avatar} alt="Seller Avatar" class="w-8 h-8 rounded-full object-cover" />
+                <span class="ml-2 text-sm truncate hover:text-sky-600 transition-colors duration-200">
+                    {owner.username}
+                </span>
+              </a>
+            </div>
+
+        </div>
+      </div>
     </div>
+
+
+      <!-- Description -->
+      <div class="p-5 mt-5 bg-gray-50 rounded-2xl border-t border-gray-100 lg:col-span-2">
+          <!-- <h3 class="text-2xl font-bold text-gray-800 mb-3 border-b pb-2">Description</h3> -->
+          <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">
+              {service.description || 'No detailed description provided for this service.'}
+          </p>
+      </div>
+
+
         <!-- Action Button (Barter or Owner Message) -->
     <div class="mt-10">
       {#if isOwner} 

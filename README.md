@@ -20,6 +20,10 @@ bun run db:seed
 bun src/lib/server/db/seed.ts
 
 
+db error on cloudflare --> redeploy
+
+
+
   <!-- Photo -->
                 {#if transaction.photo}
                   <div class="flex-shrink-0">
@@ -190,21 +194,21 @@ info
 
 
 
-      {:else if currentUserId}
-                <!-- Buyer Transaction Button (If not owner and logged in) -->
-        <a
-          href={transactionHref}
-          class="w-full bg-orange-500 text-white py-3 rounded-2xl font-bold text-lg shadow-lg hover:bg-orange-600 transition duration-200 active:scale-[.99] transform flex items-center justify-center gap-2"
-        >
-          <Handshake class="w-5 h-5" /> Make Barter Transaction
-        </a>
-      {:else}
-        <div
-          class="w-full text-center py-3 rounded-2xl font-bold text-lg bg-red-100 text-red-600"
-        >
-          Please sign in to make a transaction.
-        </div>
-      {/if}
+{:else if currentUserId}
+          <!-- Buyer Transaction Button (If not owner and logged in) -->
+  <a
+    href={transactionHref}
+    class="w-full bg-orange-500 text-white py-3 rounded-2xl font-bold text-lg shadow-lg hover:bg-orange-600 transition duration-200 active:scale-[.99] transform flex items-center justify-center gap-2"
+  >
+    <Handshake class="w-5 h-5" /> Make Barter Transaction
+  </a>
+{:else}
+  <div
+    class="w-full text-center py-3 rounded-2xl font-bold text-lg bg-red-100 text-red-600"
+  >
+    Please sign in to make a transaction.
+  </div>
+{/if}
 
 
 

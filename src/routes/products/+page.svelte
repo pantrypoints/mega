@@ -62,7 +62,7 @@
 
 
 
-<div class="min-h-screen bg-gray-50 p-4 sm:p-8">
+<div class="min-h-screen bg-sky-50 p-4 sm:p-8">
     <div class="w-full max-w-6xl mx-auto space-y-8">
         <!-- Header -->
         <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl border-t-4 border-sky-500 mb-6">

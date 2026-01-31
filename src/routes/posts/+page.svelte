@@ -77,6 +77,8 @@
 </script>
 
 
+
+
 <div class="flex items-center justify-center p-4">
     <div class="w-full max-w-4xl bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500">
         <!-- The form uses the manual createPost handler attached to the submit event -->
@@ -95,12 +97,11 @@
               class="mt-3 w-full flex items-center justify-center
                      py-3 bg-teal-500 text-white font-bold rounded-xl
                      shadow-md hover:bg-teal-600 transition transform hover:scale-105
-                     disabled:bg-gray-400 disabled:cursor-not-allowed disabled:scale-100"
->
-  <Megaphone class="w-5 h-5 mx-4" /> {loading ? 'Posting...' : 'Post'}
-</button>
-
+                     disabled:bg-gray-400 disabled:cursor-not-allowed disabled:scale-100">
+                <Megaphone class="w-5 h-5 mx-4" /> {loading ? 'Posting...' : 'Post'}
+            </button>
         </form>
+
 
         {#if error}
             <div class="bg-red-100 text-red-700 p-2 rounded mb-3 text-sm">
@@ -169,4 +170,5 @@
         @apply list-decimal list-inside mt-2 ml-4;
     }
 </style> -->
+
 

@@ -18,11 +18,11 @@
 <div class="min-h-screen bg-sky-50 flex flex-col items-center p-4 sm:p-8">
   <div class="w-full max-w-4xl bg-white p-6 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-teal-500">
     
-    <a href="/transactions/new" 
+<!--     <a href="/transactions/new" 
       class="inline-flex items-center text-teal-600 hover:text-teal-800 transition mb-6 font-medium">
       <ArrowLeft class="w-4 h-4 mr-1" />
       Back
-    </a>
+    </a> -->
 
     <div class="text-center mb-8">
       <!-- <div class="inline-flex items-center justify-center w-16 h-16 bg-teal-100 rounded-full mb-4">
