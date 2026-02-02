@@ -160,13 +160,13 @@
           </div>
           <div class="flex items-center text-gray-600">
             <!-- <Ruler class="w-5 h-5 mr-2" /> -->
-            <span class="font-semibold">Measure Unit:</span>
-            <span class="ml-2 uppercase">{product.measure}</span>
+            <span class="font-semibold">{m.measure()}:</span>
+            <span class="ml-2">{product.measure}</span>
           </div>
                 
           <div class="text-gray-600">
             <!-- <span><Tag class="w-5 h-5 mr-2" /></span> -->
-            <span class="font-semibold">Category (HS Code):</span>
+            <span class="font-semibold">{m.category()}:</span>
             <span class="ml-2">
               {getHSDescription(product.category)} ({product.category})
             </span>
@@ -176,7 +176,7 @@
 
           <div class="flex items-center text-gray-600">
             <!-- <Briefcase class="w-5 h-5 mr-2" /> -->
-            <span class="font-semibold">Owner:</span>          
+            <span class="font-semibold">{m.owner()}:</span>          
               <img src={owner.avatar || '/user.svg'} 
                 alt="Seller Avatar" 
                 class="w-8 h-8 rounded-full ml-2 object-cover"/>
@@ -187,11 +187,11 @@
       
       <!-- Description -->
       <div class="lg:col-span-2 p-5 bg-gray-50 rounded-2xl border-t border-gray-100">
-        <h3 class="text-2xl font-bold text-gray-800 mb-3 border-b pb-2">Description</h3>
+        <h3 class="text-2xl font-bold text-gray-800 mb-3 border-b pb-2">{m.description()}</h3>
         <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">
           {product.description || 'No detailed description provided for this product.'}
         </p>
-      </div>      
+      </div>
 
     </div>
 

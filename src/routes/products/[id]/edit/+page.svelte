@@ -27,15 +27,12 @@
   let measure = product.measure;
   let category = product.category || '';
 
-    let photo1 = product.photo1 || '';
-    let photo2 = product.photo2 || '';
-    let photo3 = product.photo3 || '';
-    let photo4 = product.photo4 || '';
-    let photo5 = product.photo5 || '';
-    let photo6 = product.photo6 || '';
-
-  const measures = ['hour', 'day', 'unit', 'job', 'm2', 'kg', 'piece', 'meter', 'liter'];
-
+  let photo1 = product.photo1 || '';
+  let photo2 = product.photo2 || '';
+  let photo3 = product.photo3 || '';
+  let photo4 = product.photo4 || '';
+  let photo5 = product.photo5 || '';
+  let photo6 = product.photo6 || '';
 
   // Selection State
   let selectedChapter = '';
