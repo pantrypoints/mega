@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { PageData } from './$types';
-  import { MessageCircle, Users, ArrowLeft, User, Star, Tag, MapPin, Calendar, Mail, Phone } from 'lucide-svelte';
+  import { Sparkles, MessageCircle, Users, ArrowLeft, User, Star, Tag, MapPin, Calendar, Mail, Phone } from 'lucide-svelte';
   import { page } from '$app/stores';
 
   export let data: PageData;
@@ -26,73 +26,74 @@
   }
 
 
-    import { Circle, TrendingUp } from 'lucide-svelte';
-    import { onMount } from 'svelte';
+  import { Circle, TrendingUp } from 'lucide-svelte';
+  import { onMount } from 'svelte';
 
-    // Mock data for 10 spokes (Performance Metrics, max value 100)
-    const mockData = [
-        { label: 'Focus', value: 85 },
-        { label: 'Speed', value: 70 },
-        { label: 'Quality', value: 95 },
-        { label: 'Collaboration', value: 60 },
-        { label: 'Adaptability', value: 80 },
-        { label: 'Innovation', value: 75 },
-        { label: 'Resourcefulness', value: 90 },
-        { label: 'Communication', value: 65 },
-        { label: 'Strategic Thinking', value: 50 },
-        { label: 'Experience', value: 92 }
-    ];
+  // 1. Define the attributes in order and map the quiz values (0-4)
+  // Using the values provided: 2.5, 2, 0.5, 2, 3, 1, 1, 2.5, 3, 2
+  const personalityAttributes = [
+    { label: 'Heart', value: user.heart},
+    { label: 'Brain', value: user.brain},
+    { label: 'Body', value: user.body},
+    { label: 'Luna', value: user.luna},
+    { label: 'Mercury', value: user.mercury},
+    { label: 'Saturn', value: user.saturn},
+    { label: 'Apollo', value: user.apollo},
+    { label: 'Jupiter', value: user.jupiter},
+    { label: 'Venus', value: user.venus},
+    { label: 'Mars', value: user.mars}
+  ];
 
-    // Chart dimensions and constants
-    const spokes = mockData.length;
-    const radius = 150; // Max radius for the chart
-    const center = radius + 30; // Center position (used for SVG coordinates)
-    const rings = 4; // Number of concentric rings
-    const angleStep = (2 * Math.PI) / spokes;
-    
-    // Function to calculate Cartesian coordinates from a value and index
-    function getCoordinate(index: number, value: number, max: number = 100) {
-        const angle = angleStep * index - (Math.PI / 2); // Start at 12 o'clock (-90 degrees)
-        const currentRadius = (value / max) * radius;
-        const x = center + currentRadius * Math.cos(angle);
-        const y = center + currentRadius * Math.sin(angle);
-        return { x, y };
-    }
+  // 2. Calculate Top 3 Dominant Types
+  const topThree = [...personalityAttributes]
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 3);
 
-    // Generate the path string for the main data polygon
-    $: dataPolygonPath = mockData
-        .map((d, i) => {
-            const { x, y } = getCoordinate(i, d.value);
-            return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
-        })
-        .join(' ');
-        
-    // Generate the path string for the grid rings
-    let ringPaths: string[] = [];
-    for (let r = 1; r <= rings; r++) {
-        const ringRadius = (r / rings) * radius;
-        const ringPath = mockData
-            .map((_, i) => {
-                const angle = angleStep * i - (Math.PI / 2);
-                const x = center + ringRadius * Math.cos(angle);
-                const y = center + ringRadius * Math.sin(angle);
-                return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
-            })
-            .join(' ');
-        ringPaths = [...ringPaths, ringPath];
-    }
-    
-    // Trigger CSS animation class on mount for visual effect
-    let animated = false;
-    onMount(() => {
-        animated = true;
-    });
+  // Chart dimensions
+  const spokes = personalityAttributes.length;
+  const radius = 150; 
+  const center = radius + 40; 
+  const rings = 4; // Represents scores 1, 2, 3, 4
+  const angleStep = (2 * Math.PI) / spokes;
 
+  // Function to calculate coordinates (Max value is now 4 instead of 100)
+  function getCoordinate(index: number, value: number, max: number = 4) {
+    const angle = angleStep * index - (Math.PI / 2);
+    const currentRadius = (value / max) * radius;
+    const x = center + currentRadius * Math.cos(angle);
+    const y = center + currentRadius * Math.sin(angle);
+    return { x, y };
+  }
+
+  $: dataPolygonPath = personalityAttributes
+    .map((d, i) => {
+      const { x, y } = getCoordinate(i, d.value);
+      return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
+    })
+    .join(' ') + ' Z';
+
+  let ringPaths: string[] = [];
+  for (let r = 1; r <= rings; r++) {
+    const ringPath = personalityAttributes
+      .map((_, i) => {
+        const { x, y } = getCoordinate(i, r);
+        return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
+      })
+      .join(' ') + ' Z';
+    ringPaths = [...ringPaths, ringPath];
+  }
+
+  let animated = false;
+  onMount(() => {
+    animated = true;
+  });
 </script>
+
 
 <svelte:head>
   <title>{user.username} - Circle App</title>
 </svelte:head>
+
 
 <div class="min-h-screen bg-sky-50 flex flex-col items-center p-4 sm:p-8">
   <div class="w-full max-w-4xl bg-white p-6 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-teal-500 transform transition duration-500 hover:shadow-3xl">
@@ -105,51 +106,35 @@
       Back to Users
     </a>
 
-    <!-- User Profile Header -->
     <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-8">
-      <!-- Avatar -->
-      <div class="">
+      <div class="flex-shrink-0">
         {#if user.avatar}
-          <img
-            src={user.avatar}
-            alt={user.username}
-            class="w-32 h-32 rounded-full object-cover border-4 border-teal-100 shadow-xl"
-          />
+          <img src={user.avatar} alt={user.username} class="w-32 h-32 rounded-full object-cover border-4 border-teal-100 shadow-xl" />
         {:else}
           <div class="w-32 h-32 rounded-full bg-teal-500 flex items-center justify-center border-4 border-teal-100 shadow-xl">
             <User class="w-16 h-16 text-white" />
           </div>
         {/if}
-
-        {#if currentUserId !== user.id} 
-         <a href="/chat?with={user.id}" class="my-6 flex items-center justify-center gap-2 bg-teal-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md hover:bg-teal-700 transition transform hover:scale-105 text-center" >
-            <MessageCircle class="w-4 h-4" />
-            Chat
-          </a>
-        {/if}
       </div>
-
-      <!-- User Info -->
+      
       <div class="flex-grow text-center sm:text-left">
-        <h1 class="text-4xl font-extrabold text-gray-900 mb-2">
-          {user.username}
-        </h1>
-
-        <p class="text-xl font-semibold text-teal-600 mb-4">@{user.codename}</p>
+        <h1 class="text-4xl font-extrabold text-gray-900 mb-2">{user.username}</h1>
         
-        <div class="flex flex-wrap gap-3 justify-center sm:justify-start text-sm text-gray-600">
+        <div class="flex flex-wrap gap-3 justify-center sm:justify-start text-sm text-gray-600 mb-3">
           {#if user.city}
             <div class="flex items-center gap-1">
               <MapPin class="w-4 h-4" />
               <span>{user.city}</span>
             </div>
           {/if}
+          
           {#if user.email}
             <div class="flex items-center gap-1">
               <Mail class="w-4 h-4" />
               <span>{user.email}</span>
             </div>
           {/if}
+          
           {#if user.phone}
             <div class="flex items-center gap-1">
               <Phone class="w-4 h-4" />
@@ -157,113 +142,71 @@
             </div>
           {/if}
         </div>
+        
+        <div class="inline-flex flex-wrap items-center gap-2 bg-teal-50 border border-teal-100 px-4 py-2 rounded-2xl">
+          <div class="flex items-center gap-1">
+            <Sparkles class="w-4 h-4 text-teal-600" />
+            <span class="text-xs font-bold text-teal-600 uppercase tracking-widest">Dominant Traits:</span>
+          </div>
+          
+          <div class="flex flex-wrap items-center gap-2">
+            {#each topThree as trait, index}
+              <div class="flex items-center gap-1 bg-white/70 px-2 py-1 rounded-lg">
+                <span class="text-sm font-semibold text-teal-800">{trait.label}</span>
+                <span class="text-xs text-gray-500">({trait.percentage}%)</span>
+              </div>
+            {/each}
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="w-full max-w-4xl bg-white p-6 sm:p-10 my-8">
-      <header class="text-center mb-10">
-          <p class="text-lg text-gray-500 mt-2">Personality ID</p>
+
+    <div class="w-full bg-white rounded-2xl border border-gray-100 p-4 sm:p-10 my-8 flex flex-col items-center">
+      <header class="text-center mb-6">
+        <h3 class="text-2xl font-bold text-gray-800">Personality ID</h3>
+        <p class="text-sm text-gray-400">Rolling average of your personality structure</p>
       </header>
 
-      <div class="flex flex-col lg:flex-row gap-8 justify-center items-start">
-          
+      <div class="relative overflow-visible">
+        <svg width={center * 2} height={center * 2} viewBox={`0 0 ${center * 2} ${center * 2}`} class="overflow-visible">
+          {#each ringPaths as path, i}
+            <path d={path} fill="none" stroke={i === rings - 1 ? '#cbd5e1' : '#f1f5f9'} stroke-width="1.5" />
+          {/each}
 
-            <!-- Chart Container -->
-            <div class="flex-shrink-0">
-                <svg width={center * 2} height={center * 2} viewBox={`0 0 ${center * 2} ${center * 2}`}>
-                    
-                    <!-- 1. Grid Rings (The "Web") -->
-                    {#each ringPaths as path, i (i)}
-                        <path 
-                            d={path} 
-                            fill="none" 
-                            stroke={i === rings - 1 ? '#cbd5e1' : '#e2e8f0'} 
-                            stroke-width="1"
-                            class="transition-all duration-1000"
-                        />
-                    {/each}
+          {#each Array(spokes) as _, i}
+            {@const { x, y } = getCoordinate(i, 4)}
+            <line x1={center} y1={center} x2={x} y2={y} stroke="#f1f5f9" stroke-width="1" />
+          {/each}
 
-                    <!-- 2. Spokes (Axis lines) -->
-                    {#each Array(spokes) as _, i (i)}
-                        {@const { x, y } = getCoordinate(i, 100)}
-                        <line 
-                            x1={center} 
-                            y1={center} 
-                            x2={x} 
-                            y2={y} 
-                            stroke="#e2e8f0" 
-                            stroke-width="1"
-                            class="transition-all duration-1000"
-                        />
-                    {/each}
-                    
-                    <!-- 3. Data Polygon (The filled area) -->
-                    <path 
-                        d={dataPolygonPath}
-                        fill="#0d9488" 
-                        fill-opacity="0.6"
-                        stroke="#0f766e"
-                        stroke-width="2"
-                        class:animate-radar={animated}
-                    />
+          <path d={dataPolygonPath} fill="rgba(13, 148, 136, 0.4)" stroke="#0f766e" stroke-width="3" class:animate-radar={animated} />
 
-                    <!-- 4. Data Points -->
-                    {#each mockData as d, i (i)}
-                        {@const { x, y } = getCoordinate(i, d.value)}
-                        <circle 
-                            cx={x} 
-                            cy={y} 
-                            r="4" 
-                            fill="#f97316"
-                            stroke="#fff"
-                            stroke-width="1.5"
-                            title="{d.label}: {d.value}"
-                            class:animate-point={animated}
-                        />
-                    {/each}
-                    
-                    <!-- NEW: Data Point Labels (Scores) -->
-                    {#each mockData as d, i (i)}
-                        {@const { x, y } = getCoordinate(i, d.value)}
-                        <text
-                            x={x}
-                            y={y}
-                            text-anchor="middle"
-                            dominant-baseline="middle"
-                            fill="#111827"
-                            font-size="14"
-                            font-weight="bold"
-                            style="text-shadow: 0 0 3px #fff, 0 0 3px #fff;"
-                            class:animate-point={animated}
-                            dy={y < center ? -10 : 15}
-                        >
-                            {d.value}
-                        </text>
-                    {/each}
+          {#each personalityAttributes as d, i}
+            {@const { x, y } = getCoordinate(i, d.value)}
+            <circle cx={x} cy={y} r="5" fill="#f97316" stroke="#fff" stroke-width="2" class:animate-point={animated} />
+            <text x={x} y={y} dy={y < center ? -15 : 20} text-anchor="middle" font-size="12" font-weight="bold" fill="#f97316" class:animate-point={animated}>
+              {d.value.toFixed(1)}
+            </text>
+          {/each}
 
-                    <!-- 5. Labels -->
-                    {#each mockData as d, i (i)}
-                        {@const { x, y } = getCoordinate(i, 100)}
-                        <text
-                            x={x}
-                            y={y}
-                            text-anchor={x > center + 5 ? 'start' : (x < center - 5 ? 'end' : 'middle')}
-                            dominant-baseline={y > center + 5 ? 'hanging' : (y < center - 5 ? 'auto' : 'central')}
-                            fill="#374151"
-                            font-size="12"
-                            font-weight="600"
-                            dx={x > center ? 5 : (x < center ? -5 : 0)}
-                            dy={y > center ? 15 : (y < center ? -5 : 0)}
-                        >
-                            {d.label}
-                        </text>
-                    {/each}
-                    
-                </svg>
-            </div>
-
+          {#each personalityAttributes as d, i}
+            {@const { x, y } = getCoordinate(i, 4.4)}
+            <text 
+              x={x} y={y} 
+              text-anchor="middle" 
+              dominant-baseline="middle" 
+              fill="#374151" 
+              font-size="13" 
+              font-weight="800" 
+              class="uppercase tracking-tighter"
+            >
+              {d.label}
+            </text>
+          {/each}
+        </svg>
       </div>
     </div>
+
 
 
     <!-- Tabs -->
@@ -382,41 +325,28 @@
   </div>
 </div>
 
-
-
 <style>
     /* Keyframe for a simple animation to reveal the chart on load */
-    @keyframes drawRadar {
-        from {
-            stroke-dasharray: 0 1000;
-            fill-opacity: 0.1;
-        }
-        to {
-            stroke-dasharray: 1000 0;
-            fill-opacity: 0.6;
-        }
-    }
+  @keyframes drawRadar {
+    from { stroke-dasharray: 0 1000; fill-opacity: 0; }
+    to { stroke-dasharray: 1000 0; fill-opacity: 0.4; }
+  }
 
-    /* Keyframe for points to fade in */
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.5); }
+    to { opacity: 1; transform: scale(1); }
+  }
 
-    /* Apply the animation to the data polygon path */
-    .animate-radar {
-        /* Set a large dash array value initially */
-        stroke-dasharray: 1000; 
-        stroke-dashoffset: 1000;
-        animation: drawRadar 1.5s ease-out forwards;
-        animation-delay: 0.5s;
-    }
-    
-    /* Apply animation to the data points and scores */
-    .animate-point {
-        opacity: 0;
-        animation: fadeIn 0.5s ease-in forwards;
-        animation-delay: 2s; /* Start after the radar draw finishes */
-    }
+  .animate-radar {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: drawRadar 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
 
+  .animate-point {
+    opacity: 0;
+    animation: fadeIn 0.4s ease-out forwards;
+    animation-delay: 1s;
+  }
 </style>
+

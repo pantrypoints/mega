@@ -2,7 +2,7 @@
     import favicon from '$lib/assets/favicon.svg';    
     import { enhance } from '$app/forms';
     import type { PageServerData } from './$types';
-    import { Bell, MessageCircle, LogOut, ScrollText, ChartNoAxesCombined, CircleQuestionMark, Megaphone, Shirt, Utensils, Users, User, Tally5 } from 'lucide-svelte';
+    import { ListChecks, Bell, MessageCircle, LogOut, ScrollText, ChartNoAxesCombined, CircleQuestionMark, Megaphone, Shirt, Utensils, Users, User, Tally5 } from 'lucide-svelte';
     import Lang from '$lib/components/Lang.svelte';
 
     import { goto } from '$app/navigation';
@@ -35,7 +35,7 @@
         
         <!-- Centered SVG Icon -->
         <div class="flex justify-center mb-6">
-            <img src={favicon} alt="Menu" class="" />
+            <img src={favicon} alt ="Menu" class="" />
         </div>
 
         <Lang />
@@ -159,10 +159,8 @@
             </button>
             
             <!-- 7. Profile Card -->
-            <button 
-                onclick={() => goto(`/users/${userId}`)} 
-                class="bg-sky-50 border border-sky-200 p-3 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center min-h-24 flex flex-col justify-center items-center"
-            >
+            <button onclick={() => goto(`/users/${userId}`)} 
+                class="bg-sky-50 border border-sky-200 p-3 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center min-h-24 flex flex-col justify-center items-center">
                 <div class="p-2 mb-1">
                     <User class="w-10 h-10 sm:w-12 sm:h-12 text-gray-500" />
                 </div>
@@ -171,6 +169,17 @@
                 </div>
             </button>
             
+
+            <button onclick={() => goto(`/quiz`)} 
+                class="bg-sky-50 border border-sky-200 p-3 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center min-h-24 flex flex-col justify-center items-center">
+                <div class="p-2 mb-1">
+                    <ListChecks class="w-10 h-10 sm:w-12 sm:h-12 text-gray-500" />
+                </div>
+                <div class="text-gray-800 font-semibold text-xs sm:text-sm whitespace-nowrap">
+                    {m.personality_quiz()}
+                </div>
+            </button>
+
             <!-- 8. Stats Card -->
             <button 
                 onclick={() => goto('/stats')} 
