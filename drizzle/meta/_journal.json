@@ -64,6 +64,13 @@
       "when": 1769330658250,
       "tag": "0008_spooky_red_ghost",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1770190100025,
+      "tag": "0009_parched_polaris",
+      "breakpoints": true
     }
   ]
 }

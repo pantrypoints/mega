@@ -1055,21 +1055,12 @@ export function getDetailName(subcategoryCode: string, detailCode: string): stri
 
 
 
-
-// Helper functions
-export function getSubcategoriesForChapter(chapterCode: string): Array<{code: string, name: string}> {
-    const subcategories = hsSubcategories[chapterCode];
-    if (!subcategories) return [];
-    
-    return Object.entries(subcategories).map(([code, name]) => ({ code, name }));
+export function getSortedChaptersList(): Array<{code: string, name: string}> {
+    return Object.entries(hsChapters)
+        .map(([code, name]) => ({ code, name }))
+        .sort((a, b) => parseInt(a.code) - parseInt(b.code));
 }
 
-export function getDetailsForSubcategory(subcategoryCode: string): Array<{code: string, name: string}> {
-    const details = hsDetails[subcategoryCode];
-    if (!details) return [];
-    
-    return Object.entries(details).map(([code, name]) => ({ code, name }));
-}
 
 export function parseHSCode(fullCode: string): {
     chapter?: string;
@@ -1102,5 +1093,40 @@ export function parseHSCode(fullCode: string): {
     }
     
     return result;
+}
+
+
+export function getSubcategoriesForChapter(chapterCode: string): Array<{code: string, name: string}> {
+  const subcategories = hsSubcategories[chapterCode];
+  if (!subcategories) return [];
+  
+  return Object.entries(subcategories)
+    .sort(([codeA], [codeB]) => {
+      // Sort by numeric value of the subcategory code
+      return parseInt(codeA) - parseInt(codeB);
+    })
+    .map(([code, name]) => ({ code, name }));
+}
+
+export function getDetailsForSubcategory(subcategoryCode: string): Array<{code: string, name: string}> {
+  const details = hsDetails[subcategoryCode];
+  if (!details) return [];
+  
+  return Object.entries(details)
+    .sort(([codeA], [codeB]) => {
+      // For codes like "0101.21", we need to handle the dot
+      const cleanA = codeA.replace('.', '');
+      const cleanB = codeB.replace('.', '');
+      return parseInt(cleanA) - parseInt(cleanB);
+    })
+    .map(([code, name]) => ({ code, name }));
+}
+
+// If you want to use the ordered list in a component:
+export function getAllChaptersSorted(): Record<string, string> {
+  const sortedEntries = Object.entries(hsChapters)
+    .sort(([codeA], [codeB]) => parseInt(codeA) - parseInt(codeB));
+  
+  return Object.fromEntries(sortedEntries);
 }
 

@@ -3,6 +3,8 @@ import { error, redirect } from '@sveltejs/kit';
 import { transactions, user } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 
+
+ 
 export const load: PageServerLoad = async ({ params, locals }) => {
   const db = locals.db;
   const currentUserId = locals.user?.id;

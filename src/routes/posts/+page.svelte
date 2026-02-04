@@ -2,6 +2,7 @@
     import { onMount, onDestroy } from 'svelte';
     import { marked } from 'marked'; 
     import { Megaphone } from 'lucide-svelte';
+    import { m } from '$lib/paraglide/messages.js';
 
     // State variables
     let content = $state('');
@@ -82,10 +83,10 @@
     <!-- Header -->
     <div class="w-full max-w-4xl mb-8 text-center">
         <h1 class="text-4xl font-extrabold text-gray-900 mb-2">
-            Posts
+            {m.posts()}
         </h1>
         <p class="text-lg text-gray-600">
-            What's happening?
+            {m.whats_up()}
         </p>
     </div>
 
@@ -98,7 +99,7 @@
                 required 
                 rows="4"
                 class="w-full p-5 rounded-2xl border-2 border-gray-200 focus:border-sky-400 focus:ring-2 focus:ring-sky-100 focus:outline-none transition duration-200 resize-none"
-                placeholder="What's happening in your universe? Share your thoughts, announcements, or updates..."
+                placeholder="{m.whats_up()}"
                 disabled={loading}
             ></textarea>
             
@@ -114,14 +115,14 @@
                 class="w-full flex items-center justify-center py-2 bg-teal-600 text-white font-bold text-lg rounded-2xl shadow-lg hover:bg-teal-700 transition duration-200 active:scale-[.99] transform disabled:bg-gray-400 disabled:cursor-not-allowed disabled:scale-100"
             >
                 <Megaphone class="w-5 h-5 mr-3" />
-                {loading ? 'Posting...' : 'Create Post'}
+                {loading ? 'Posting...' : m.create_post() }
             </button>
         </form>
     </div>
 
     <!-- Posts Feed -->
     <div class="w-full max-w-4xl">
-        <h2 class="text-2xl font-bold text-gray-900 mb-6">Recent Posts</h2>
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">{m.recent_posts()}</h2>
         
         <div class="space-y-6">
             {#each posts as post}

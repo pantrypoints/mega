@@ -2,6 +2,37 @@
     import type { PageData } from './$types';
     import { Search, ArrowUpDown, Star, Tag, ExternalLink } from 'lucide-svelte';
     import { goto } from '$app/navigation';
+    import { m } from '$lib/paraglide/messages.js';
+    import { hsChapters, hsSubcategories, hsDetails } from '$lib/data/hsData';
+
+      export function getHSDescription(code: string): string {
+        if (!code) return 'Not Classified';
+
+        // 1. Clean the code for logic (remove dots for length checks)
+        const cleanCode = code.replace(/\D/g, '');
+        const chapter = cleanCode.substring(0, 2);
+        const subcategory = cleanCode.substring(0, 4);
+
+        // 2. Check Detail Level (6+ digits, e.g., 2901.10)
+        // We use the provided 'code' here because your hsDetails keys include dots
+        if (hsDetails[subcategory]?.[code]) {
+          return hsDetails[subcategory][code];
+        }
+
+        // 3. Check Subcategory Level (4 digits, e.g., 2901)
+        if (hsSubcategories[chapter]?.[subcategory]) {
+          return hsSubcategories[chapter][subcategory];
+        }
+
+        // 4. Check Chapter Level (2 digits, e.g., 01)
+        if (hsChapters[chapter]) {
+          return hsChapters[chapter];
+        }
+
+        return 'Unknown Category';
+      }
+
+
 
     export let data: PageData;
     $: ({ products, search, sort, direction, error } = data);
@@ -68,12 +99,12 @@
         <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl border-t-4 border-sky-500 mb-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                 <div>
-                    <h1 class="text-3xl font-extrabold text-gray-800">Products</h1>
-                    <p class="text-gray-500 mt-1">Browse and manage products</p>
+                    <h1 class="text-3xl font-extrabold text-gray-800">{m.products()}</h1>
+                    <p class="text-gray-500 mt-1">{m.browse()}</p>
                 </div>
                 <a href="/products/new"
                     class="w-full sm:w-auto bg-teal-500 hover:bg-teal-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition duration-300 transform hover:scale-105 text-center">
-                    + Create New Product
+                    + {m.create_product()}
                 </a>
             </div>
 
@@ -94,14 +125,14 @@
                 <button
                     type="submit"
                     class="sm:w-auto px-6 py-3 bg-sky-600 text-white rounded-xl font-semibold shadow-md hover:bg-sky-700 transition">
-                    Search
+                    {m.search()}
                 </button>
             </form>
 
 
             <!-- Sort Controls -->
             <div class="mt-4 flex flex-wrap gap-4 text-sm text-gray-600 pt-4 mt-4">
-                <span class="font-semibold self-center">Sort by:</span>
+                <span class="font-semibold self-center">{m.sort_by()}:</span>
                 {#each ['dateCreated', 'name', 'points'] as key}
                     <button 
                         on:click={() => handleSort(key)} 
@@ -119,8 +150,6 @@
             </div>
         </div>
 
-
-
         
         <!-- Error Display -->
         {#if error}
@@ -133,7 +162,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {#if products.length === 0}
                 <p class="text-gray-500 text-center col-span-full py-10">
-                    No products found matching your criteria. Try adjusting your search!
+                    {m.nothing_found()}
                 </p>
             {:else}
                 {#each products as product (product.id)}
@@ -144,26 +173,23 @@
                             <img
                                 src={product.mainPhoto}
                                 alt={product.name}
-                                class="w-full h-full object-cover transition duration-500 group-hover:scale-105"
-                                
-                            />
+                                class="w-full h-full object-cover transition duration-500 group-hover:scale-105"/>
                         </div>
 
                         <!-- Product Info -->
                         <div class="p-6 space-y-3">
                             <h3 class="text-xl font-bold text-gray-900 truncate">{product.name}</h3>
                             <p class="text-sm text-gray-500 line-clamp-2">{product.headline}</p>
-
+                            <span class="flex items-center text-xs p-2 bg-sky-50 text-sky-600 rounded-full font-medium">
+                                <Tag class="w-3 h-3 mr-1" />
+                                {getHSDescription(product.category)}
+                            </span>
                             <!-- Price and Category -->
                             <div class="flex justify-between items-center pt-2 border-t border-gray-100">
                                 <div class="flex items-center text-lg font-extrabold text-orange-600">
                                     <Star class="w-4 h-4 mr-1 fill-orange-500 text-orange-500" />
                                     {product.points.toFixed(0)} Points
                                 </div>
-                                <span class="flex items-center text-xs px-2 py-1 bg-sky-50 text-sky-600 rounded-full font-medium">
-                                    <Tag class="w-3 h-3 mr-1" />
-                                    {product.category}
-                                </span>
                             </div>
                         </div>
                     </div>
@@ -173,3 +199,4 @@
         </div>
     </div>
 </div>
+

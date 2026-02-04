@@ -1,7 +1,8 @@
 <script lang="ts">
   import type { PageData } from './$types';
   import { ArrowUpDown, ChevronLeft, ChevronRight, User, Calendar, Star, Tag, Package } from 'lucide-svelte';
-  
+  import { m } from '$lib/paraglide/messages.js';
+
   export let data: PageData;
   
   const { transactions, currentUserId } = data;
@@ -73,9 +74,11 @@
   }
 </script>
 
+
 <svelte:head>
   <title>Transaction History - Circle App</title>
 </svelte:head>
+
 
 <div class="min-h-screen bg-gradient-to-br from-sky-50 to-teal-50 p-4 sm:p-6 lg:p-8">
   <div class="max-w-6xl mx-auto">
@@ -83,10 +86,10 @@
     <!-- Header -->
     <div class="mb-8 text-center">
       <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-2">
-        Transaction History
+        {m.tx_history()}
       </h1>
       <p class="text-lg text-gray-600">
-        View and manage all your barter transactions
+        {m.tx_manage()}
       </p>
     </div>
 
@@ -100,13 +103,12 @@
             on:click={() => activeTab = 'all'}
             class="flex-1 px-6 py-4 text-center font-semibold transition-all duration-200"
             class:bg-white={activeTab === 'all'}
-            class:text-teal-600={activeTab === 'all'}
+            class:text-sky-600={activeTab === 'all'}
             class:border-b-2={activeTab === 'all'}
-            class:border-teal-600={activeTab === 'all'}
+            class:border-sky-600={activeTab === 'all'}
             class:text-gray-600={activeTab !== 'all'}
-            class:hover:bg-gray-100={activeTab !== 'all'}
-          >
-            All Transactions
+            class:hover:bg-gray-100={activeTab !== 'all'}>
+            {m.tx_all()}
             <span class="ml-2 px-2 py-1 text-xs rounded-full bg-gray-200">
               {transactions.length}
             </span>
@@ -116,13 +118,12 @@
             on:click={() => activeTab = 'giver'}
             class="flex-1 px-6 py-4 text-center font-semibold transition-all duration-200"
             class:bg-white={activeTab === 'giver'}
-            class:text-teal-600={activeTab === 'giver'}
+            class:text-sky-600={activeTab === 'giver'}
             class:border-b-2={activeTab === 'giver'}
-            class:border-teal-600={activeTab === 'giver'}
+            class:border-sky-600={activeTab === 'giver'}
             class:text-gray-600={activeTab !== 'giver'}
-            class:hover:bg-gray-100={activeTab !== 'giver'}
-          >
-            As Seller
+            class:hover:bg-gray-100={activeTab !== 'giver'}>
+            {m.as_seller()}
             <span class="ml-2 px-2 py-1 text-xs rounded-full bg-gray-200">
               {transactions.filter(t => t.isGiver).length}
             </span>
@@ -132,13 +133,12 @@
             on:click={() => activeTab = 'getter'}
             class="flex-1 px-6 py-4 text-center font-semibold transition-all duration-200"
             class:bg-white={activeTab === 'getter'}
-            class:text-teal-600={activeTab === 'getter'}
+            class:text-sky-600={activeTab === 'getter'}
             class:border-b-2={activeTab === 'getter'}
-            class:border-teal-600={activeTab === 'getter'}
+            class:border-sky-600={activeTab === 'getter'}
             class:text-gray-600={activeTab !== 'getter'}
-            class:hover:bg-gray-100={activeTab !== 'getter'}
-          >
-            As Buyer
+            class:hover:bg-gray-100={activeTab !== 'getter'}>
+            {m.as_buyer()}
             <span class="ml-2 px-2 py-1 text-xs rounded-full bg-gray-200">
               {transactions.filter(t => !t.isGiver).length}
             </span>
@@ -159,10 +159,9 @@
             class:bg-gray-200={sortBy !== 'partner'}
             class:text-gray-700={sortBy !== 'partner'}
             class:hover:bg-teal-700={sortBy === 'partner'}
-            class:hover:bg-gray-300={sortBy !== 'partner'}
-          >
+            class:hover:bg-gray-300={sortBy !== 'partner'}>
             <User class="w-4 h-4" />
-            Partner
+            {m.partner()}
             {#if sortBy === 'partner'}
               <ArrowUpDown class="w-3 h-3" />
             {/if}
@@ -179,7 +178,7 @@
             class:hover:bg-gray-300={sortBy !== 'date'}
           >
             <Calendar class="w-4 h-4" />
-            Date
+            {m.date()}
             {#if sortBy === 'date'}
               <ArrowUpDown class="w-3 h-3" />
             {/if}
@@ -196,7 +195,7 @@
             class:hover:bg-gray-300={sortBy !== 'points'}
           >
             <Star class="w-4 h-4" />
-            Points
+            {m.points()}
             {#if sortBy === 'points'}
               <ArrowUpDown class="w-3 h-3" />
             {/if}
@@ -209,7 +208,7 @@
         {#if paginatedTransactions.length === 0}
           <div class="p-12 text-center">
             <Package class="w-16 h-16 mx-auto mb-4 text-gray-300" />
-            <p class="text-xl font-semibold text-gray-500 mb-2">No transactions found</p>
+            <p class="text-xl font-semibold text-gray-500 mb-2">{m.nothing()}</p>
             <p class="text-gray-400">
               {#if activeTab === 'giver'}
                 You haven't sold any items yet
@@ -222,10 +221,8 @@
           </div>
         {:else}
           {#each paginatedTransactions as transaction (transaction.id)}
-            <a
-              href="/transactions/{transaction.id}"
-              class="block p-4 sm:p-6 hover:bg-sky-50 transition-all duration-200 group"
-            >
+            <a href="/transactions/{transaction.id}"
+              class="block p-4 sm:p-6 hover:bg-sky-50 transition-all duration-200 group">
               <div class="flex flex-col sm:flex-row gap-4">
                 
                 <!-- Details -->
@@ -324,10 +321,9 @@
                 class:cursor-not-allowed={currentPage === 1}
                 class:bg-teal-600={currentPage !== 1}
                 class:text-white={currentPage !== 1}
-                class:hover:bg-teal-700={currentPage !== 1}
-              >
+                class:hover:bg-teal-700={currentPage !== 1}>
                 <ChevronLeft class="w-4 h-4 mr-1" />
-                Previous
+                {m.previous()}
               </button>
               
               <div class="flex items-center gap-1">
@@ -360,9 +356,8 @@
                 class:cursor-not-allowed={currentPage === totalPages}
                 class:bg-teal-600={currentPage !== totalPages}
                 class:text-white={currentPage !== totalPages}
-                class:hover:bg-teal-700={currentPage !== totalPages}
-              >
-                Next
+                class:hover:bg-teal-700={currentPage !== totalPages}>
+                {m.next()}
                 <ChevronRight class="w-4 h-4 ml-1" />
               </button>
             </div>

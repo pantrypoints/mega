@@ -8,6 +8,7 @@ export const user = sqliteTable('user', {
   codename: text('codename').notNull().unique(),
   pin: text('pin').notNull(),
   passwordHash: text('password_hash').notNull(),
+  slug: text('slug').notNull(),
   avatar: text('avatar'),
   gender: text('gender').notNull(),
   dateOfBirth: text('date_of_birth'),

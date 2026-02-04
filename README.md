@@ -11,6 +11,17 @@ todo:
 - prod serv new edit del 
 
 
+Use locals.db for your load functions and Actions.
+
+Use getDb() directly ONLY for standalone scripts (like seed.ts or migration runners) where SvelteKit's hooks aren't running.
+
+
+  "a-images": {
+    "title": "كيفية إضافة الصور",
+    "summary": "نستخدم الروابط المباشرة لعرض الصور"
+  }
+
+  
 <!-- <Tag class="w-3 h-3 mr-1" />  -->
 
 replace argon2 with bycriptjs 
@@ -746,3 +757,123 @@ TRANSACTION SHOW COLORFUL:
 
 
 
+
+
+
+the lucide icons are:
+heart = Heart 
+brain = Brain
+body = BicepsFlexed
+luna = Moon
+mercury = FlaskConical
+saturn = Orbit
+apollo = Sun
+jupiter = HandFist
+venus = Flower
+mars = Sword
+
+make the: 
+heart badge pink, icon red
+brain light yellow, icon dark yellwo
+mars light red, icon dark red
+and so on..
+
+in the user list, make extra transaction badges as:
+- exchanges as giver then add the number value
+- exchanges as getter then add the number value
+- donations as giver then add the number value
+- donations as getter then add the number value
+
+the transaction values are taken from table:
+
+export const transactions = sqliteTable('transactions', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  name: text('name').notNull(),
+  points: real('points').notNull(),
+  measure: text('measure'),
+  amount: real('amount'),
+  photo: text('photo'),
+  notes: text('notes'),
+  kind: text('kind').notNull(), // 'debt' or 'credit'
+  category: text('category').notNull(), // HS Code or MCC Code
+  status: text('status').notNull().default('accepted'), // 'pending', 'accepted', 'cancelled', 'transferred'
+  giverId: text('giver_id').notNull().references(() => user.id), // seller
+  getterId: text('getter_id').notNull().references(() => user.id), // buyer
+  transfereeId: text('transferee_id').references(() => user.id),
+  dateAccepted: text('date_accepted'),
+  dateCancelled: text('date_cancelled'),
+  dateTransferred: text('date_transferred'),
+  dateCreated: text('date_created').default(sql`(CURRENT_TIMESTAMP)`),
+  dateModified: text('date_modified').default(sql`(CURRENT_TIMESTAMP)`)
+});
+
+so for each user, go through transactions and find the ones where he is giver or getter. the list how many he has as exchange or donation kind as getter and/or giver then populate the badges with the instance count. 
+
+transactions are called by:
+export const load: PageServerLoad = async ({ locals }) => {
+  const db = locals.db;
+
+
+<!-- Heart - Love/Life -->
+<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+</svg>
+
+<!-- Brain - Wisdom -->
+<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M9 17H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm2-7h-1V7h-2v3h-2V7h-2v3h-2V7H8v3H7c-1.1 0-2 .9-2 2v5h2v-2h10v2h2v-5c0-1.1-.9-2-2-2zm0 5H7v-2h10v2z"/>
+</svg>
+
+<!-- Body - Human Form -->
+<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M12 6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2m0 10c2.7 0 5.8 1.29 6 2H6c.23-.72 3.31-2 6-2m0-12C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 10c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+</svg>
+
+<!-- Moon - Crescent -->
+<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/>
+</svg>
+
+<!-- Mercury - Winged Messenger -->
+<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+  <path d="M16 7l-1.41 1.41L16 9.83l-2.59 2.58L12 12l4-4z" opacity="0.7"/>
+</svg>
+
+<!-- Saturn - With Rings -->
+<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+  <circle cx="12" cy="12" r="5"/>
+  <ellipse cx="12" cy="12" rx="9" ry="2.5" fill="none" stroke="currentColor" stroke-width="2"/>
+</svg>
+
+<!-- Apollo - Sun -->
+<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+  <circle cx="12" cy="12" r="5"/>
+  <line x1="12" y1="1" x2="12" y2="4"/>
+  <line x1="12" y1="20" x2="12" y2="23"/>
+  <line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/>
+  <line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/>
+  <line x1="1" y1="12" x2="4" y2="12"/>
+  <line x1="20" y1="12" x2="23" y2="12"/>
+  <line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/>
+  <line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/>
+</svg>
+
+<!-- Jupiter - King of Gods -->
+<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+  <circle cx="12" cy="12" r="6"/>
+  <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+</svg>
+
+<!-- Venus - Beauty/Feminine -->
+<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+  <circle cx="12" cy="8" r="4"/>
+  <path d="M12 14c-3.31 0-6 2.69-6 6h12c0-3.31-2.69-6-6-6z"/>
+</svg>
+
+<!-- Mars - War/Masculine -->
+<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+  <circle cx="12" cy="12" r="4"/>
+  <line x1="18" y1="6" x2="12" y2="12" stroke-width="2"/>
+  <line x1="12" y1="12" x2="6" y2="18" stroke-width="2"/>
+</svg>

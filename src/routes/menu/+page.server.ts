@@ -5,7 +5,12 @@ import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
   const user = requireLogin();
-  return { user };
+  return { 
+    user: {
+      ...user,
+      slug: user.slug
+    } 
+  };
 };
 
 export const actions: Actions = {
@@ -13,11 +18,8 @@ export const actions: Actions = {
     if (!event.locals.session) {
       return fail(401);
     }
-    
-    // ✅ Pass db as first parameter, then sessionId
     await auth.invalidateSession(event.locals.db, event.locals.session.id);
     auth.deleteSessionTokenCookie(event);
-    
     return redirect(302, '/');
   },
 };
@@ -29,3 +31,39 @@ function requireLogin() {
   }
   return locals.user;
 }
+
+
+
+
+
+// import * as auth from '$lib/server/auth';
+// import { fail, redirect } from '@sveltejs/kit';
+// import { getRequestEvent } from '$app/server';
+// import type { Actions, PageServerLoad } from './$types';
+
+// export const load: PageServerLoad = async () => {
+//   const user = requireLogin();
+//   return { user };
+// };
+
+// export const actions: Actions = {
+//   logout: async (event) => {
+//     if (!event.locals.session) {
+//       return fail(401);
+//     }
+    
+//     // ✅ Pass db as first parameter, then sessionId
+//     await auth.invalidateSession(event.locals.db, event.locals.session.id);
+//     auth.deleteSessionTokenCookie(event);
+    
+//     return redirect(302, '/');
+//   },
+// };
+
+// function requireLogin() {
+//   const { locals } = getRequestEvent();
+//   if (!locals.user) {
+//     return redirect(302, "/login");
+//   }
+//   return locals.user;
+// }

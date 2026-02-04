@@ -1,4 +1,4 @@
-<script lang="ts">
+ <script lang="ts">
   import type { PageData } from './$types';
   import { ArrowLeft, Star, Tag, Ruler, Briefcase, Camera, Handshake, Edit, Trash2 } from 'lucide-svelte';
   import { enhance } from '$app/forms';
@@ -39,16 +39,13 @@
 
 
 
-
 <svelte:head>
   <title>Service: {service.name}</title>
 </svelte:head>
 
 
 <div class="min-h-screen bg-sky-50 flex flex-col items-center p-4 sm:p-8">
-  <div
-    class="w-full max-w-4xl bg-white p-6 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500 transform transition duration-500 hover:shadow-3xl"
-  >
+  <div class="w-full max-w-4xl bg-white p-6 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500 transform transition duration-500 hover:shadow-3xl">
 
     <a href="/services"
       class="inline-flex items-center text-sky-600 hover:text-sky-800 transition mb-6 font-medium">
@@ -108,9 +105,7 @@
 
         <!-- Thumbnail Selector -->
         {#if service.photos.length > 0}
-          <div
-            class="flex flex-wrap gap-2 justify-center p-2 rounded-xl bg-gray-50 border border-gray-100"
-          >
+          <div class="flex flex-wrap gap-2 justify-center p-2 rounded-xl bg-gray-50 border border-gray-100">
             <Camera class="w-5 h-5 text-gray-500 self-center hidden sm:block" />
             {#each service.photos as photo, index (photo)}
               <button
@@ -119,11 +114,9 @@
                 class:border-sky-500={photo === currentPhoto}
                 class:border-transparent={photo !== currentPhoto}
               >
-                <img
-                  src={photo}
+                <img src={photo}
                   alt="Thumbnail {index + 1}"
-                  class="w-full h-full object-cover opacity-80 hover:opacity-100"
-                />
+                  class="w-full h-full object-cover opacity-80 hover:opacity-100"/>
               </button>
             {/each}
           </div>
@@ -155,16 +148,13 @@
               </span>
             </div>
 
-
-
-
             <div class="flex items-center text-gray-600">
               <!-- <Briefcase class="w-5 h-5 mr-2" /> -->
               <span class="font-semibold">{m.seller()}:</span>
-              <a href={`/users/${owner.id}`} class="flex items-center ml-2 hover:bg-sky-50 p-1 rounded-lg transition-colors duration-200">
+              <a href={`/users/${owner.slug}`} class="flex items-center ml-2 hover:bg-sky-50 p-1 rounded-lg transition-colors duration-200">
                 <img src={owner.avatar} alt="Seller Avatar" class="w-8 h-8 rounded-full object-cover" />
                 <span class="ml-2 text-sm truncate hover:text-sky-600 transition-colors duration-200">
-                    {owner.username}
+                  {owner.username}
                 </span>
               </a>
             </div>
@@ -187,13 +177,11 @@
     <div class="mt-10">
       {#if isOwner} 
         <a href={transactionHref} class="w-full bg-teal-600 text-white py-3 rounded-2xl font-bold text-lg shadow-lg hover:bg-teal-700 transition duration-200 active:scale-[.99] transform flex items-center justify-center gap-2" >
-          <Handshake class="w-5 h-5" /> Make Barter Transaction
+          <Handshake class="w-5 h-5" />{m.barter_do()}
         </a>
       {:else}
-        <div
-          class="w-full text-center py-3 rounded-2xl font-bold text-lg bg-red-100 text-red-600"
-        >
-          To avail of this item, please chat the person to meet up
+        <div class="w-full text-center py-3 rounded-2xl font-bold text-lg bg-red-100 text-red-600">
+          {m.to_avail()}
         </div>
       {/if}
     </div>

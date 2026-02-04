@@ -69,7 +69,7 @@
     <a href="/products"
       class="inline-flex items-center text-sky-600 hover:text-teal-800 transition mb-6 font-medium">
       <ArrowLeft class="w-4 h-4 mr-1" />
-      Back to Products
+      {m.back_to_products()}
     </a>
 
     <div class="flex items-start justify-between gap-4 mb-2">
@@ -80,8 +80,7 @@
       {#if isOwner}
         <div class="flex space-x-3 mt-1">
             <!-- Edit Button -->
-            <a 
-                href={`/products/${product.id}/edit`}
+            <a href={`/products/${product.id}/edit`}
                 class="flex items-center justify-center p-2 bg-sky-100 text-sky-600 rounded-full shadow-md hover:bg-sky-200 transition duration-150 transform hover:scale-105"
                 title="Edit Product">
                 <Edit class="w-5 h-5" />
@@ -200,16 +199,13 @@
     <div class="mt-10">
       {#if isOwner}
         <a href={transactionHref} class="w-full bg-teal-600 text-white py-3 rounded-2xl font-bold text-lg shadow-lg hover:bg-teal-700 transition duration-200 active:scale-[.99] transform flex items-center justify-center gap-2" >
-          <Handshake class="w-5 h-5" /> Make Barter Transaction
+          <Handshake class="w-5 h-5" />{m.barter_do()}
         </a>
       {:else}
-        <div
-          class="w-full text-center py-3 rounded-2xl font-bold text-lg bg-red-100 text-red-600"
-        >
-          To avail of this item, please chat the person to meet up
+        <div class="w-full text-center py-3 rounded-2xl font-bold text-lg bg-red-100 text-red-600">
+          {m.to_avail()}
         </div>
       {/if}
     </div>
   </div>
 </div>
-

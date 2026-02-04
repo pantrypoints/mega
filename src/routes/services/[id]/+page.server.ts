@@ -26,6 +26,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
           id: user.id,
           username: user.username,
           avatar: user.avatar,
+          slug: user.slug,
         }
       })
       .from(services)
@@ -64,6 +65,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
         id: owner?.id || service.userId,
         username: owner?.username || 'Unknown User',
         avatar: ownerAvatar,
+        slug: owner?.slug
       },
       isOwner,
       currentUserId,

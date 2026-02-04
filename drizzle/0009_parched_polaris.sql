@@ -1,0 +1,1 @@
+ALTER TABLE `user` ADD `slug` text NOT NULL;

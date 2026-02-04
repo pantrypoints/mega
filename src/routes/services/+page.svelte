@@ -2,6 +2,8 @@
     import type { PageData } from './$types';
     import { Search, ArrowUpDown, Star, Tag, ExternalLink } from 'lucide-svelte';
     import { goto } from '$app/navigation';
+    import { getNAICSDescription } from '$lib/data/naicsData';
+    import { m } from '$lib/paraglide/messages.js';
 
     export let data: PageData;
     $: ({ services, search, sort, direction, error } = data);
@@ -67,14 +69,12 @@
         <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl border-t-4 border-sky-500 mb-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                 <div>
-                    <h1 class="text-3xl font-extrabold text-gray-800">Services</h1>
+                    <h1 class="text-3xl font-extrabold text-gray-800">{m.services()}</h1>
                     <!-- <p class="text-gray-500 mt-1">Browse and manage services</p> -->
                 </div>
-                <a
-                    href="/services/new"
-                    class="w-full sm:w-auto bg-sky-500 hover:bg-sky-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition duration-300 transform hover:scale-105 text-center"
-                >
-                    + Create New service
+                <a href="/services/new"
+                    class="w-full sm:w-auto bg-teal-500 hover:bg-teal-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition duration-300 transform hover:scale-105 text-center">
+                    {m.create_service()}
                 </a>
             </div>
 
@@ -86,7 +86,7 @@
                     <input
                         type="search"
                         bind:value={currentSearch}
-                        placeholder="Search by name or headline..."
+                        placeholder="{m.search_by()}"
                         class="w-full p-3 pl-10 border border-gray-300 rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition"
                     />
                     <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -94,7 +94,7 @@
                 
                 <!-- Search Button -->
                 <button type="submit" class="sm:w-auto px-6 py-3 bg-sky-600 text-white rounded-xl font-semibold shadow-md hover:bg-sky-700 transition" >
-                    Search
+                    {m.search()}
                 </button>
             </form>
 
@@ -135,18 +135,19 @@
                     <div class="bg-white rounded-2xl shadow-xl overflow-hidden transform transition duration-300 hover:shadow-2xl hover:-translate-y-1">
                         <!-- service Image -->
                         <div class="h-48 overflow-hidden bg-gray-100">
-                            <img
-                                src={service.mainPhoto}
+                            <img src={service.mainPhoto}
                                 alt={service.name}
-                                class="w-full h-full object-cover transition duration-500 group-hover:scale-105"
-                                
-                            />
+                                class="w-full h-full object-cover transition duration-500 group-hover:scale-105"/>
                         </div>
 
                         <!-- service Info -->
                         <div class="p-6 space-y-3">
                             <h3 class="text-xl font-bold text-gray-900 truncate">{service.name}</h3>
                             <p class="text-sm text-gray-500 line-clamp-2">{service.headline}</p>
+                            <span class="flex items-center text-xs px-2 py-1 bg-sky-50 text-sky-600 rounded-full font-medium">
+                                <Tag class="w-3 h-3 mr-1" />
+                                {getNAICSDescription(service.category)} ({service.category})
+                            </span>
 
                             <!-- Price and Category -->
                             <div class="flex justify-between items-center pt-2 border-t border-gray-100">
@@ -154,10 +155,6 @@
                                     <Star class="w-4 h-4 mr-1 fill-orange-500 text-orange-500" />
                                     {service.points.toFixed(0)} Points
                                 </div>
-                                <span class="flex items-center text-xs px-2 py-1 bg-sky-50 text-sky-600 rounded-full font-medium">
-                                    <Tag class="w-3 h-3 mr-1" />
-                                    {service.category}
-                                </span>
                             </div>
                         </div>
                     </div>

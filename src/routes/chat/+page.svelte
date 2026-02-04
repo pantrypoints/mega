@@ -4,6 +4,7 @@
 	import { invalidateAll, invalidate } from '$app/navigation';
 	import { Send, Trash2, User, MessageSquare } from 'lucide-svelte';
 	import { onMount, onDestroy } from 'svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let { data } = $props();
 	
@@ -34,6 +35,7 @@
 	// onDestroy(() => {
 	// 	if (interval) clearInterval(interval);
 	// });
+
 </script>
 
 
@@ -183,7 +185,7 @@
 					<input 
 						type="text" 
 						name="content" 
-						placeholder="Type a message..." 
+						placeholder="{m.type_message()}" 
 						required
 						class="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
 					/>
@@ -197,9 +199,9 @@
 				<div class="w-20 h-20 bg-sky-50 rounded-full flex items-center justify-center mb-4">
 					<MessageSquare class="w-10 h-10 text-sky-400" />
 				</div>
-				<h3 class="text-xl font-bold text-gray-700">Select a chat</h3>
+				<h3 class="text-xl font-bold text-gray-700">{m.select_chat()}</h3>
 				<p class="text-gray-400 mt-2 text-center max-w-xs">
-					Choose a contact from the left or visit a user's profile to start a new conversation.
+					{m.choose_contact()}
 				</p>
 			</div>
 		{/if}

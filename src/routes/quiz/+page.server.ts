@@ -3,6 +3,8 @@ import { QUESTIONS } from '$lib/data/quiz';
 import { user as userTable } from '$lib/server/db/schema'; 
 import { eq } from 'drizzle-orm';
 
+
+
 export const actions = {
     default: async ({ request, locals, platform }) => {  // Add platform here
         const currentUser = locals.user; 

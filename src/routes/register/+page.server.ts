@@ -25,6 +25,13 @@ export const actions: Actions = {
 		const passwordConfirm = form.get('passwordConfirm');
 		const genderInput = form.get('gender') as string | null; // Retrieve gender
 
+
+
+		const username = form.get('username') as string;
+		// Generate initial slug from username
+		const slug = username.toLowerCase();
+
+
 		// ---------- VALIDATION ----------
 		if (!validateUsername(username)) return fail(400, { message: 'Invalid username' });
 		if (!validateCodename(codename)) return fail(400, { message: 'Invalid codename' });
@@ -52,13 +59,47 @@ export const actions: Actions = {
 		// END: Gender Validation and Normalization
 
 
-		// Check duplicate username OR codename (fixed the query)
+		// Check duplicate username OR codename slug(fixed the query)
 		const exists = await db
-			.select()
-			.from(table.user)
-			.where(or(eq(table.user.username, username), eq(table.user.codename, codename)));
+		    .select()
+		    .from(table.user)
+		    .where(
+		        or(
+		            eq(table.user.username, username), 
+		            eq(table.user.codename, codename),
+		            eq(table.user.slug, slug) // Check if slug is taken
+		        )
+		    );
+		if (exists.length) return fail(400, { message: 'Username, codename, or slug already exists' });
 
-		if (exists.length) return fail(400, { message: 'User or codename already exists' });
+		try {
+		    const passwordHash = await bcrypt.hash(password as string, saltRounds);
+		    const pinHash = await bcrypt.hash(pin as string, saltRounds);
+
+		    const userId = generateUserId();
+		    
+		    // 2. Insert the slug into the database
+		    await db.insert(table.user).values({
+		        id: userId,
+		        username,
+		        slug, // <--- Added this
+		        codename,
+		        pin: pinHash,
+		        passwordHash,
+		        avatar: form.get('avatar') as string | null,
+		        gender: normalizedGender,
+		        dateOfBirth: form.get('dateOfBirth') as string | null,
+		        email: form.get('email') as string | null,
+		        phone: form.get('phone') as string | null,
+		        city: form.get('city') as string | null,
+		        country: form.get('country') as string | null
+		    });
+
+		    // ... rest of the session logic ...
+		}
+
+
+
 
 		// ---------- HASH PASSWORD & PIN (USING BCRYPT) ----------
 		try {

@@ -23,12 +23,12 @@ async function seed() {
 
   // --- 2. CREATE USERS ---
   const users = [
-    {id: nanoid(), username: "jose", codename: "jose", pin: hash("111111"), passwordHash: hash("123123"), avatar: "/jose.jpg", gender: "male", dateOfBirth: "1995-01-05", email: "jose@example.com", phone: "+123456789", city: "Manila", country: "Philippines" },
-    {id: nanoid(), username: "jing", codename: "jing", pin: hash("111111"), passwordHash: hash("123123"), avatar: "/jing.jpg", gender: "male", dateOfBirth: "1995-01-05", email: "jing@example.com", phone: "+123456789", city: "Manila", country: "Philippines" },
-    {id: nanoid(), username: "ehmil", codename: "ehmil", pin: hash("222222"), passwordHash: hash("123123"), avatar: "/ehmil.jpg", gender: "male", dateOfBirth: "1992-05-10", email: "ehmil@example.com", phone: "+987654321", city: "Manila", country: "Philippines" },
-    {id: nanoid(), username: "lam", codename: "lam", pin: hash("030493"), passwordHash: hash("030493"), avatar: "/lam.jpg", gender: "female", dateOfBirth: "1993-04-03", email: "lam.nguye n.34.vn@gmail.com", phone: "+84328784517", city: "Manila", country: "Philippines" },
-    {id: nanoid(), username: "jun", codename: "jun", pin: hash("123123"), passwordHash: hash("123123"), avatar: "/jun.jpg", gender: "male", dateOfBirth: "1980-09-08", email: "jundalisay@yahoo.com", phone: "+639..", city: "Manila", country: "Philippines" },
-    {id: nanoid(), username: "anh", codename: "anh", pin: hash("444444"), passwordHash: hash("123123"), avatar: "/anh.jpg", gender: "female", dateOfBirth: "1990-11-23", email: "anh@example.com", phone: "+1029384756", city: "Manila", country: "Philippines" }
+    {id: nanoid(), username: "jose", codename: "jose", slug: "jose", pin: hash("111111"), passwordHash: hash("123123"), avatar: "/jose.jpg", gender: "male", dateOfBirth: "1995-01-05", email: "jose@example.com", phone: "+123456789", city: "Manila", country: "Philippines" },
+    {id: nanoid(), username: "jing", codename: "jing", slug: "jing", pin: hash("111111"), passwordHash: hash("123123"), avatar: "/jing.jpg", gender: "male", dateOfBirth: "1995-01-05", email: "jing@example.com", phone: "+123456789", city: "Manila", country: "Philippines" },
+    {id: nanoid(), username: "ehmil", codename: "ehmil", slug: "ehmil", pin: hash("222222"), passwordHash: hash("123123"), avatar: "/ehmil.jpg", gender: "male", dateOfBirth: "1992-05-10", email: "ehmil@example.com", phone: "+987654321", city: "Manila", country: "Philippines" },
+    {id: nanoid(), username: "lam", codename: "lam", slug: "lam", pin: hash("030493"), passwordHash: hash("030493"), avatar: "/lam.jpg", gender: "female", dateOfBirth: "1993-04-03", email: "lam.nguye n.34.vn@gmail.com", phone: "+84328784517", city: "Manila", country: "Philippines" },
+    {id: nanoid(), username: "jun", codename: "jun", slug: "jun", pin: hash("123123"), passwordHash: hash("123123"), avatar: "/jun.jpg", gender: "male", dateOfBirth: "1980-09-08", email: "jundalisay@yahoo.com", phone: "+639..", city: "Manila", country: "Philippines" },
+    {id: nanoid(), username: "anh", codename: "anh", slug: "anh", pin: hash("444444"), passwordHash: hash("123123"), avatar: "/anh.jpg", gender: "female", dateOfBirth: "1990-11-23", email: "anh@example.com", phone: "+1029384756", city: "Manila", country: "Philippines" }
   ];
   
   await db.insert(user).values(users);
@@ -52,8 +52,8 @@ async function seed() {
     {name: "Flutter App Development", measure: "project", points: 100.0, category: "541511", photo1: "/flutter.jpg", 
         photo2: "/flutter2.jpg", description: "Cross-platform mobile app development (Android/iOS).", headline: "Your App Idea, Realized.", userId: users[4].id },
     {name: "Agricultural Consultation Services", measure: "day", points: 30.0, category: " 541690", photo1: "/planter.jpg", description: "Agricultural extension services for small plots", headline: "Professional agriultural consultation", userId: users[4].id },
-    {name: "Office Cleaning Services", measure: "day", points: 10.0, category: "561720", photo1: "/office2.jpg", description: "We do office cleaning.", headline: "Your App Idea, Realized.", userId: users[0].id },
-    {name: "Yoga lessons", measure: "hour", points: 10.0, category: "713940", photo1: "/office2.jpg", description: "We do office cleaning.", headline: "Your App Idea, Realized.", userId: users[0].id }
+    {name: "Office Cleaning Services", measure: "day", points: 10.0, category: "561720", photo1: "/office2.jpg", description: "We do office cleaning.", headline: "Professional Office Cleaning.", userId: users[0].id },
+    {name: "Yoga lessons", measure: "hour", points: 10.0, category: "713940", photo1: "/yoga.jpg", description: "We do ashtanga yoga.", headline: "Ashtanga yoga is part of the 8 limbs of yoga.", userId: users[0].id }
   ]).returning({ id: services.id }); // Get the IDs of the newly inserted services
 
 
