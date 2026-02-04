@@ -877,3 +877,105 @@ export const load: PageServerLoad = async ({ locals }) => {
   <line x1="18" y1="6" x2="12" y2="12" stroke-width="2"/>
   <line x1="12" y1="12" x2="6" y2="18" stroke-width="2"/>
 </svg>
+
+
+
+transactions schema is:
+export const transactions = sqliteTable('transactions', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  name: text('name').notNull(),
+  points: real('points').notNull(),
+  measure: text('measure'),
+  amount: real('amount'),
+  photo: text('photo'),
+  notes: text('notes'),
+  kind: text('kind').notNull(), // 'debt' or 'credit'
+  category: text('category').notNull(), // HS Code or MCC Code
+  status: text('status').notNull().default('accepted'), // 'pending', 'accepted', 'cancelled', 'transferred'
+  giverId: text('giver_id').notNull().references(() => user.id), // seller
+  getterId: text('getter_id').notNull().references(() => user.id), // buyer
+  transfereeId: text('transferee_id').references(() => user.id),
+  dateAccepted: text('date_accepted'),
+  dateCancelled: text('date_cancelled'),
+  dateTransferred: text('date_transferred'),
+  dateCreated: text('date_created').default(sql`(CURRENT_TIMESTAMP)`),
+  dateModified: text('date_modified').default(sql`(CURRENT_TIMESTAMP)`)
+});
+
+the server:
+
+computes the total points where current user is the giver and  kind is exchange.
+computes the total points where current user is the getter and  kind is exchange.
+computes the total points where current user is the giver and  kind is donation.
+computes the total points where current user is the getter and  kind is donation.
+computes the total points where current user is the giver and  kind is transfer.
+computes the total points where current user is the getter and  kind is transfer.
+
+the view has 3 tabs: exchange, donation, transfer. use this style:
+<div class="min-h-screen bg-gradient-to-br from-sky-50 to-teal-50 p-4 sm:p-6 lg:p-8">
+  <div class="max-w-6xl mx-auto">
+    
+    <!-- Header -->
+    <div class="mb-8 text-center">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-2">
+        {m.tx_history()}
+      </h1>
+      <p class="text-lg text-gray-600">
+        {m.tx_manage()}
+      </p>
+    </div>
+
+    <!-- Main Content Card -->
+    <div class="bg-white rounded-3xl shadow-2xl border-t-4 border-sky-500 overflow-hidden">
+      
+      <!-- Tabs -->
+      <div class="border-b border-gray-200 bg-gray-50">
+        <div class="flex">
+          <button
+            on:click={() => activeTab = 'all'}
+            class="flex-1 px-6 py-4 text-center font-semibold transition-all duration-200"
+            class:bg-white={activeTab === 'all'}
+            class:text-sky-600={activeTab === 'all'}
+            class:border-b-2={activeTab === 'all'}
+            class:border-sky-600={activeTab === 'all'}
+            class:text-gray-600={activeTab !== 'all'}
+            class:hover:bg-gray-100={activeTab !== 'all'}>
+            {m.tx_all()}
+            <span class="ml-2 px-2 py-1 text-xs rounded-full bg-gray-200">
+              {transactions.length}
+            </span>
+          </button>
+          
+          <button
+            on:click={() => activeTab = 'giver'}
+            class="flex-1 px-6 py-4 text-center font-semibold transition-all duration-200"
+            class:bg-white={activeTab === 'giver'}
+            class:text-sky-600={activeTab === 'giver'}
+            class:border-b-2={activeTab === 'giver'}
+            class:border-sky-600={activeTab === 'giver'}
+            class:text-gray-600={activeTab !== 'giver'}
+            class:hover:bg-gray-100={activeTab !== 'giver'}>
+            {m.as_seller()}
+            <span class="ml-2 px-2 py-1 text-xs rounded-full bg-gray-200">
+              {transactions.filter(t => t.isGiver).length}
+            </span>
+          </button>
+          
+          <button
+            on:click={() => activeTab = 'getter'}
+            class="flex-1 px-6 py-4 text-center font-semibold transition-all duration-200"
+            class:bg-white={activeTab === 'getter'}
+            class:text-sky-600={activeTab === 'getter'}
+            class:border-b-2={activeTab === 'getter'}
+            class:border-sky-600={activeTab === 'getter'}
+            class:text-gray-600={activeTab !== 'getter'}
+            class:hover:bg-gray-100={activeTab !== 'getter'}>
+            {m.as_buyer()}
+            <span class="ml-2 px-2 py-1 text-xs rounded-full bg-gray-200">
+              {transactions.filter(t => !t.isGiver).length}
+            </span>
+          </button>
+        </div>
+      </div>
+
+each tab will show user which has biggest getter points where current user is giver, and which has the biggest giver points where the current user is the getter

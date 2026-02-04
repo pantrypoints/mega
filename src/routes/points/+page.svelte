@@ -1,159 +1,155 @@
 <script lang="ts">
-	import { onMount } from "svelte";
-	import { Chart, registerables } from "chart.js";
-	Chart.register(...registerables);
+  import type { PageData } from './$types';
+  import { ArrowRightLeft, Heart, Send, User, TrendingUp, TrendingDown, ArrowRight } from 'lucide-svelte';
+  import { m } from '$lib/paraglide/messages.js';
 
-	// Tabs
-	const tabs = [
-		"Balances",
-		"Transactions",
-		"Purchases (Debts)",
-		"Sales (Credits)",
-		"Aggregated Debts",
-		"Aggregated Credits",
-		"Stats"
-	] as const;
+  export let data: PageData;
+  const { stats, topPartners, transactions } = data;
 
-	let activeTab: (typeof tabs)[number] = "Balances";
+  let activeTab: 'exchange' | 'donation' | 'transfer' = 'exchange';
 
-	// Mock data
-	let balances = [
-		{ user: "shopA", total: 150 },
-		{ user: "juan", total: 90 },
-		{ user: "maria", total: -40 }
-	];
-
-	let transactions = [
-		{ id: 1, user: "maria", amount: 30, date: "2025-01-01", type: "debit" },
-		{ id: 2, user: "juan", amount: -20, date: "2025-01-03", type: "credit" },
-		{ id: 3, user: "shopA", amount: 40, date: "2025-01-06", type: "debit" }
-	];
-
-	let dateFilter = "";
-	let valueFilter = 0;
-
-	let chartPoints = [10, 20, 15, 18, 24, 30, 22];
-
-	let chartEl: HTMLCanvasElement;
-	let chart: Chart;
-
-	onMount(() => {
-		if (!chartEl) return;
-
-		if (chart) chart.destroy();
-
-		chart = new Chart(chartEl, {
-			type: "line",
-			data: {
-				labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-				datasets: [
-					{
-						label: "Transactions Per Day",
-						data: chartPoints,
-						borderWidth: 3,
-						borderColor: "#0d9488", // teal-600
-						backgroundColor: "rgba(13,148,136,0.15)",
-						tension: 0.3,
-						fill: true
-					}
-				]
-			},
-			options: {
-				responsive: true,
-				plugins: {
-					legend: { display: false }
-				},
-				scales: {
-					y: { beginAtZero: true }
-				}
-			}
-		});
-	});
+  $: currentTop = topPartners[activeTab];
+  $: currentStats = stats[activeTab];
+  $: filteredTx = transactions.filter(t => t.kind === activeTab);
 </script>
 
-<!-- PAGE CONTAINER -->
-<div class="min-h-screen bg-sky-50 flex justify-center p-6 sm:p-10">
-	<div class="w-full max-w-4xl bg-white p-6 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-teal-500">
 
-		<h1 class="text-3xl font-extrabold text-gray-900 mb-6 text-center">
-			Points & Transactions Dashboard
-		</h1>
 
-		<!-- TABS -->
-		<div class="border-b mb-8 flex gap-6 justify-center">
-			{#each tabs as tab}
-				<button
-					on:click={() => activeTab = tab}
-					class="pb-3 px-3 font-semibold transition border-b-2"
-					class:text-teal-600={activeTab === tab}
-					class:border-teal-600={activeTab === tab}
-					class:text-gray-500={activeTab !== tab}
-					class:border-transparent={activeTab !== tab}
-					class:hover:text-teal-500={activeTab !== tab}
-				>
-					{tab}
-				</button>
-			{/each}
-		</div>
+<div class="min-h-screen bg-gradient-to-br from-sky-50 to-teal-50 p-4 sm:p-6 lg:p-8">
+  <div class="max-w-6xl mx-auto">
+    
+    <div class="mb-8 text-center">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-2">
+        {m.points()}
+      </h1>
+<!--       <p class="text-lg text-gray-600">
+        {m.tx_manage()}
+      </p> -->
+    </div>
 
-		<!-- TAB CONTENT -->
-		{#if activeTab === "Balances"}
-			<h2 class="text-xl font-bold mb-4">Total balance per user</h2>
+    <div class="bg-white rounded-3xl shadow-2xl border-t-4 border-sky-500 overflow-hidden">
+      
+      <div class="border-b border-gray-200 bg-gray-50">
+        <div class="flex">
+          {#each ['exchange', 'donation', 'transfer'] as tab}
+            <button
+              on:click={() => activeTab = tab}
+              class="flex-1 px-6 py-4 text-center font-bold transition-all duration-200 flex items-center justify-center gap-2 uppercase tracking-wider text-sm"
+              class:bg-white={activeTab === tab}
+              class:text-sky-600={activeTab === tab}
+              class:border-b-4={activeTab === tab}
+              class:border-sky-600={activeTab === tab}
+              class:text-gray-500={activeTab !== tab}
+              class:hover:bg-gray-100={activeTab !== tab}>
+              {#if tab === 'exchange'}<ArrowRightLeft class="w-4 h-4"/>{/if}
+              {#if tab === 'donation'}<Heart class="w-4 h-4"/>{/if}
+              {#if tab === 'transfer'}<Send class="w-4 h-4"/>{/if}
+              {tab}
+            </button>
+          {/each}
+        </div>
+      </div>
 
-			<div class="space-y-3">
-				{#each balances as b}
-					<div class="flex justify-between p-4 rounded-xl border shadow-sm bg-sky-50">
-						<span class="font-semibold">{b.user}</span>
-						<span class={b.total >= 0 ? "text-green-600" : "text-red-600"}>
-							{b.total} pts
-						</span>
-					</div>
-				{/each}
-			</div>
+      <div class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-6 flex items-center justify-between">
+            <div>
+              <p class="text-emerald-600 font-bold text-xs uppercase tracking-widest mb-1">Total Given (Out)</p>
+              <h2 class="text-3xl font-black text-emerald-700">{currentStats.giver.toFixed(2)}</h2>
+            </div>
+            <TrendingUp class="w-12 h-12 text-emerald-200" />
+          </div>
+          <div class="bg-sky-50 border border-sky-100 rounded-2xl p-6 flex items-center justify-between">
+            <div>
+              <p class="text-sky-600 font-bold text-xs uppercase tracking-widest mb-1">Total Received (In)</p>
+              <h2 class="text-3xl font-black text-sky-700">{currentStats.getter.toFixed(2)}</h2>
+            </div>
+            <TrendingDown class="w-12 h-12 text-sky-200" />
+          </div>
+        </div>
 
-		{:else if activeTab === "Transactions"}
-			<div class="flex gap-2 mb-4">
-				<input type="date" bind:value={dateFilter} class="input border p-2 rounded-lg" />
-				<input type="number" placeholder="Min value" bind:value={valueFilter} class="input w-32 border p-2 rounded-lg" />
-			</div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="border border-gray-100 rounded-2xl p-4 bg-white shadow-sm">
+                <h3 class="text-sm font-bold text-gray-400 uppercase mb-4">Biggest Recipient</h3>
+                {#if currentTop.biggestGetter}
+                    <a href="/users/{currentTop.biggestGetter.slug}" class="flex items-center gap-4 group">
+                        <div class="relative">
+                            {#if currentTop.biggestGetter.avatar}
+                                <img src={currentTop.biggestGetter.avatar} alt="" class="w-14 h-14 rounded-full border-2 border-sky-500 p-0.5" />
+                            {:else}
+                                <div class="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center"><User /></div>
+                            {/if}
+                            <div class="absolute -bottom-1 -right-1 bg-emerald-500 text-white rounded-full p-1"><ArrowRight class="w-3 h-3"/></div>
+                        </div>
+                        <div>
+                            <p class="font-bold text-gray-900 group-hover:text-sky-600 transition">{currentTop.biggestGetter.username}</p>
+                            <p class="text-xs text-gray-500">{currentTop.biggestGetter.total.toFixed(2)} points total</p>
+                        </div>
+                    </a>
+                {:else}
+                    <p class="text-sm italic text-gray-400">No recipients yet</p>
+                {/if}
+            </div>
 
-			{#each transactions.filter(t => (!dateFilter || t.date >= dateFilter) && (!valueFilter || Math.abs(t.amount) >= valueFilter)) as t}
-				<div class="p-4 border rounded-xl flex justify-between bg-white shadow-sm">
-					<div>
-						<div class="font-semibold">{t.user}</div>
-						<div class="text-xs text-gray-500">{t.date}</div>
-					</div>
+            <div class="border border-gray-100 rounded-2xl p-4 bg-white shadow-sm">
+                <h3 class="text-sm font-bold text-gray-400 uppercase mb-4">Biggest Provider</h3>
+                {#if currentTop.biggestGiver}
+                    <a href="/users/{currentTop.biggestGiver.slug}" class="flex items-center gap-4 group">
+                        <div class="relative">
+                            {#if currentTop.biggestGiver.avatar}
+                                <img src={currentTop.biggestGiver.avatar} alt="" class="w-14 h-14 rounded-full border-2 border-emerald-500 p-0.5" />
+                            {:else}
+                                <div class="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center"><User /></div>
+                            {/if}
+                            <div class="absolute -bottom-1 -right-1 bg-sky-500 text-white rounded-full p-1 rotate-180"><ArrowRight class="w-3 h-3"/></div>
+                        </div>
+                        <div>
+                            <p class="font-bold text-gray-900 group-hover:text-sky-600 transition">{currentTop.biggestGiver.username}</p>
+                            <p class="text-xs text-gray-500">{currentTop.biggestGiver.total.toFixed(2)} points total</p>
+                        </div>
+                    </a>
+                {:else}
+                    <p class="text-sm italic text-gray-400">No providers yet</p>
+                {/if}
+            </div>
+        </div>
 
-					<div class={t.amount > 0 ? "text-red-600" : "text-green-600"}>
-						{t.amount} pts
-					</div>
-				</div>
-			{/each}
-
-		{:else if activeTab === "Stats"}
-			<h2 class="text-xl font-bold mb-4">Statistics</h2>
-
-			<div class="grid grid-cols-2 gap-6 mb-8">
-				<div class="p-4 border rounded-xl bg-sky-50 text-center">
-					<div class="text-sm text-gray-500">Avg resolution time</div>
-					<div class="text-3xl font-bold">4.7 days</div>
-				</div>
-
-				<div class="p-4 border rounded-xl bg-sky-50 text-center">
-					<div class="text-sm text-gray-500">Unique transaction partners</div>
-					<div class="text-3xl font-bold">12</div>
-				</div>
-			</div>
-
-			<!-- CHART -->
-			<div class="p-6 border rounded-2xl bg-white shadow-lg">
-				<h3 class="text-sm text-gray-600 mb-2">Weekly Transaction Volume</h3>
-				<canvas bind:this={chartEl} class="w-full h-64"></canvas>
-			</div>
-
-		{:else}
-			<p class="text-gray-500 text-center">This tab will be customized next.</p>
-		{/if}
-
-	</div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="text-xs font-bold text-gray-400 uppercase border-b border-gray-100">
+                <th class="px-4 py-3">Transaction</th>
+                <th class="px-4 py-3">Role</th>
+                <th class="px-4 py-3">Status</th>
+                <th class="px-4 py-3 text-right">Points</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+              {#each filteredTx as tx}
+                <tr class="hover:bg-gray-50 transition">
+                  <td class="px-4 py-4">
+                    <p class="font-bold text-gray-900">{tx.name}</p>
+                    <p class="text-xs text-gray-400 font-mono">{tx.category}</p>
+                  </td>
+                  <td class="px-4 py-4">
+                    <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter"
+                      class:bg-emerald-100={tx.isGiver} class:text-emerald-700={tx.isGiver}
+                      class:bg-sky-100={!tx.isGiver} class:text-sky-700={!tx.isGiver}>
+                      {tx.isGiver ? 'Giver' : 'Getter'}
+                    </span>
+                  </td>
+                  <td class="px-4 py-4">
+                    <span class="text-sm text-gray-600 italic">{tx.status}</span>
+                  </td>
+                  <td class="px-4 py-4 text-right font-black" class:text-emerald-600={tx.isGiver} class:text-sky-600={!tx.isGiver}>
+                    {tx.isGiver ? '-' : '+'}{tx.points.toFixed(2)}
+                  </td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

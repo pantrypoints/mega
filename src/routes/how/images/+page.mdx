@@ -1,0 +1,51 @@
+<script>
+  const title = "Introduction";
+  const subtitle = "A quick overview of the How-To Guide";
+  const image = "https://picsum.photos/800/600";
+</script>
+
+
+
+<div class="min-h-screen bg-sky-50 flex flex-col items-center p-4 sm:p-8">
+  <div class="w-full max-w-4xl bg-white p-6 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500">
+
+    <a href="/how" class="inline-flex items-center text-sky-600 hover:text-sky-800 transition mb-6 font-medium">
+      ← Back to Topics
+    </a>
+
+    <div class="mb-8">
+      <h1 class="text-4xl font-extrabold text-gray-900 mb-2">{title}</h1>
+      <p class="text-xl font-semibold text-sky-600">{subtitle}</p>
+    </div>
+
+    <div class="overflow-hidden rounded-2xl shadow-xl aspect-[4/3] bg-gray-100 mb-10">
+      <img src={image} alt={title} class="w-full h-full object-cover" />
+    </div>
+
+    <div class="p-5 bg-sky-50 rounded-2xl border-l-4 border-sky-400 mb-8">
+      <p class="text-gray-800">
+        This topic is part of the **How Guide**, helping you understand the system step by step.
+      </p>
+    </div>
+
+    <div class="p-5 bg-gray-50 rounded-2xl border-t border-gray-100 prose max-w-none">
+      <h2>What You Will Learn</h2>
+      <p>
+        This introductory topic covers the essentials you need to begin using this guide effectively.
+      </p>
+
+      <h3>Key Goals</h3>
+      <ul>
+        <li>Understand the purpose of the guide</li>
+        <li>Learn how topics are organized</li>
+        <li>Know how to navigate the documentation efficiently</li>
+      </ul>
+
+      <h3>Next Steps</h3>
+      <p>
+        Once you're ready, continue to <a href="/how/setup">Project Setup</a> to start configuring your environment.
+      </p>
+    </div>
+  </div>
+</div>
+
