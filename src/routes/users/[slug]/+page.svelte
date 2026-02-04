@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { PageData } from './$types';
-  import { HandPlatter, HandHelping, HandHeart, HandCoins, ArrowRightLeft, Heart, Brain, BicepsFlexed, Moon, FlaskConical, Orbit, Sun, HandFist, Flower, Sword, Sparkles, MessageCircle, Users, ArrowLeft, User, Star, Tag, MapPin, Calendar, Mail, Phone } from 'lucide-svelte';
+  import { Pen, HandPlatter, HandHelping, HandHeart, HandCoins, ArrowRightLeft, Heart, Brain, BicepsFlexed, Moon, FlaskConical, Orbit, Sun, HandFist, Flower, Sword, Sparkles, MessageCircle, Users, ArrowLeft, User, Star, Tag, MapPin, Calendar, Mail, Phone } from 'lucide-svelte';
   import { page } from '$app/stores';
   import { m } from '$lib/paraglide/messages.js';
   
@@ -188,6 +188,12 @@
             <MessageCircle class="w-4 h-4" />
             {m.chat()}
           </a>
+        {:else}
+          <a href="/users/{user.slug}/edit" class="my-6 flex items-center justify-center gap-2 bg-teal-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md hover:bg-teal-700 transition transform hover:scale-105 text-center">
+            <Pen class="w-4 h-4" />
+            {m.edit()}
+          </a>        
+
         {/if}
       </div>
       

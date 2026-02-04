@@ -1,35 +1,61 @@
+// gemini fast
 
+import { error, fail, redirect } from '@sveltejs/kit';
+import type { PageServerLoad, Actions } from './$types';
+import { getDb } from '$lib/server/db';
+import { user as userTable } from '$lib/server/db/schema';
+import { eq } from 'drizzle-orm';
 
-// Inside a settings or profile update action
-// export const actions = {
-//     updateSlug: async ({ request, locals }) => {
-//         const session = locals.session;
-//         if (!session) return fail(401);
+export const load: PageServerLoad = async ({ params, platform, locals }) => {
+    // 1. Check authentication
+    if (!locals.user) throw redirect(302, '/login');
 
-//         const data = await request.formData();
-//         const newSlug = (data.get('slug') as string).toLowerCase();
+    const db = getDb(platform?.env);
+    const [foundUser] = await db
+        .select()
+        .from(userTable)
+        .where(eq(userTable.slug, params.slug))
+        .limit(1);
 
-//         // Validate slug format (same as username)
-//         if (!/^[a-z0-9_-]{3,31}$/.test(newSlug)) {
-//             return fail(400, { message: 'Invalid slug format' });
-//         }
+    if (!foundUser) throw error(404, 'User not found');
+    
+    // 2. Authorization: Ensure user is editing themselves
+    if (foundUser.id !== locals.user.id) throw error(403, 'Unauthorized');
 
-//         // Check if the slug is already taken by SOMEONE ELSE
-//         const existing = await db
-//             .select()
-//             .from(table.user)
-//             .where(eq(table.user.slug, newSlug))
-//             .limit(1);
+    return { profile: foundUser };
+};
 
-//         if (existing.length > 0 && existing[0].id !== session.userId) {
-//             return fail(400, { message: 'This slug is already in use' });
-//         }
+export const actions: Actions = {
+    default: async ({ request, params, platform, locals }) => {
+        if (!locals.user) return fail(401);
 
-//         await db.update(table.user)
-//             .set({ slug: newSlug })
-//             .where(eq(table.user.id, session.userId));
+        const formData = await request.formData();
+        const db = getDb(platform?.env);
 
-//         return { success: true };
-//     }
-// };
+        // Extract fields
+        const updateData = {
+            codename: formData.get('codename') as string,
+            pin: formData.get('pin') as string,
+            avatar: formData.get('avatar') as string,
+            gender: formData.get('gender') as string,
+            dateOfBirth: formData.get('dateOfBirth') as string,
+            email: formData.get('email') as string,
+            phone: formData.get('phone') as string,
+            city: formData.get('city') as string,
+            country: formData.get('country') as string,
+            dateModified: new Date().toISOString()
+        };
+
+        try {
+            await db.update(userTable)
+                .set(updateData)
+                .where(eq(userTable.id, locals.user.id));
+        } catch (err) {
+            console.error(err);
+            return fail(500, { message: 'Failed to update profile' });
+        }
+
+        throw redirect(303, `/users/${params.slug}`);
+    }
+};
 
