@@ -42,7 +42,8 @@ const handleAuth: Handle = async ({ event, resolve }) => {
   }
 
   /* 🏁 Public routes allowed without login */
-  const PUBLIC_STARTS = ['/login', '/register', '/api/', '/stats'];
+  const PUBLIC_STARTS = ['/login', '/register', '/api/', '/stats', '/products', '/services', '/products/[id]', '/services/[id]'];
+
   const path = event.url.pathname;
   const isPublic = PUBLIC_STARTS.some(p => path.startsWith(p));
 
@@ -55,3 +56,4 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 
 /* 📌 FINAL COMBINED HANDLER */
 export const handle: Handle = sequence(handleParaglide, handleDatabase, handleAuth);
+

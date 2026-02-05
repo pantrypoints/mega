@@ -40,6 +40,7 @@ async function seed() {
     {name: "Organic Honey", measure: "liter", points: 20.0, category: "0409.00.05", photo1: "/honey.jpg", 
         photo2: "/honey2.jpg", description: "Pure, local, and organic honey from the mountains.", headline: "The Sweetest Deal!", userId: users[0].id },
     {name: "Tomatoes", measure: "kilo", points: 2, category: "0702.00.00", photo1: "/tomatoes.jpg", description: "Home grown tomatoes.", headline: "Fresh and Healthy!", userId: users[4].id },
+    {name: "Stainless Vacuum Black Tumbler", measure: "piece", points: 2, category: "9617.00.00", photo1: "/tumbler.jpg", description: "Stainless Vacuum Black Tumbler with Canva logo.", headline: "From a Canva event", userId: users[4].id },
     {name: "Colored Foldable Hand Fans", measure: "piece", points: 4, category: "3926.90", photo1: "/fan.jpg", description: "Foldable hand fans made of plastic and cloth", headline: "Attractive colors available!", userId: users[5].id }
   ];
   
