@@ -4,9 +4,18 @@
   import { onMount } from 'svelte';
   import type { PageData } from './$types';
   import { m } from '$lib/paraglide/messages.js';
-  
-  // Import the new NAICS assets
   import { naicsSectors, naicsSubsectors, naicsIndustries, getSectorKey } from '$lib/data/naicsData';
+  import ImageKit from 'imagekit-javascript';
+  import { PUBLIC_IMAGEKIT_URL_ENDPOINT, PUBLIC_IMAGEKIT_PUBLIC_KEY } from '$env/static/public';
+
+  // Props in Svelte 5
+  let { data }: { data: PageData } = $props();
+  const { product } = data;
+
+  // State Management
+  let photoUrls = $state([product.photo1 || '', product.photo2 || '', product.photo3 || '']);
+  let uploadingIndices = $state(new Set<number>());
+
 
   export let data: PageData;
   const { service } = data;
@@ -21,9 +30,6 @@
     let photo1 = service.photo1 || '';
     let photo2 = service.photo2 || '';
     let photo3 = service.photo3 || '';
-    let photo4 = service.photo4 || '';
-    let photo5 = service.photo5 || '';
-    let photo6 = service.photo6 || '';
 
 
   let selectedSector = '';
@@ -46,6 +52,34 @@
       }
     }
   });
+
+  const ik = new ImageKit({
+    urlEndpoint: PUBLIC_IMAGEKIT_URL_ENDPOINT,
+    publicKey: PUBLIC_IMAGEKIT_PUBLIC_KEY,
+  });
+
+  async function uploadPhoto(e: Event, index: number) {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    if (file.size > 500 * 1024) { alert("File too large (>500KB)"); return; }
+    
+    uploadingIndices.add(index);
+    try {
+      const authRes = await fetch('/api/imagekit-auth');
+      const authData = await authRes.json();
+      const result = await ik.upload({
+        file,
+        fileName: `edit_prod_${Date.now()}_${index}`,
+        ...authData
+      });
+      photoUrls[index] = result.url;
+    } catch (err) {
+      console.error(err);
+    } finally {
+      uploadingIndices.delete(index);
+    }
+  }
+
 
   // Reactive Lists
   $: availableSubsectors = selectedSector 

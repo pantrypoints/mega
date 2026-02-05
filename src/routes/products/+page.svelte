@@ -116,7 +116,7 @@
                     <input
                         type="search"
                         bind:value={currentSearch}
-                        placeholder="Search by name or description..."
+                        placeholder={m.search_by()}
                         class="w-full p-3 pl-10 border border-gray-300 rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition"
                     />
                     <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -158,45 +158,56 @@
             </div>
         {/if}
 
-        <!-- Product List -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {#if products.length === 0}
-                <p class="text-gray-500 text-center col-span-full py-10">
-                    {m.nothing_found()}
-                </p>
-            {:else}
-                {#each products as product (product.id)}
-                <a href="/products/{product.id}">
-                    <div class="bg-white rounded-2xl shadow-xl overflow-hidden transform transition duration-300 hover:shadow-2xl hover:-translate-y-1">
-                        <!-- Product Image -->
-                        <div class="h-48 overflow-hidden bg-gray-100">
-                            <img
-                                src={product.mainPhoto}
-                                alt={product.name}
-                                class="w-full h-full object-cover transition duration-500 group-hover:scale-105"/>
-                        </div>
 
-                        <!-- Product Info -->
-                        <div class="p-6 space-y-3">
-                            <h3 class="text-xl font-bold text-gray-900 truncate">{product.name}</h3>
-                            <p class="text-sm text-gray-500 line-clamp-2">{product.headline}</p>
-                            <span class="flex items-center text-xs p-2 bg-sky-50 text-sky-600 rounded-full font-medium">
-                                <Tag class="w-3 h-3 mr-1" />
-                                {getHSDescription(product.category)}
-                            </span>
-                            <!-- Price and Category -->
-                            <div class="flex justify-between items-center pt-2 border-t border-gray-100">
-                                <div class="flex items-center text-lg font-extrabold text-orange-600">
-                                    <Star class="w-4 h-4 mr-1 fill-orange-500 text-orange-500" />
-                                    {product.points.toFixed(0)} Points
-                                </div>
+
+<!-- Product List -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {#if products.length === 0}
+        <p class="text-gray-500 text-center col-span-full py-10">
+            {m.nothing_found()}
+        </p>
+    {:else}
+        {#each products as product (product.id)}
+            <a href="/products/{product.id}" class="group block h-full">
+                <!-- Added "h-full" to the link -->
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden transform transition duration-300 hover:shadow-2xl hover:-translate-y-1 flex flex-col h-full">
+                    <!-- Added "flex flex-col h-full" -->
+                    
+                    <!-- Product Image with fixed height -->
+                    <div class="h-48 overflow-hidden bg-gray-100 flex-shrink-0">
+                        <img src={product.mainPhoto} alt={product.name} class="w-full h-full object-cover transition duration-500 group-hover:scale-105"/>
+                    </div>
+                    
+                    <!-- Product Info with flex-grow -->
+                    <div class="p-6 space-y-3 flex-grow flex flex-col">
+                        <h3 class="text-xl font-bold text-gray-900 truncate">{product.name}</h3>
+                        <p class="text-sm text-gray-500 line-clamp-2 flex-grow">{product.headline}</p>
+                        
+                        <!-- Only show category badge if product.category exists and is not empty -->
+                        {#if product.category && product.category.trim()}
+                            <div class="mt-2">
+                                <span class="inline-flex items-center text-xs p-2 bg-sky-50 text-sky-600 rounded-full font-medium">
+                                    <Tag class="w-3 h-3 mr-1" />
+                                    {getHSDescription(product.category)}
+                                </span>
+                            </div>
+                        {/if}
+                        
+                        <!-- Price - pushed to bottom -->
+                        <div class="flex justify-between items-center pt-4 mt-auto border-t border-gray-100">
+                            <div class="flex items-center text-lg font-extrabold text-orange-600">
+                                <Star class="w-4 h-4 mr-1 fill-orange-500 text-orange-500" />
+                                {product.points.toFixed(0)} Points
                             </div>
                         </div>
                     </div>
-                </a>
-                {/each}
-            {/if}
-        </div>
+                </div>
+            </a>
+        {/each}
+    {/if}
+</div>
+
+
     </div>
 </div>
 

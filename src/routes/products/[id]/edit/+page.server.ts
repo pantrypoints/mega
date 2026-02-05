@@ -27,6 +27,9 @@ export const load: PageServerLoad = async ({ params, locals }) => {
   return { product };
 };
 
+
+
+
 export const actions: Actions = {
   default: async ({ request, params, locals }) => {
     const db = locals.db;
@@ -49,9 +52,6 @@ export const actions: Actions = {
     const photo1 = form.get('photo1')?.toString() || null;
     const photo2 = form.get('photo2')?.toString() || null;
     const photo3 = form.get('photo3')?.toString() || null;
-    const photo4 = form.get('photo4')?.toString() || null;
-    const photo5 = form.get('photo5')?.toString() || null;
-    const photo6 = form.get('photo6')?.toString() || null;
 
     // Validate required fields
     if (!name || !points || !measure || !category) {
@@ -71,9 +71,6 @@ export const actions: Actions = {
         photo1,
         photo2,
         photo3,
-        photo4,
-        photo5,
-        photo6,
         dateModified: new Date().toISOString()
       })
       .where(
@@ -86,4 +83,6 @@ export const actions: Actions = {
     throw redirect(303, `/products/${productId}`);
   }
 };
+
+
 

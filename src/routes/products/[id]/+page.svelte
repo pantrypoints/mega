@@ -1,10 +1,13 @@
 <script lang="ts">
   import type { PageData } from './$types';
   import { ArrowLeft, Star, Tag, Ruler, Briefcase, Camera, Handshake, Edit, Trash2 } from 'lucide-svelte';
-
   import { hsChapters, hsSubcategories, hsDetails } from '$lib/data/hsData';
+  import { m } from '$lib/paraglide/messages.js';
 
-  export function getHSDescription(code: string): string {
+  import { fade, scale } from 'svelte/transition';
+  
+
+    export function getHSDescription(code: string): string {
     if (!code) return 'Not Classified';
 
     // 1. Clean the code for logic (remove dots for length checks)
@@ -41,8 +44,7 @@
     currentPhoto = url;
   }
 
-  import { setLocale } from '$lib/paraglide/runtime';
-  import { m } from '$lib/paraglide/messages.js';
+//  let currentPhoto = $state(product.photos[0]);
 
   // Prepare transaction parameters for the URL
   const transactionParams = new URLSearchParams();
@@ -90,7 +92,7 @@
             <form 
                 method="POST" 
                 action="?/delete"
-                on:submit={() => confirm('Delete this product permanently?')}
+                onsubmit={() => confirm('Delete this product permanently?')}
                 use:enhance>
                 <button 
                     type="submit"
@@ -113,29 +115,52 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
       <!-- Image Gallery -->
       <div class="space-y-4">
+
+
+<div class="relative w-full h-96 bg-gray-100 rounded-2xl overflow-hidden mb-4 shadow-inner">
+  {#key currentPhoto}
+    <img
+      in:scale={{ duration: 300, start: 0.95, opacity: 0 }}
+      src={currentPhoto}
+      alt="Selected product"
+      class="w-full h-full object-contain"/>
+  {/key}
+</div>
+
+<div class="flex gap-3 justify-center">
+  {#each product.photos as photo, i (i)}            
+    <button
+      onclick={() => handleThumbnailClick(photo)}
+      class="w-16 h-12 rounded-lg overflow-hidden border-2 transition-all duration-300 transform active:scale-90 focus:outline-none 
+             {photo === currentPhoto ? 'border-teal-500 scale-110 shadow-md' : 'border-transparent opacity-60 hover:opacity-100'}">
+      <img
+        src={photo}
+        alt="Product {i + 1}"
+        class="w-full h-full object-cover"
+      />
+    </button>
+  {/each}
+</div>
+
         <!-- Main Display Image -->
-        <div class="relative overflow-hidden rounded-2xl shadow-xl aspect-[4/3] bg-gray-100">
+<!--         <div class="relative overflow-hidden rounded-2xl shadow-xl aspect-[4/3] bg-gray-100">
           <img
             src={currentPhoto}
             alt={product.name}
             class="w-full h-full object-cover transition-opacity duration-300"
           />
         </div>
-
+ -->
         <!-- Thumbnail Selector -->
-        {#if product.photos.length > 0}
+<!--         {#if product.photos.length > 0}
           <div class="flex flex-wrap gap-2 justify-center p-2 rounded-xl bg-gray-50 border border-gray-100">
             <Camera class="w-5 h-5 text-gray-500 self-center hidden sm:block" />
-
-
-            <!-- {#each product.photos as photo, index (photo)} -->
             {#each product.photos as photo, i (i)}            
               <button
-                on:click={() => handleThumbnailClick(photo)}
+                onclick={() => handleThumbnailClick(photo)}
                 class="w-16 h-12 rounded-lg overflow-hidden border-2 transition-all duration-200 focus:outline-none"
                 class:border-teal-500={photo === currentPhoto}
-                class:border-transparent={photo !== currentPhoto}
-              >
+                class:border-transparent={photo !== currentPhoto}>
                 <img
                   src={photo}
                   alt="Product Image {i + 1}"
@@ -143,9 +168,8 @@
                 />
               </button>
             {/each}
-
           </div>
-        {/if}
+        {/if} -->
       </div>
 
       <!-- Info and Description -->
@@ -171,15 +195,16 @@
             </span>
           </div>
 
-
-
           <div class="flex items-center text-gray-600">
             <!-- <Briefcase class="w-5 h-5 mr-2" /> -->
-            <span class="font-semibold">{m.owner()}:</span>          
-              <img src={owner.avatar || '/user.svg'} 
-                alt="Seller Avatar" 
-                class="w-8 h-8 rounded-full ml-2 object-cover"/>
-            <span class="ml-2 text-sm truncate">{owner.username}</span>
+              <span class="font-semibold">{m.seller()}:</span>
+              <a href={`/users/${owner.slug}`} class="flex items-center ml-2 hover:bg-sky-50 p-1 rounded-lg transition-colors duration-200">
+                <img src={owner.avatar} alt="Seller Avatar" class="w-8 h-8 rounded-full object-cover" />
+                <span class="ml-2 text-sm truncate hover:text-sky-600 transition-colors duration-200">
+                  {owner.username}
+                </span>
+              </a>
+
           </div>
         </div>
       </div>

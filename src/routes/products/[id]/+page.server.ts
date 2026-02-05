@@ -55,6 +55,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
           id: user.id,
           username: user.username,
           avatar: user.avatar,
+          slug: user.slug
         }
       })
       .from(products)
@@ -84,15 +85,13 @@ export const load: PageServerLoad = async ({ params, locals }) => {
           product.photo1,
           product.photo2,
           product.photo3,
-          product.photo4,
-          product.photo5,
-          product.photo6,
         ].filter(url => url),
       },
       owner: {
         id: owner?.id || product.userId,
         username: owner?.username || 'Unknown User',
         avatar: ownerAvatar,
+        slug: owner?.slug
       },
       isOwner,
       currentUserId,
@@ -102,63 +101,3 @@ export const load: PageServerLoad = async ({ params, locals }) => {
     throw error(500, 'Could not load product data due to a server error.');
   }
 };
-
-
-
-
-// export const load: PageServerLoad = async ({ params, platform }) => {
-//     const productId = params.id;
-//     const db = getDb(platform?.env);
-
-//     if (!productId || isNaN(parseInt(productId))) {
-//         throw error(404, 'Invalid Product ID format.');
-//     }
-
-//     try {
-//         // 3. Query the database, joining products with the user table (seller)
-//         const result = await db
-//             .select({
-//                 product: products, // Select all product fields
-//                 ownerAvatar: user.avatar, // 💡 Select the seller's avatar
-//                 ownerName: user.username, // 💡 Select the seller's username (ownerName)
-//             })
-//             .from(products)
-//             // Join products table with user table on the userId column
-//             .innerJoin(user, eq(products.userId, user.id))
-//             .where(eq(products.id, parseInt(productId)))
-//             .limit(1);
-
-//         const row = result[0];
-
-//         // 4. Handle 404 (Product not found)
-//         if (!row) {
-//             throw error(404, 'Product not found.');
-//         }
-
-//         const product = row.product;
-//         const ownerAvatar = row.ownerAvatar; // Extracted owner avatar
-//         const ownerName = row.ownerName; // 💡 Extracted owner name
-
-//         // 5. Return the product data, ownerAvatar, and ownerName
-//         return {
-//             product: {
-//                 // Ensure photo URLs are an array for easy iteration in the Svelte file
-//                 ...product,
-//                 photos: [
-//                     product.photo1, product.photo2, product.photo3, product.photo4, product.photo5, product.photo6,
-//                 ].filter(url => url), // Filter out any null/undefined photos
-//             },
-//             // 💡 Return the ownerAvatar and ownerName so they are accessible in the .svelte file
-//             ownerAvatar: ownerAvatar,
-//             ownerName: ownerName,
-//         };
-//     } catch (e) {
-//         console.error("Database query failed:", e);
-//         // If the error is not a 404, throw a general server error
-//         if (e instanceof Error && (e as any).status === 404) {
-//              throw e;
-//         }
-//         throw error(500, 'Could not load product data due to a server error.');
-//     }
-// };
-

@@ -56,9 +56,6 @@ export const load: PageServerLoad = async ({ params, locals }) => {
           service.photo1,
           service.photo2,
           service.photo3,
-          service.photo4,
-          service.photo5,
-          service.photo6,
         ].filter(url => url),
       },
       owner: {

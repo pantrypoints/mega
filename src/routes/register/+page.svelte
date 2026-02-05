@@ -9,7 +9,6 @@
   import ImageKit from 'imagekit-javascript';
   import { PUBLIC_IMAGEKIT_URL_ENDPOINT, PUBLIC_IMAGEKIT_PUBLIC_KEY } from '$env/static/public';
 
-
   let avatarUrl = $state(''); 
   let uploading = $state(false);
 
@@ -18,30 +17,45 @@
     publicKey: PUBLIC_IMAGEKIT_PUBLIC_KEY,
   });
 
-  async function uploadImage(e: Event) {
-    const file = (e.target as HTMLInputElement).files?.[0];
-    if (!file) return;
 
-    uploading = true;
-    try {
-      // 1. Get auth params from our API
-      const authResponse = await fetch('/api/imagekit-auth');
-      const authData = await authResponse.json();
+    // Define the limit in bytes
+    const MAX_FILE_SIZE = 500 * 1024; 
+    let uploadError = $state(''); // New state for error feedback
 
-      // 2. Upload directly to ImageKit
-      const result = await ik.upload({
-        file,
-        fileName: file.name,
-        ...authData
-      });
+    async function uploadImage(e: Event) {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
 
-      avatarUrl = result.url; // This is the URL we save to the DB
-    } catch (err) {
-      console.error("Upload failed", err);
-    } finally {
-      uploading = false;
+      // Reset errors
+      uploadError = '';
+
+      // Size Validation
+      if (file.size > MAX_FILE_SIZE) {
+        uploadError = 'File is too large. Please select an image under 500KB.';
+        // Clear the input so the user has to pick a new one
+        (e.target as HTMLInputElement).value = ''; 
+        return;
+      }
+
+      uploading = true;
+      try {
+        const authResponse = await fetch('/api/imagekit-auth');
+        const authData = await authResponse.json();
+
+        const result = await ik.upload({
+          file,
+          fileName: file.name,
+          ...authData
+        });
+
+        avatarUrl = result.url;
+      } catch (err) {
+        console.error("Upload failed", err);
+        uploadError = 'Upload failed. Please try again.';
+      } finally {
+        uploading = false;
+      }
     }
-  }
 
 	let { form }: { form: ActionData } = $props();
 
@@ -49,6 +63,14 @@
 	let showPin = false;
 
     let passwordVisible = $state(false);
+
+
+
+
+
+
+
+
 
     function togglePasswordVisibility() {
         passwordVisible = !passwordVisible;
@@ -69,9 +91,11 @@
 </script>
 
 
+
+
 <!-- Main Registration Card -->
 <div class="min-h-screen bg-sky-50 flex items-center justify-center p-4">
-    <div class="w-full max-w-xl bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-teal-500 transform transition duration-500 hover:shadow-3xl">
+    <div class="w-full max-w-xl bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500 transform transition duration-500 hover:shadow-3xl">
         <h1 class="text-3xl font-extrabold text-gray-800 text-center mb-1">{m.create_account()}</h1>
         <p class="text-center text-gray-500 mb-8">{m.enter_details()}</p>
 
@@ -82,7 +106,18 @@
             </p>
         {/if}
 
-        <form method="post" action="?/register" use:enhance class="space-y-6">           
+<form 
+  method="post" 
+  action="?/register" 
+  use:enhance={({ formData }) => {
+    // Manually ensure the latest avatarUrl is in the payload
+    if (avatarUrl) {
+      formData.set('avatar', avatarUrl);
+    }
+  }} 
+  class="space-y-6">
+
+
             <div class="grid grid-cols-1 gap-4">
                 <!-- Username (Standard) -->
                 <label class="block">
@@ -149,7 +184,8 @@
                     <div class="relative mt-1">
                         <input 
                             name="pin"
-                            placeholder="123456"
+                            type='password'
+                            placeholder="••••••"
                             required
                             maxlength="6"
                             class="block w-full pr-12 px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus"
@@ -164,7 +200,8 @@
                     <div class="relative mt-1">
                         <input 
                             name="pinConfirm"
-                            placeholder="123456"
+                            type='password'
+                            placeholder="••••••"
                             required
                             maxlength="6"
                             class="block w-full pr-12 px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus"
@@ -210,21 +247,30 @@
   <span class="text-gray-700 font-medium">Profile Picture</span>
   <div class="mt-2 flex items-center gap-4">
     {#if avatarUrl}
-      <img src={avatarUrl} alt="Preview" class="w-16 h-16 rounded-full object-cover border-2 border-teal-500" />
+      <img src={avatarUrl} alt="Preview" class="w-16 h-16 rounded-full object-cover border-2 border-sky-500" />
     {:else}
-      <div class="w-16 h-16 rounded-full bg-sky-100 flex items-center justify-center text-sky-400">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="Store user ID here" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-        </svg>
-      </div>
+        <div class="w-16 h-16 rounded-full bg-sky-100 flex items-center justify-center text-sky-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+        </div>
     {/if}
-    
-    <input 
-      type="file" 
+
+
+    <input type="file" 
       accept="image/*" 
       onchange={uploadImage} 
-      class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100"
-    />
+      class="text-sm ..."/>
+
+    {#if uploadError}
+      <p class="text-xs text-red-500 mt-2 font-medium">{uploadError}</p>
+    {/if}
+
+    {#if uploading}
+      <p class="text-xs text-teal-600 mt-1 animate-pulse">Uploading image...</p>
+    {/if}
+
+
   </div>
   
   <input type="hidden" name="avatar" value={avatarUrl} />
@@ -281,12 +327,15 @@
             </div>
             
             <!-- Register Button -->
-            <button 
-                class="w-full bg-teal-600 text-white font-bold px-4 py-3 rounded-xl shadow-lg hover:bg-teal-700 
-                       focus:outline-none focus:ring-4 focus:ring-teal-300 transition duration-150 transform hover:scale-[1.01] mt-8"
-                >
+            <button disabled={uploading}
+              class="w-full bg-teal-600 text-white font-bold px-4 py-3 rounded-xl shadow-lg hover:bg-teal-700 focus:outline-none focus:ring-4 focus:ring-teal-300 transition duration-150 transform hover:scale-[1.01] mt-8">
+              {#if uploading}
+                Processing Image...
+              {:else}
                 {m.register_here()}
+              {/if}
             </button>
+
 
             <!-- Back to Login Link -->
             <div class="text-center pt-2">

@@ -44,15 +44,6 @@ export type Session = typeof session.$inferSelect;
 
 export type User = typeof user.$inferSelect;
 
-// export const message = sqliteTable('message', {
-//   id: text('id').primaryKey(),
-//   content: text('content').notNull(),
-//   sender: text('sender').notNull().references(() => user.id),
-//   receiver: text('receiver').notNull().references(() => user.id),
-//   dateCreated: text('date_created').default(sql`(CURRENT_TIMESTAMP)`),
-//   isRead: integer('is_read', { mode: 'boolean' }).default(sql`0`),
-// });
-
 
 export const message = sqliteTable('message', {
   id: text('id').primaryKey(),
@@ -82,9 +73,6 @@ export const products = sqliteTable('products', {
   photo1: text('photo1'),
   photo2: text('photo2'),
   photo3: text('photo3'),
-  photo4: text('photo4'),
-  photo5: text('photo5'),
-  photo6: text('photo6'),
   description: text('description'),
   headline: text('headline'),
   userId: text('user_id').notNull().references(() => user.id),
@@ -101,9 +89,6 @@ export const services = sqliteTable('services', {
   photo1: text('photo1'),
   photo2: text('photo2'),
   photo3: text('photo3'),
-  photo4: text('photo4'),
-  photo5: text('photo5'),
-  photo6: text('photo6'),
   description: text('description'),
   headline: text('headline'),
   userId: text('user_id').notNull().references(() => user.id),
@@ -120,9 +105,6 @@ export const requests = sqliteTable('requests', {
   photo1: text('photo1'),
   photo2: text('photo2'),
   photo3: text('photo3'),
-  photo4: text('photo4'),
-  photo5: text('photo5'),
-  photo6: text('photo6'),
   description: text('description'),
   headline: text('headline'),
   userId: text('user_id').notNull().references(() => user.id),
@@ -139,9 +121,6 @@ export const wishes = sqliteTable('wishes', {
   photo1: text('photo1'),
   photo2: text('photo2'),
   photo3: text('photo3'),
-  photo4: text('photo4'),
-  photo5: text('photo5'),
-  photo6: text('photo6'),
   description: text('description'),
   headline: text('headline'),
   userId: text('user_id').notNull().references(() => user.id),
@@ -169,3 +148,4 @@ export const transactions = sqliteTable('transactions', {
   dateCreated: text('date_created').default(sql`(CURRENT_TIMESTAMP)`),
   dateModified: text('date_modified').default(sql`(CURRENT_TIMESTAMP)`)
 });
+

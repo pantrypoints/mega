@@ -5,6 +5,8 @@ import { eq, or } from 'drizzle-orm';
 import * as auth from '$lib/server/auth';
 import * as table from '$lib/server/db/schema';
 import type { Actions, PageServerLoad } from './$types';
+import { m } from '$lib/paraglide/messages.js';
+
 
 const saltRounds = 10;
 
@@ -17,6 +19,7 @@ export const actions: Actions = {
 	register: async (event) => {
 		const db = event.locals.db;
 		const form = await event.request.formData();
+
 		
 		// Extract form data
 		const username = form.get('username');
@@ -26,10 +29,12 @@ export const actions: Actions = {
 		const password = form.get('password');
 		const passwordConfirm = form.get('passwordConfirm');
 		const genderInput = form.get('gender') as string | null;
+
+
 		
 		// Validate required fields are not null
 		if (!username || !codename || !pin || !pinConfirm || !password || !passwordConfirm) {
-			return fail(400, { message: 'All required fields must be provided' });
+			return fail(400, { message: m.error_all_fields() });
 		}
 
 		// Convert to string for validation
@@ -44,17 +49,19 @@ export const actions: Actions = {
 		const slug = usernameStr.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 		// ---------- VALIDATION ----------
-		if (!validateUsername(usernameStr)) return fail(400, { message: 'Invalid username' });
+		if (!validateUsername(usernameStr)) return fail(400, { message: m.error_invalid_username() });
 		if (!validateCodename(codenameStr)) return fail(400, { message: 'Invalid codename' });
 		if (!validatePassword(passwordStr)) return fail(400, { message: 'Password too weak' });
 		if (!validatePIN(pinStr)) return fail(400, { message: 'Invalid PIN' });
 		if (passwordStr !== passwordConfirmStr) return fail(400, { message: 'Passwords do not match' });
 		if (pinStr !== pinConfirmStr) return fail(400, { message: 'PIN does not match' });
 
-		// Gender Validation and Normalization
-		if (!genderInput || genderInput === 'Select Gender') {
-			return fail(400, { message: 'Gender selection is required.' });
-		}
+	    // Gender Validation
+	    if (!genderInput || genderInput === 'Select Gender' || genderInput === '') {
+	      return fail(400, { message: m.error_gender_required() });
+	    }
+
+
 		
 		let normalizedGender: 'm' | 'f' | null = null;
 		const lowerCaseGender = genderInput.toLowerCase();
