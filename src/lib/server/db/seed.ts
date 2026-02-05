@@ -1,5 +1,5 @@
 import { getDb } from './index';
-import { user, products, services, posts } from './schema';
+import { user, products, services, posts, transactions } from './schema'; // Add transactions here
 import { nanoid } from 'nanoid';
 import bcrypt from 'bcryptjs';
 import { sql } from 'drizzle-orm';
@@ -7,12 +7,12 @@ import { sql } from 'drizzle-orm';
 const db = getDb();
 
 
-
 async function seed() {
   console.log("🌱 Seeding database...");
 
   // --- 1. CLEAR TABLES ---
-  // Ensure child tables are deleted first due to foreign key constraints
+  // The order matters: Children first, then Parents.
+  await db.delete(transactions); // <--- ADD THIS LINE FIRST
   await db.delete(products);
   await db.delete(services);
   await db.delete(posts);

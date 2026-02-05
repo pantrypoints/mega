@@ -110,6 +110,44 @@ export const services = sqliteTable('services', {
   dateModified: text('date_modified').default(sql`(CURRENT_TIMESTAMP)`)
 });
 
+export const requests = sqliteTable('requests', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  name: text('name').notNull(),
+  measure: text('measure').notNull(),
+  points: real('points').notNull(),
+  category: text('category').notNull(), // MCC Code
+  photo1: text('photo1'),
+  photo2: text('photo2'),
+  photo3: text('photo3'),
+  photo4: text('photo4'),
+  photo5: text('photo5'),
+  photo6: text('photo6'),
+  description: text('description'),
+  headline: text('headline'),
+  userId: text('user_id').notNull().references(() => user.id),
+  dateCreated: text('date_created').default(sql`(CURRENT_TIMESTAMP)`),
+  dateModified: text('date_modified').default(sql`(CURRENT_TIMESTAMP)`)
+});
+
+export const wishes = sqliteTable('wishes', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  name: text('name').notNull(),
+  measure: text('measure').notNull(),
+  points: real('points').notNull(),
+  category: text('category').notNull(),
+  photo1: text('photo1'),
+  photo2: text('photo2'),
+  photo3: text('photo3'),
+  photo4: text('photo4'),
+  photo5: text('photo5'),
+  photo6: text('photo6'),
+  description: text('description'),
+  headline: text('headline'),
+  userId: text('user_id').notNull().references(() => user.id),
+  dateCreated: text('date_created').default(sql`(CURRENT_TIMESTAMP)`),
+  dateModified: text('date_modified').default(sql`(CURRENT_TIMESTAMP)`)
+});
+
 export const transactions = sqliteTable('transactions', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   name: text('name').notNull(),

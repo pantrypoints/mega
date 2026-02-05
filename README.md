@@ -10,6 +10,9 @@ todo:
 - points system
 - prod serv new edit del 
 
+requests
+seekings
+
 
 Use locals.db for your load functions and Actions.
 
@@ -21,6 +24,19 @@ Use getDb() directly ONLY for standalone scripts (like seed.ts or migration runn
     "summary": "نستخدم الروابط المباشرة لعرض الصور"
   }
 
+
+requests
+
+
+
+which is better for product and service: need a product, need a service, want a product, want a service
+
+wish for product, wish for service, request for product, request for service, demand for service, demand for product
+
+wish product
+requests service 
+
+need a product 
   
 <!-- <Tag class="w-3 h-3 mr-1" />  -->
 
@@ -979,3 +995,13 @@ the view has 3 tabs: exchange, donation, transfer. use this style:
       </div>
 
 each tab will show user which has biggest getter points where current user is giver, and which has the biggest giver points where the current user is the getter
+
+
+
+i reseed the db in local no problems via:
+
+bun run db:generate && bun run db:push && bun run src/lib/server/db/seed.ts
+
+but when i run it on turso db online, i get error:
+
+❌ Seeding failed: 38 |   async queryWithCache(queryString, params, query) {39 |     if (this.cache === void 0 || is(this.cache, NoopCache) || this.queryMetadata === void 0) {40 |       try {41 |         return await query(); 42 |       } catch (e) {43 |         throw new DrizzleQueryError(queryString, params, e); ^ error: Failed query: delete from "user" params: query: "delete from \"user\"", params: [], at queryWithCache (/home/jun/svelte/mega/node_modules/drizzle-orm/sqlite-core/session.js:43:15) 274 |     return new ResultSetImpl(columns, columnTypes, rows, rowsAffected, lastInsertRowid); 275 | } 276 | export function mapHranaError(e) {277 |     if (e instanceof hrana.ClientError) {278 |         const code = mapHranaErrorCode(e); 279 |         return new LibsqlError(e.message, code, undefined, e); ^ LibsqlError: SQLITE_CONSTRAINT: SQLite error: FOREIGN KEY constraint failed rawCode: undefined, code: "SQLITE_CONSTRAINT" at mapHranaError (/home/jun/svelte/mega/node_modules/@libsql/client/lib-esm/hrana.js:279:16) at <anonymous> (/home/jun/svelte/mega/node_modules/@libsql/client/lib-esm/http.js:84:23) 42 |         } 43 |     } 44 |     return row; 45 | } 46 | export function errorFromProto(error) {47 |     return new ResponseError(error.message, error); ^ ResponseError: SQLite error: FOREIGN KEY constraint failed proto: {message: "SQLite error: FOREIGN KEY constraint failed", code: "SQLITE_CONSTRAINT", }, code: "SQLITE_CONSTRAINT"
