@@ -31,6 +31,7 @@ export const user = sqliteTable('user', {
   dateModified: text('date_modified').default(sql`(CURRENT_TIMESTAMP)`)
 });
 
+
 export const session = sqliteTable('session', {
 	id: text('id').primaryKey(),
 	userId: text('user_id')

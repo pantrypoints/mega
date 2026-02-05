@@ -5,6 +5,44 @@
     import { setLocale } from '$lib/paraglide/runtime';
     import { m } from '$lib/paraglide/messages.js';
 
+
+  import ImageKit from 'imagekit-javascript';
+  import { PUBLIC_IMAGEKIT_URL_ENDPOINT, PUBLIC_IMAGEKIT_PUBLIC_KEY } from '$env/static/public';
+
+
+  let avatarUrl = $state(''); 
+  let uploading = $state(false);
+
+  const ik = new ImageKit({
+    urlEndpoint: PUBLIC_IMAGEKIT_URL_ENDPOINT,
+    publicKey: PUBLIC_IMAGEKIT_PUBLIC_KEY,
+  });
+
+  async function uploadImage(e: Event) {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    uploading = true;
+    try {
+      // 1. Get auth params from our API
+      const authResponse = await fetch('/api/imagekit-auth');
+      const authData = await authResponse.json();
+
+      // 2. Upload directly to ImageKit
+      const result = await ik.upload({
+        file,
+        fileName: file.name,
+        ...authData
+      });
+
+      avatarUrl = result.url; // This is the URL we save to the DB
+    } catch (err) {
+      console.error("Upload failed", err);
+    } finally {
+      uploading = false;
+    }
+  }
+
 	let { form }: { form: ActionData } = $props();
 
 	let showPassword = false;
@@ -158,14 +196,46 @@
 
             <div class="grid grid-cols-1 gap-4">
                 <!-- Avatar -->
-                <label class="block">
+                <!-- <label class="block">
                     <span class="text-gray-700 font-medium">Avatar URL</span>
                     <input 
                         name="avatar" 
                         placeholder="https://example.com/avatar.png"
                         class="mt-1 block w-full px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus"
                     />
-                </label>
+                </label> -->
+
+
+<label class="block">
+  <span class="text-gray-700 font-medium">Profile Picture</span>
+  <div class="mt-2 flex items-center gap-4">
+    {#if avatarUrl}
+      <img src={avatarUrl} alt="Preview" class="w-16 h-16 rounded-full object-cover border-2 border-teal-500" />
+    {:else}
+      <div class="w-16 h-16 rounded-full bg-sky-100 flex items-center justify-center text-sky-400">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="Store user ID here" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+      </div>
+    {/if}
+    
+    <input 
+      type="file" 
+      accept="image/*" 
+      onchange={uploadImage} 
+      class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100"
+    />
+  </div>
+  
+  <input type="hidden" name="avatar" value={avatarUrl} />
+  
+  {#if uploading}
+    <p class="text-xs text-teal-600 mt-1 animate-pulse">Uploading image...</p>
+  {/if}
+</label>
+
+
+
 
                 <!-- Date of Birth -->
                 <label class="block">
