@@ -2,7 +2,7 @@
   import favicon from '$lib/assets/favicon.svg';
   import { enhance } from '$app/forms';
   import type { PageServerData } from './$types';
-  import { ListChecks, Bell, MessageCircle, LogOut, ScrollText, ChartNoAxesCombined, CircleQuestionMark, Megaphone, Shirt, Utensils, Users, User, Tally5 } from 'lucide-svelte';
+  import { HandHelping, HandCoins, ListChecks, Bell, MessageCircle, LogOut, ScrollText, ChartNoAxesCombined, CircleQuestionMark, Megaphone, Shirt, Utensils, Users, User, Tally5 } from 'lucide-svelte';
   import Lang from '$lib/components/Lang.svelte';
   import { m } from '$lib/paraglide/messages.js';
   
@@ -71,7 +71,27 @@
           {m.services()}
         </div>
       </a>
-      
+
+
+      <a href="/wishes" class="bg-sky-50 border border-sky-200 p-3 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center min-h-24 flex flex-col justify-center items-center">
+        <div class="p-2 mb-1">
+          <HandCoins class="w-10 h-10 sm:w-12 sm:h-12 text-gray-500" />
+        </div>
+        <div class="text-gray-800 font-semibold text-xs sm:text-sm whitespace-nowrap">
+          {m.services()}
+        </div>
+      </a>
+
+      <a href="/requests" class="bg-sky-50 border border-sky-200 p-3 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center min-h-24 flex flex-col justify-center items-center">
+        <div class="p-2 mb-1">
+          <HandHelping class="w-10 h-10 sm:w-12 sm:h-12 text-gray-500" />
+        </div>
+        <div class="text-gray-800 font-semibold text-xs sm:text-sm whitespace-nowrap">
+          {m.services()}
+        </div>
+      </a>
+
+
       <!-- 4. Points Card (Tally5) -->
       <a href="/points" class="bg-sky-50 border border-sky-200 p-3 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center min-h-24 flex flex-col justify-center items-center">
         <div class="p-2 mb-1">
