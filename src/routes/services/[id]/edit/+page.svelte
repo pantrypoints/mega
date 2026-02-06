@@ -10,31 +10,52 @@
 
   // Props in Svelte 5
   let { data }: { data: PageData } = $props();
-  const { product } = data;
-
-  // State Management
-  let photoUrls = $state([product.photo1 || '', product.photo2 || '', product.photo3 || '']);
-  let uploadingIndices = $state(new Set<number>());
-
-
-  export let data: PageData;
+  // export let data: PageData;
   const { service } = data;
 
-  let name = service.name;
-  let headline = service.headline || '';
-  let description = service.description || '';
-  let points = String(service.points);
-  let measure = service.measure;
-  let category = service.category || ''; 
+  // State Management
+  let photoUrls = $state([service.photo1 || '', service.photo2 || '', service.photo3 || '']);
+  let uploadingIndices = $state(new Set<number>());
 
-    let photo1 = service.photo1 || '';
-    let photo2 = service.photo2 || '';
-    let photo3 = service.photo3 || '';
+  let name = $state(service.name);
+  let headline = $state(service.headline || '');
+  let description = $state(service.description || '');
+  let points = $state(String(service.points));
+  let measure = $state(service.measure);
+  let category = $state(service.category || '');
+  let selectedSector = $state('');
+  let selectedSubsector = $state('');
+  let selectedIndustry = $state('');
+
+  // --- REPLACEMENT FOR $: ---
+
+  // Reactive Lists using $derived
+  const availableSubsectors = $derived(
+    selectedSector
+      ? Object.entries(naicsSubsectors[selectedSector] || {}).map(([code, name]) => ({ code, name }))
+      : []
+  );
+
+  const availableIndustries = $derived(
+    selectedSubsector
+      ? Object.entries(naicsIndustries[selectedSubsector] || {}).map(([code, name]) => ({ code, name }))
+      : []
+  );
+
+  // Sync Category with deepest selection using $effect
+  $effect(() => {
+    if (selectedIndustry) {
+      category = selectedIndustry;
+    } else if (selectedSubsector) {
+      category = selectedSubsector;
+    } else {
+      category = selectedSector;
+    }
+  });
 
 
-  let selectedSector = '';
-  let selectedSubsector = '';
-  let selectedIndustry = '';
+
+
 
   onMount(() => {
     if (category) {
@@ -80,22 +101,6 @@
     }
   }
 
-
-  // Reactive Lists
-  $: availableSubsectors = selectedSector 
-    ? Object.entries(naicsSubsectors[selectedSector] || {}).map(([code, name]) => ({ code, name })) 
-    : [];
-  
-  $: availableIndustries = selectedSubsector 
-    ? Object.entries(naicsIndustries[selectedSubsector] || {}).map(([code, name]) => ({ code, name })) 
-    : [];
-
-  // Sync Category with deepest selection
-  $: {
-    if (selectedIndustry) category = selectedIndustry;
-    else if (selectedSubsector) category = selectedSubsector;
-    else category = selectedSector;
-  }
 
   function resetSub() { selectedSubsector = ''; selectedIndustry = ''; }
   function resetInd() { selectedIndustry = ''; }
@@ -143,7 +148,7 @@
         <div class="mb-4">
           <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Sector</label>
           <div class="relative">
-            <select bind:value={selectedSector} on:change={resetSub} class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white appearance-none pr-10 outline-none focus:border-teal-500">
+            <select bind:value={selectedSector} onchange={resetSub} class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white appearance-none pr-10 outline-none focus:border-teal-500">
               <option value="">-- Select Sector --</option>
               {#each Object.entries(naicsSectors) as [code, label]}
                 <option value={code}>{code} - {label}</option>
@@ -157,7 +162,7 @@
           <div class="mb-4">
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Subsector</label>
             <div class="relative">
-              <select bind:value={selectedSubsector} on:change={resetInd} class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white appearance-none pr-10 outline-none focus:border-teal-500">
+              <select bind:value={selectedSubsector} onchange={resetInd} class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white appearance-none pr-10 outline-none focus:border-teal-500">
                 <option value="">-- Select Subsector --</option>
                 {#each availableSubsectors as sub}
                   <option value={sub.code}>{sub.code} - {sub.name}</option>
@@ -191,28 +196,43 @@
 
 
             <h2 class="text-xl font-bold text-teal-700 mt-6 flex items-center gap-1"><Image class="w-5 h-5"/> Image Gallery URLs (Optional)</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-
-                {#each [
-                    { label: 'Primary Photo URL', name: 'photo1', bind: photo1 },
-                    { label: 'Photo 2 URL', name: 'photo2', bind: photo2 },
-                    { label: 'Photo 3 URL', name: 'photo3', bind: photo3 },
-                    { label: 'Photo 4 URL', name: 'photo4', bind: photo4 },
-                    { label: 'Photo 5 URL', name: 'photo5', bind: photo5 },
-                    { label: 'Photo 6 URL', name: 'photo6', bind: photo6 },
-                ] as field}
-                    <div>
-                        <label for={field.name} class="block text-sm font-medium text-gray-700 mb-1">{field.label}</label>
-                        <input
-                            type="text"
-                            name={field.name}
-                            id={field.name}
-                            bind:value={field.bind}
-                            placeholder="https://placehold.co/..."
-                            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-teal-500 focus:border-teal-500 transition duration-150"
-                        />
-                    </div>
-                {/each}
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
+              {#each [0, 1, 2] as i}
+                <div class="space-y-2">
+                  <label class="block text-sm font-semibold text-gray-700">
+                    {i === 0 ? 'Primary Photo' : `Photo ${i + 1}`}
+                  </label>
+                  
+                  <div class="relative h-40 w-full bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center overflow-hidden group">
+                    {#if photoUrls[i]}
+                      <img src={photoUrls[i]} alt="Preview" class="w-full h-full object-cover" />
+                      <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-2">
+                         <button 
+                          type="button" 
+                          onclick={() => photoUrls[i] = ''} 
+                          class="bg-red-500 text-white p-2 rounded-full shadow-lg hover:bg-red-600"
+                        >✕</button>
+                      </div>
+                    {:else}
+                      <Image class="w-8 h-8 text-gray-400" />
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        onchange={(e) => uploadPhoto(e, i)} 
+                        class="absolute inset-0 opacity-0 cursor-pointer"
+                      />
+                    {/if}
+                    
+                    {#if uploadingIndices.has(i)}
+                      <div class="absolute inset-0 bg-white/80 flex items-center justify-center">
+                        <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-teal-500"></div>
+                      </div>
+                    {/if}
+                  </div>
+                  
+                  <input type="hidden" name="photo{i + 1}" value={photoUrls[i]} />
+                </div>
+              {/each}
             </div>
 
 
@@ -226,9 +246,3 @@
     </form>
   </div>
 </div>
-
-
-
-
-
-
