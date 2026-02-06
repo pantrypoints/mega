@@ -71,6 +71,13 @@
       "when": 1770190100025,
       "tag": "0009_parched_polaris",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1770358288338,
+      "tag": "0010_remarkable_slayback",
+      "breakpoints": true
     }
   ]
 }

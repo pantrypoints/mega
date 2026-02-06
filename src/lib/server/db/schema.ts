@@ -1,6 +1,8 @@
 // src/lib/server/db/schema.ts
 import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core';
 import { sql } from 'drizzle-orm';
+import { v4 as uuidv4 } from 'uuid'; // Standard for unique log IDs
+
 
 export const user = sqliteTable('user', {
   id: text('id').primaryKey(),
@@ -149,3 +151,13 @@ export const transactions = sqliteTable('transactions', {
   dateModified: text('date_modified').default(sql`(CURRENT_TIMESTAMP)`)
 });
 
+
+export const tracker = sqliteTable('tracker', {
+  // We use a unique ID for every single log entry
+  logId: text('log_id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  emailId: text('email_id'), // The ID of the specific email/campaign
+  title: text('title'),
+  country: text('country'),
+  device: text('device'),
+  dateCreated: text('date_created').default(sql`(CURRENT_TIMESTAMP)`)
+});

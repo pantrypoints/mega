@@ -42,10 +42,19 @@ need a product
 
 replace argon2 with bycriptjs 
 
+# seed
 bun run db:generate && bun run db:push && bun run src/lib/server/db/seed.ts
 bun run db:seed
 bun src/lib/server/db/seed.ts
 
+# tracker
+<img 
+  src="https://lp.pantrypoints.com/api/track/welcome-email-001?title=Welcome%20Campaign" 
+  width="1" 
+  height="1" 
+  style="display:none !important;" 
+  alt=""
+/>
 
 <<<<<<< HEAD
 db error on cloudflare --> redeploy
