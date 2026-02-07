@@ -1,7 +1,8 @@
 import { getDb } from '$lib/server/db';
-import { services } from '$lib/server/db/schema';
+import { requests } from '$lib/server/db/schema';
 import { like, sql, asc, desc } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
+
 
 
 // Define the shape of the sort parameter
@@ -9,7 +10,7 @@ type SortKey = 'name' | 'points' | 'dateCreated';
 type SortDirection = 'asc' | 'desc';
 
 
-// This function loads the list of services with search, sort, and filter capabilities.
+// This function loads the list of requests with search, sort, and filter capabilities.
 export const load: PageServerLoad = async ({ url, platform }) => {
     const db = getDb(platform?.env);
 
@@ -17,6 +18,7 @@ export const load: PageServerLoad = async ({ url, platform }) => {
     const search = url.searchParams.get('search') || '';
     const sort = (url.searchParams.get('sort') as SortKey) || 'dateCreated';
     const direction = (url.searchParams.get('direction') as SortDirection) || 'desc';
+
 
     // --- 2. Build Query Filters ---
     let whereClause = undefined;
@@ -28,20 +30,20 @@ export const load: PageServerLoad = async ({ url, platform }) => {
 
     // --- 3. Determine Sorting Order ---
     let orderByClause: any = undefined;
-    const sortColumn = services[sort];
+    const sortColumn = requests[sort];
 
     if (sortColumn) {
         orderByClause = direction === 'asc' ? asc(sortColumn) : desc(sortColumn);
     } else {
         // Fallback to default sort if an invalid column is provided
-        orderByClause = desc(services.dateCreated);
+        orderByClause = desc(requests.dateCreated);
     }
 
     try {
         // --- 4. Execute Query ---
         const result = await db
             .select()
-            .from(services)
+            .from(requests)
             .where(whereClause)
             .orderBy(orderByClause);
 
@@ -53,7 +55,7 @@ export const load: PageServerLoad = async ({ url, platform }) => {
 
         // 5. Return the product list and current search/sort state
         return {
-            services: serviceList,
+            requests: serviceList,
             search,
             sort,
             direction,
@@ -62,12 +64,11 @@ export const load: PageServerLoad = async ({ url, platform }) => {
         console.error("Database query failed:", e);
         // Return an empty list or an error message on failure
         return {
-            services: [],
+            requests: [],
             search,
             sort,
             direction,
-            error: 'Failed to load services. Please check the database connection.',
+            error: 'Failed to load requests. Please check the database connection.',
         };
     }
 };
-

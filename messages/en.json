@@ -14,6 +14,7 @@
 	"back_to_posts": "Back to Posts", 
 	"back_to_products": "Back to Products",
 	"back_to_services": "Back to Services",
+	"back_to_requests": "Back to Requests",
 	"back_to_users": "Back to Users",
 	"balance": "Balance",
 	"barter_do": "Make Barter Transaction",
@@ -35,6 +36,8 @@
 	"create_account": "Create your Account",
 	"create_post": "Create Post",
 	"create_product": "Create New Product",
+	"create_request": "Create New Request",
+	"create_wish": "Create New Wish",
 	"create_service": "Create New Service",
 	"date": "Date",
 	"description": "Description",
@@ -103,6 +106,7 @@
 	"recent_posts": "Recent Posts",
 	"register_here": "Register here",
 	"required": "Required",
+	"requests": "Requests",
 	"role": "Role",
 	"sales": "Sales (Credits)",
 	"save_changes": "Save Changes",
@@ -140,6 +144,7 @@
 	"visible": "Publicly Visible",
 	"welcome": "Welcome!",
 	"whats_up" : "What's happening?",
+	"wishes": "Wishes",
 	"quiz_q1": "I often follow my emotions rather than logic.",
 	"quiz_q2": "Connecting with others on a deep level is a priority for me.",
 	"quiz_q3": "I enjoy solving complex analytical puzzles.",
@@ -170,3 +175,4 @@
 	"back_to_home": "Back to Home",
 	"personality_quiz": "Personality Quiz"
 }
+

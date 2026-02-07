@@ -40,7 +40,7 @@
 
 
 <svelte:head>
-  <title>Service: {service.name}</title>
+  <title>{m.requests()}: {service.name}</title>
 </svelte:head>
 
 
@@ -50,7 +50,7 @@
     <a href="/services"
       class="inline-flex items-center text-sky-600 hover:text-sky-800 transition mb-6 font-medium">
       <ArrowLeft class="w-4 h-4 mr-1" />
-        {m.back_to_services()}
+        {m.back_to_requests()}
     </a>
 
     <!-- Header & Owner Controls -->

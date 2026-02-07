@@ -6,7 +6,7 @@
     import { m } from '$lib/paraglide/messages.js';
 
     export let data: PageData;
-    $: ({ services, search, sort, direction, error } = data);
+    $: ({ requests, search, sort, direction, error } = data);
 
     let currentSearch = search;
     
@@ -23,7 +23,7 @@
         // Preserve sorting parameters
         params.set('sort', sort);
         params.set('direction', direction);
-        goto(`/services?${params.toString()}`);
+        goto(`/requests?${params.toString()}`);
     }
 
     /** Updates the sorting order and direction */
@@ -47,8 +47,9 @@
             params.set('search', currentSearch);
         }
 
-        goto(`/services?${params.toString()}`);
+        goto(`/requests?${params.toString()}`);
     }
+
 
     /** Helper to render the sort arrow */
     function getSortArrow(key: string) {
@@ -57,8 +58,9 @@
     }
 </script>
 
+
 <svelte:head>
-    <title>Services</title>
+    <title>{m.requests()}</title>
 </svelte:head>
 
 
@@ -69,12 +71,12 @@
         <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl border-t-4 border-sky-500 mb-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                 <div>
-                    <h1 class="text-3xl font-extrabold text-gray-800">{m.services()}</h1>
+                    <h1 class="text-3xl font-extrabold text-gray-800">{m.requests()}</h1>
                     <!-- <p class="text-gray-500 mt-1">Browse and manage services</p> -->
                 </div>
-                <a href="/services/new"
+                <a href="/requets/new"
                     class="w-full sm:w-auto bg-teal-500 hover:bg-teal-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition duration-300 transform hover:scale-105 text-center">
-                    {m.create_service()}
+                    {m.create_request()}
                 </a>
             </div>
 
@@ -123,15 +125,17 @@
             </div>
         {/if}
 
-        <!-- Services List -->
+        <!-- Requests List -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {#if services.length === 0}
+            {#if requests.length === 0}
                 <p class="text-gray-500 text-center col-span-full py-10">
                     No services found matching your criteria. Try adjusting your search!
+
+
                 </p>
             {:else}
-                {#each services as service (service.id)}
-                <a href="/services/{service.id}">
+                {#each requests as service (service.id)}
+                <a href="/requests/{service.id}">
                     <div class="bg-white rounded-2xl shadow-xl overflow-hidden transform transition duration-300 hover:shadow-2xl hover:-translate-y-1">
                         <!-- service Image -->
                         <div class="h-48 overflow-hidden bg-gray-100">

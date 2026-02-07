@@ -1,5 +1,5 @@
 import { getDb } from './index';
-import { user, products, services, posts, transactions, tracker } from './schema';
+import { user, products, services, posts, transactions, tracker, wishes, requests } from './schema';
 import { nanoid } from 'nanoid';
 import bcrypt from 'bcryptjs';
 import { sql } from 'drizzle-orm';
@@ -23,6 +23,8 @@ async function seed() {
     // 3. Clear EVERYTHING (Order doesn't matter now because FK is OFF)
     await db.delete(tracker); 
     await db.delete(transactions);
+    await db.delete(wishes); 
+    await db.delete(requests); 
     await db.delete(products);
     await db.delete(services);
     await db.delete(posts);
@@ -67,6 +69,22 @@ async function seed() {
       {name: "Office Cleaning Services", measure: "day", points: 10.0, category: "561720", photo1: "/office2.jpg", description: "We do office cleaning.", headline: "Professional Office Cleaning.", userId: users[0].id },
       {name: "Yoga lessons", measure: "hour", points: 10.0, category: "713940", photo1: "/yoga.jpg", description: "We do ashtanga yoga.", headline: "Ashtanga yoga is part of the 8 limbs of yoga.", userId: users[0].id }
     ]).returning({ id: services.id }); // Get the IDs of the newly inserted services
+
+
+    // --- CREATE WISHES ---
+    const wishesToInsert = [
+      {name: "Wired Headset with Mic", measure: "unit", points: 6.0, category: "8518.30.00", photo1: "/headset.jpg", description: "I need a Wired Headset with Mic for Zoom calls.", headline: "Wired Headset with Mic for Zoom calls", userId: users[4].id }
+    ];
+    
+    await db.insert(wishes).values(wishesToInsert);
+
+
+    // --- CREATE REQYESTS ---
+    const reqsToInsert = [
+      {name: "Caregiver to care for my father", measure: "shift", points: 20.0, category: "624120", photo1: "/nurse.jpg", description: "I need a Caregiver to care for my father.", headline: "Caregiver needed", userId: users[4].id }
+    ];
+    
+    await db.insert(requests).values(reqsToInsert);
 
 
     // --- 5. CREATE POSTS ---

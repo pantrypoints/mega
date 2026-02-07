@@ -8,7 +8,7 @@
         'en': 'English',
         'es': 'Español',             // Spanish
         //'fr': 'Français',            // French
-        'ps': 'پښتو (Pashto)',       // Pashto
+        // 'ps': 'پښتو (Pashto)',       // Pashto
         // 'ru': 'Русский (Russkiy)',   // Russian
         'tl': 'Tagalog',             // Tagalog/Filipino
         'vi': 'Tiếng Việt',          // Vietnamese

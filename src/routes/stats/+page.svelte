@@ -1,222 +1,147 @@
 <script lang="ts">
-    import { Circle, TrendingUp } from 'lucide-svelte';
-    import { onMount } from 'svelte';
-
-    // Mock data for 10 spokes (Performance Metrics, max value 100)
-    const mockData = [
-        { label: 'Focus', value: 85 },
-        { label: 'Speed', value: 70 },
-        { label: 'Quality', value: 95 },
-        { label: 'Collaboration', value: 60 },
-        { label: 'Adaptability', value: 80 },
-        { label: 'Innovation', value: 75 },
-        { label: 'Resourcefulness', value: 90 },
-        { label: 'Communication', value: 65 },
-        { label: 'Strategic Thinking', value: 50 },
-        { label: 'Experience', value: 92 }
-    ];
-
-    // Chart dimensions and constants
-    const spokes = mockData.length;
-    const radius = 150; // Max radius for the chart
-    const center = radius + 30; // Center position (used for SVG coordinates)
-    const rings = 4; // Number of concentric rings
-    const angleStep = (2 * Math.PI) / spokes;
+    import { Users, Package, Zap, ShoppingBag, Briefcase, Heart, MessageSquare, TrendingUp, ArrowRightLeft, Send, HandHeart } from 'lucide-svelte';
     
-    // Function to calculate Cartesian coordinates from a value and index
-    function getCoordinate(index: number, value: number, max: number = 100) {
-        const angle = angleStep * index - (Math.PI / 2); // Start at 12 o'clock (-90 degrees)
-        const currentRadius = (value / max) * radius;
-        const x = center + currentRadius * Math.cos(angle);
-        const y = center + currentRadius * Math.sin(angle);
-        return { x, y };
-    }
+    let { data } = $props();
+    let activeTab = $state('users');
 
-    // Generate the path string for the main data polygon
-    $: dataPolygonPath = mockData
-        .map((d, i) => {
-            const { x, y } = getCoordinate(i, d.value);
+    // Simple SVG Sparkline helper
+    function getPath(values: number[]) {
+        if (values.length < 2) return "";
+        const max = Math.max(...values, 1);
+        const height = 40;
+        const width = 160;
+        return values.map((v, i) => {
+            const x = (i / (values.length - 1)) * width;
+            const y = height - (v / max) * height;
             return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
-        })
-        .join(' ');
-        
-    // Generate the path string for the grid rings
-    let ringPaths: string[] = [];
-    for (let r = 1; r <= rings; r++) {
-        const ringRadius = (r / rings) * radius;
-        const ringPath = mockData
-            .map((_, i) => {
-                const angle = angleStep * i - (Math.PI / 2);
-                const x = center + ringRadius * Math.cos(angle);
-                const y = center + ringRadius * Math.sin(angle);
-                return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
-            })
-            .join(' ');
-        ringPaths = [...ringPaths, ringPath];
+        }).join(' ');
     }
-    
-    // Trigger CSS animation class on mount for visual effect
-    let animated = false;
-    onMount(() => {
-        animated = true;
-    });
-
 </script>
 
-<svelte:head>
-    <title>Performance Stats - Radar</title>
-</svelte:head>
 
-<div class="min-h-screen bg-gray-50 p-4 sm:p-8 flex flex-col items-center">
-    <div class="w-full max-w-4xl bg-white p-6 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-teal-500 my-8">
-        <header class="text-center mb-10">
-            <h1 class="text-4xl font-extrabold text-teal-600 flex items-center justify-center gap-3">
-                <TrendingUp class="w-8 h-8"/> Team Performance Radar
-            </h1>
-            <p class="text-lg text-gray-500 mt-2">Visualization across 10 core metrics (Max score: 100)</p>
-        </header>
 
-        <div class="flex justify-center">
-            
-            <!-- Chart Container -->
-            <div class="flex-shrink-0">
-                <svg width={center * 2} height={center * 2} viewBox={`0 0 ${center * 2} ${center * 2}`}>
-                    
-                    <!-- 1. Grid Rings (The "Web") -->
-                    {#each ringPaths as path, i (i)}
-                        <path 
-                            d={path} 
-                            fill="none" 
-                            stroke={i === rings - 1 ? '#cbd5e1' : '#e2e8f0'} 
-                            stroke-width="1"
-                            class="transition-all duration-1000"
-                        />
-                    {/each}
-
-                    <!-- 2. Spokes (Axis lines) -->
-                    {#each Array(spokes) as _, i (i)}
-                        {@const { x, y } = getCoordinate(i, 100)}
-                        <line 
-                            x1={center} 
-                            y1={center} 
-                            x2={x} 
-                            y2={y} 
-                            stroke="#e2e8f0" 
-                            stroke-width="1"
-                            class="transition-all duration-1000"
-                        />
-                    {/each}
-                    
-                    <!-- 3. Data Polygon (The filled area) -->
-                    <path 
-                        d={dataPolygonPath}
-                        fill="#0d9488" 
-                        fill-opacity="0.6"
-                        stroke="#0f766e"
-                        stroke-width="2"
-                        class:animate-radar={animated}
-                    />
-
-                    <!-- 4. Data Points -->
-                    {#each mockData as d, i (i)}
-                        {@const { x, y } = getCoordinate(i, d.value)}
-                        <circle 
-                            cx={x} 
-                            cy={y} 
-                            r="4" 
-                            fill="#f97316"
-                            stroke="#fff"
-                            stroke-width="1.5"
-                            title="{d.label}: {d.value}"
-                            class:animate-point={animated}
-                        />
-                    {/each}
-                    
-                    <!-- NEW: Data Point Labels (Scores) -->
-                    {#each mockData as d, i (i)}
-                        {@const { x, y } = getCoordinate(i, d.value)}
-                        <text
-                            x={x}
-                            y={y}
-                            text-anchor="middle"
-                            dominant-baseline="middle"
-                            fill="#111827"
-                            font-size="14"
-                            font-weight="bold"
-                            style="text-shadow: 0 0 3px #fff, 0 0 3px #fff;"
-                            class:animate-point={animated}
-                            dy={y < center ? -10 : 15}
-                        >
-                            {d.value}
-                        </text>
-                    {/each}
-
-                    <!-- 5. Labels -->
-                    {#each mockData as d, i (i)}
-                        {@const { x, y } = getCoordinate(i, 100)}
-                        <text
-                            x={x}
-                            y={y}
-                            text-anchor={x > center + 5 ? 'start' : (x < center - 5 ? 'end' : 'middle')}
-                            dominant-baseline={y > center + 5 ? 'hanging' : (y < center - 5 ? 'auto' : 'central')}
-                            fill="#374151"
-                            font-size="12"
-                            font-weight="600"
-                            dx={x > center ? 5 : (x < center ? -5 : 0)}
-                            dy={y > center ? 15 : (y < center ? -5 : 0)}
-                        >
-                            {d.label}
-                        </text>
-                    {/each}
-                    
-                </svg>
-            </div>
-            
-            <!-- The Legend and Details section has been removed -->
-            
-        </div>
+<div class="min-h-screen bg-gradient-to-br from-sky-50 to-teal-50 p-4 sm:p-8">
+    <div class="mx-auto max-w-6xl">
         
-        <p class="text-sm text-gray-500 pt-8 border-t mt-8 text-center">
-            The chart represents the current standing relative to the maximum possible score (100) for each metric. Hover over the orange data points to see the metric name.
-        </p>
+        <div class="mb-10 text-center">
+            <h1 class="text-3xl font-black text-gray-900 tracking-tighter">Server Dashboard</h1>
+            <p class="text-sm font-bold text-gray-500 opacity-70">Updated Real-time</p>
+        </div>
 
+        <div class="overflow-hidden rounded-3xl border-t-4 border-sky-500 bg-white shadow-2xl">
+            <div class="flex border-b border-gray-100 bg-gray-50/50">
+                {#each ['users', 'items', 'points'] as tab}
+                    <button 
+                        onclick={() => activeTab = tab}
+                        class="flex-1 px-6 py-5 text-center font-bold transition-all flex items-center justify-center gap-2 uppercase tracking-widest text-xs
+                        {activeTab === tab ? 'bg-white text-sky-600 border-b-4 border-sky-600' : 'text-gray-400 hover:bg-gray-100'}"
+                    >
+                        {#if tab === 'users'}<Users class="w-4 h-4"/>{/if}
+                        {#if tab === 'items'}<Package class="w-4 h-4"/>{/if}
+                        {#if tab === 'points'}<Zap class="w-4 h-4"/>{/if}
+                        {tab}
+                    </button>
+                {/each}
+            </div>
 
+            <div class="p-6 lg:p-10">
+                {#if activeTab === 'users'}
+                    <div class="grid gap-6 md:grid-cols-3">
+                        <div class="bg-sky-50 rounded-2xl p-8 border border-sky-100 flex flex-col justify-center">
+                            <p class="text-sky-600 font-black text-xs uppercase tracking-widest mb-1">Total Users</p>
+                            <h2 class="text-6xl font-black text-sky-900 tracking-tighter">{data.userStats.total}</h2>
+                        </div>
+                        <div class="md:col-span-2 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm relative overflow-hidden">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-gray-400 font-bold text-xs uppercase">Monthly Registration Trend</h3>
+                                <TrendingUp class="text-emerald-400 w-5 h-5" />
+                            </div>
+                            <svg viewBox="0 0 160 40" class="w-full h-24 stroke-sky-500 fill-none stroke-[3]" preserveAspectRatio="none">
+                                <path d={getPath(data.userStats.trend)} stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                    </div>
+
+                {:else if activeTab === 'items'}
+                    <div class="mb-10 flex items-end gap-4">
+                        <div class="h-16 w-2 bg-sky-500 rounded-full"></div>
+                        <div>
+                            <p class="text-gray-400 font-bold text-xs uppercase">Total Inventory</p>
+                            <h2 class="text-5xl font-black text-gray-900 leading-none">
+                                {Object.values(data.itemStats.counts).reduce((a, b) => a + b, 0)}
+                            </h2>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="bg-orange-50 rounded-2xl p-6 border border-orange-100 group">
+                            <ShoppingBag class="text-orange-500 w-8 h-8 mb-4 group-hover:scale-110 transition" />
+                            <p class="text-xs font-bold text-orange-600 uppercase mb-1">Products</p>
+                            <p class="text-3xl font-black text-gray-900">{data.itemStats.counts.products}</p>
+                            <div class="mt-4 flex flex-wrap gap-1">
+                                {#each data.itemStats.topProducts as cat}
+                                    <span class="text-[9px] bg-white/60 px-2 py-0.5 rounded-full font-bold text-orange-800">#{cat.category}</span>
+                                {/each}
+                            </div>
+                        </div>
+
+                        <div class="bg-purple-50 rounded-2xl p-6 border border-purple-100 group">
+                            <Briefcase class="text-purple-500 w-8 h-8 mb-4 group-hover:scale-110 transition" />
+                            <p class="text-xs font-bold text-purple-600 uppercase mb-1">Services</p>
+                            <p class="text-3xl font-black text-gray-900">{data.itemStats.counts.services}</p>
+                            <div class="mt-4 flex flex-wrap gap-1">
+                                {#each data.itemStats.topServices as cat}
+                                    <span class="text-[9px] bg-white/60 px-2 py-0.5 rounded-full font-bold text-purple-800">#{cat.category}</span>
+                                {/each}
+                            </div>
+                        </div>
+
+                        <div class="bg-pink-50 rounded-2xl p-6 border border-pink-100">
+                            <Heart class="text-pink-500 w-8 h-8 mb-4" />
+                            <p class="text-xs font-bold text-pink-600 uppercase mb-1">Wishes</p>
+                            <p class="text-3xl font-black text-gray-900">{data.itemStats.counts.wishes}</p>
+                        </div>
+
+                        <div class="bg-blue-50 rounded-2xl p-6 border border-blue-100">
+                            <MessageSquare class="text-blue-500 w-8 h-8 mb-4" />
+                            <p class="text-xs font-bold text-blue-600 uppercase mb-1">Requests</p>
+                            <p class="text-3xl font-black text-gray-900">{data.itemStats.counts.requests}</p>
+                        </div>
+                    </div>
+
+                {:else if activeTab === 'points'}
+                    <div class="grid gap-6">
+                        <div class="bg-emerald-600 rounded-3xl p-8 text-white flex justify-between items-center shadow-lg shadow-emerald-100">
+                            <div>
+                                <p class="opacity-70 text-xs font-bold uppercase tracking-widest mb-1">Circulating Wealth</p>
+                                <h2 class="text-6xl font-black tracking-tighter">{data.pointStats.total.toLocaleString()}</h2>
+                            </div>
+                            <Zap class="w-16 h-16 opacity-30" />
+                        </div>
+
+                        <div class="grid md:grid-cols-3 gap-4">
+                            {#each data.pointStats.breakdown as type}
+                                <div class="bg-white border border-gray-100 rounded-2xl p-6 flex items-center justify-between">
+                                    <div class="flex items-center gap-4">
+                                        <div class="p-3 bg-gray-50 rounded-xl">
+                                            {#if type.kind === 'debt'}<ArrowRightLeft class="text-red-500"/>{/if}
+                                            {#if type.kind === 'credit'}<HandHeart class="text-emerald-500"/>{/if}
+                                        </div>
+                                        <div>
+                                            <p class="text-[10px] font-black text-gray-400 uppercase">{type.kind}</p>
+                                            <p class="text-2xl font-black">{type.txCount}</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-xs font-bold text-gray-400">Total Volume</p>
+                                        <p class="font-bold text-sky-600">{type.total.toLocaleString()} pts</p>
+                                    </div>
+                                </div>
+                            {/each}
+                        </div>
+                    </div>
+                {/if}
+            </div>
+        </div>
     </div>
 </div>
-
-<style>
-    /* Keyframe for a simple animation to reveal the chart on load */
-    @keyframes drawRadar {
-        from {
-            stroke-dasharray: 0 1000;
-            fill-opacity: 0.1;
-        }
-        to {
-            stroke-dasharray: 1000 0;
-            fill-opacity: 0.6;
-        }
-    }
-
-    /* Keyframe for points to fade in */
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-
-    /* Apply the animation to the data polygon path */
-    .animate-radar {
-        /* Set a large dash array value initially */
-        stroke-dasharray: 1000; 
-        stroke-dashoffset: 1000;
-        animation: drawRadar 1.5s ease-out forwards;
-        animation-delay: 0.5s;
-    }
-    
-    /* Apply animation to the data points and scores */
-    .animate-point {
-        opacity: 0;
-        animation: fadeIn 0.5s ease-in forwards;
-        animation-delay: 2s; /* Start after the radar draw finishes */
-    }
-
-</style>

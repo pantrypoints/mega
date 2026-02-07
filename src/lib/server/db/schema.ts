@@ -77,6 +77,7 @@ export const products = sqliteTable('products', {
   photo3: text('photo3'),
   description: text('description'),
   headline: text('headline'),
+  status: text('status').notNull().default('active'),
   userId: text('user_id').notNull().references(() => user.id),
   dateCreated: text('date_created').default(sql`(CURRENT_TIMESTAMP)`),
   dateModified: text('date_modified').default(sql`(CURRENT_TIMESTAMP)`)
@@ -93,6 +94,7 @@ export const services = sqliteTable('services', {
   photo3: text('photo3'),
   description: text('description'),
   headline: text('headline'),
+  status: text('status').notNull().default('active'),
   userId: text('user_id').notNull().references(() => user.id),
   dateCreated: text('date_created').default(sql`(CURRENT_TIMESTAMP)`),
   dateModified: text('date_modified').default(sql`(CURRENT_TIMESTAMP)`)
@@ -109,6 +111,7 @@ export const requests = sqliteTable('requests', {
   photo3: text('photo3'),
   description: text('description'),
   headline: text('headline'),
+  status: text('status').notNull().default('active'),
   userId: text('user_id').notNull().references(() => user.id),
   dateCreated: text('date_created').default(sql`(CURRENT_TIMESTAMP)`),
   dateModified: text('date_modified').default(sql`(CURRENT_TIMESTAMP)`)
@@ -125,6 +128,7 @@ export const wishes = sqliteTable('wishes', {
   photo3: text('photo3'),
   description: text('description'),
   headline: text('headline'),
+  status: text('status').notNull().default('active'),
   userId: text('user_id').notNull().references(() => user.id),
   dateCreated: text('date_created').default(sql`(CURRENT_TIMESTAMP)`),
   dateModified: text('date_modified').default(sql`(CURRENT_TIMESTAMP)`)
@@ -161,3 +165,4 @@ export const tracker = sqliteTable('tracker', {
   device: text('device'),
   dateCreated: text('date_created').default(sql`(CURRENT_TIMESTAMP)`)
 });
+

@@ -1,6 +1,6 @@
 // from gemini jundalisay ata
 import { getDb } from '$lib/server/db';
-import { products } from '$lib/server/db/schema';
+import { wishes } from '$lib/server/db/schema';
 import { like, sql, asc, desc } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 
@@ -29,7 +29,7 @@ export const load: PageServerLoad = async ({ url, platform }) => {
 
     // --- 3. Determine Sorting Order ---
     let orderByClause: any = undefined;
-    const sortColumn = products[sort];
+    const sortColumn = wishes[sort];
 
     if (sortColumn) {
         orderByClause = direction === 'asc' ? asc(sortColumn) : desc(sortColumn);
@@ -42,7 +42,7 @@ export const load: PageServerLoad = async ({ url, platform }) => {
         // --- 4. Execute Query ---
         const result = await db
             .select()
-            .from(products)
+            .from(wishes)
             .where(whereClause)
             .orderBy(orderByClause);
 
@@ -54,7 +54,7 @@ export const load: PageServerLoad = async ({ url, platform }) => {
 
         // 5. Return the product list and current search/sort state
         return {
-            products: productList,
+            wishes: productList,
             search,
             sort,
             direction,
@@ -63,7 +63,7 @@ export const load: PageServerLoad = async ({ url, platform }) => {
         console.error("Database query failed:", e);
         // Return an empty list or an error message on failure
         return {
-            products: [],
+            wishes: [],
             search,
             sort,
             direction,

@@ -5,6 +5,7 @@
     import { m } from '$lib/paraglide/messages.js';
     import { hsChapters, hsSubcategories, hsDetails } from '$lib/data/hsData';
 
+
       export function getHSDescription(code: string): string {
         if (!code) return 'Not Classified';
 
@@ -35,7 +36,7 @@
 
 
     export let data: PageData;
-    $: ({ products, search, sort, direction, error } = data);
+    $: ({ wishes, search, sort, direction, error } = data);
 
     let currentSearch = search;
     
@@ -52,7 +53,7 @@
         // Preserve sorting parameters
         params.set('sort', sort);
         params.set('direction', direction);
-        goto(`/products?${params.toString()}`);
+        goto(`/wishes?${params.toString()}`);
     }
 
     /** Updates the sorting order and direction */
@@ -76,7 +77,7 @@
             params.set('search', currentSearch);
         }
 
-        goto(`/products?${params.toString()}`);
+        goto(`/wishes?${params.toString()}`);
     }
 
     /** Helper to render the sort arrow */
@@ -88,7 +89,7 @@
 </script>
 
 <svelte:head>
-    <title>Products - Catalog</title>
+    <title>wishes - Catalog</title>
 </svelte:head>
 
 
@@ -99,10 +100,10 @@
         <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl border-t-4 border-sky-500 mb-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                 <div>
-                    <h1 class="text-3xl font-extrabold text-gray-800">{m.products()}</h1>
+                    <h1 class="text-3xl font-extrabold text-gray-800">{m.wishes()}</h1>
                     <p class="text-gray-500 mt-1">{m.browse()}</p>
                 </div>
-                <a href="/products/new"
+                <a href="/wishes/new"
                     class="w-full sm:w-auto bg-teal-500 hover:bg-teal-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition duration-300 transform hover:scale-105 text-center">
                     + {m.create_product()}
                 </a>
@@ -160,13 +161,13 @@
 
         <!-- Product List -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {#if products.length === 0}
+            {#if wishes.length === 0}
                 <p class="text-gray-500 text-center col-span-full py-10">
                     {m.nothing_found()}
                 </p>
             {:else}
-                {#each products as product (product.id)}
-                <a href="/products/{product.id}">
+                {#each wishes as product (product.id)}
+                <a href="/wishes/{product.id}">
                     <div class="bg-white rounded-2xl shadow-xl overflow-hidden transform transition duration-300 hover:shadow-2xl hover:-translate-y-1">
                         <!-- Product Image -->
                         <div class="h-48 overflow-hidden bg-gray-100">
