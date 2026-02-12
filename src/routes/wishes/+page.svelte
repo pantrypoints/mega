@@ -105,7 +105,7 @@
                 </div>
                 <a href="/wishes/new"
                     class="w-full sm:w-auto bg-teal-500 hover:bg-teal-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition duration-300 transform hover:scale-105 text-center">
-                    + {m.create_product()}
+                    + {m.create_wish()}
                 </a>
             </div>
 
@@ -159,37 +159,37 @@
             </div>
         {/if}
 
-        <!-- Product List -->
+        <!-- wish List -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {#if wishes.length === 0}
                 <p class="text-gray-500 text-center col-span-full py-10">
                     {m.nothing_found()}
                 </p>
             {:else}
-                {#each wishes as product (product.id)}
-                <a href="/wishes/{product.id}">
+                {#each wishes as wish (wish.id)}
+                <a href="/wishes/{wish.id}">
                     <div class="bg-white rounded-2xl shadow-xl overflow-hidden transform transition duration-300 hover:shadow-2xl hover:-translate-y-1">
-                        <!-- Product Image -->
+                        <!-- wish Image -->
                         <div class="h-48 overflow-hidden bg-gray-100">
                             <img
-                                src={product.mainPhoto}
-                                alt={product.name}
+                                src={wish.mainPhoto}
+                                alt={wish.name}
                                 class="w-full h-full object-cover transition duration-500 group-hover:scale-105"/>
                         </div>
 
-                        <!-- Product Info -->
+                        <!-- wish Info -->
                         <div class="p-6 space-y-3">
-                            <h3 class="text-xl font-bold text-gray-900 truncate">{product.name}</h3>
-                            <p class="text-sm text-gray-500 line-clamp-2">{product.headline}</p>
+                            <h3 class="text-xl font-bold text-gray-900 truncate">{wish.name}</h3>
+                            <p class="text-sm text-gray-500 line-clamp-2">{wish.headline}</p>
                             <span class="flex items-center text-xs p-2 bg-sky-50 text-sky-600 rounded-full font-medium">
                                 <Tag class="w-3 h-3 mr-1" />
-                                {getHSDescription(product.category)}
+                                {getHSDescription(wish.category)}
                             </span>
                             <!-- Price and Category -->
                             <div class="flex justify-between items-center pt-2 border-t border-gray-100">
                                 <div class="flex items-center text-lg font-extrabold text-orange-600">
                                     <Star class="w-4 h-4 mr-1 fill-orange-500 text-orange-500" />
-                                    {product.points.toFixed(0)} Points
+                                    {wish.points.toFixed(0)} Points
                                 </div>
                             </div>
                         </div>

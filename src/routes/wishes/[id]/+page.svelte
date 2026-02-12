@@ -31,11 +31,11 @@
     return 'Unknown Category';
   }
 
-  // The product data loaded from the server
+  // The wish data loaded from the server
   export let data: PageData;
-  const { product, isOwner, owner, currentUserId } = data;
+  const { wish, isOwner, owner, currentUserId } = data;
 
-  let currentPhoto = product.photos[0] || 'https://placehold.co/800x600/f0f9ff/0e7490?text=No+Image';
+  let currentPhoto = wish.photos[0] || 'https://placehold.co/800x600/f0f9ff/0e7490?text=No+Image';
 
   function handleThumbnailClick(url: string) {
     currentPhoto = url;
@@ -46,12 +46,12 @@
 
   // Prepare transaction parameters for the URL
   const transactionParams = new URLSearchParams();
-  transactionParams.set('name', product.name);
-  transactionParams.set('points', String(product.points));
-  transactionParams.set('measure', product.measure);
-  transactionParams.set('category', product.category);
-  transactionParams.set('photo', product.photo1 || '');
-  transactionParams.set('giverId', product.userId);
+  transactionParams.set('name', wish.name);
+  transactionParams.set('points', String(wish.points));
+  transactionParams.set('measure', wish.measure);
+  transactionParams.set('category', wish.category);
+  transactionParams.set('photo', wish.photo1 || '');
+  transactionParams.set('giverId', wish.userId);
 
   const transactionHref = `/transactions/new?${transactionParams.toString()}`;
 </script>
@@ -59,30 +59,30 @@
 
 
 <svelte:head>
-  <title>{product.name} - Circle App</title>
+  <title>{wish.name} - Circle App</title>
 </svelte:head>
 
 
 <div class="min-h-screen bg-sky-50 flex flex-col items-center p-4 sm:p-8">
   <div class="w-full max-w-4xl bg-white p-6 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500 transform transition duration-500 hover:shadow-3xl">
 
-    <a href="/products"
+    <a href="/wishs"
       class="inline-flex items-center text-sky-600 hover:text-teal-800 transition mb-6 font-medium">
       <ArrowLeft class="w-4 h-4 mr-1" />
-      {m.back_to_products()}
+      {m.back_to_wishes()}
     </a>
 
     <div class="flex items-start justify-between gap-4 mb-2">
       <h1 class="text-4xl font-extrabold text-gray-900">
-        {product.name}
+        {wish.name}
       </h1>
 
       {#if isOwner}
         <div class="flex space-x-3 mt-1">
             <!-- Edit Button -->
-            <a href={`/products/${product.id}/edit`}
+            <a href={`/wishs/${wish.id}/edit`}
                 class="flex items-center justify-center p-2 bg-sky-100 text-sky-600 rounded-full shadow-md hover:bg-sky-200 transition duration-150 transform hover:scale-105"
-                title="Edit Product">
+                title="Edit wish">
                 <Edit class="w-5 h-5" />
             </a>
 
@@ -90,12 +90,12 @@
             <form 
                 method="POST" 
                 action="?/delete"
-                on:submit={() => confirm('Delete this product permanently?')}
+                on:submit={() => confirm('Delete this wish permanently?')}
                 use:enhance>
                 <button 
                     type="submit"
                     class="flex items-center justify-center p-2 bg-red-100 text-red-600 rounded-full shadow-md hover:bg-red-200 transition duration-150 transform hover:scale-105"
-                    title="Delete Product">
+                    title="Delete wish">
                     <Trash2 class="w-5 h-5" />
                 </button>
             </form>
@@ -105,11 +105,11 @@
 
 
     <p class="text-xl font-semibold text-sky-600 mb-8">
-      {product.headline}
+      {wish.headline}
     </p>
 
     
-    <!-- Product Details Grid -->
+    <!-- wish Details Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
       <!-- Image Gallery -->
       <div class="space-y-4">
@@ -117,19 +117,19 @@
         <div class="relative overflow-hidden rounded-2xl shadow-xl aspect-[4/3] bg-gray-100">
           <img
             src={currentPhoto}
-            alt={product.name}
+            alt={wish.name}
             class="w-full h-full object-cover transition-opacity duration-300"
           />
         </div>
 
         <!-- Thumbnail Selector -->
-        {#if product.photos.length > 0}
+        {#if wish.photos.length > 0}
           <div class="flex flex-wrap gap-2 justify-center p-2 rounded-xl bg-gray-50 border border-gray-100">
             <Camera class="w-5 h-5 text-gray-500 self-center hidden sm:block" />
 
 
-            <!-- {#each product.photos as photo, index (photo)} -->
-            {#each product.photos as photo, i (i)}            
+            <!-- {#each wish.photos as photo, index (photo)} -->
+            {#each wish.photos as photo, i (i)}            
               <button
                 on:click={() => handleThumbnailClick(photo)}
                 class="w-16 h-12 rounded-lg overflow-hidden border-2 transition-all duration-200 focus:outline-none"
@@ -138,7 +138,7 @@
               >
                 <img
                   src={photo}
-                  alt="Product Image {i + 1}"
+                  alt="wish Image {i + 1}"
                   class="w-full h-full object-cover opacity-80 hover:opacity-100"
                 />
               </button>
@@ -155,19 +155,19 @@
           <div class="flex items-center text-gray-800">
             <!-- <Star class="w-5 h-5 text-orange-500 mr-2" /> -->
             <span class="font-bold text-lg">{m.points_value()}:</span>
-            <span class="ml-2 text-2xl font-extrabold text-sky-700">{product.points.toFixed(0)}</span>
+            <span class="ml-2 text-2xl font-extrabold text-sky-700">{wish.points.toFixed(0)}</span>
           </div>
           <div class="flex items-center text-gray-600">
             <!-- <Ruler class="w-5 h-5 mr-2" /> -->
             <span class="font-semibold">{m.measure()}:</span>
-            <span class="ml-2">{product.measure}</span>
+            <span class="ml-2">{wish.measure}</span>
           </div>
                 
           <div class="text-gray-600">
             <!-- <span><Tag class="w-5 h-5 mr-2" /></span> -->
             <span class="font-semibold">{m.category()}:</span>
             <span class="ml-2">
-              {getHSDescription(product.category)} ({product.category})
+              {getHSDescription(wish.category)} ({wish.category})
             </span>
           </div>
 
@@ -188,7 +188,7 @@
       <div class="lg:col-span-2 p-5 bg-gray-50 rounded-2xl border-t border-gray-100">
         <h3 class="text-2xl font-bold text-gray-800 mb-3 border-b pb-2">{m.description()}</h3>
         <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">
-          {product.description || 'No detailed description provided for this product.'}
+          {wish.description || 'No detailed description provided for this wish.'}
         </p>
       </div>
 

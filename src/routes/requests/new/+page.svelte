@@ -7,8 +7,8 @@
 
 <div class="min-h-screen bg-sky-50 flex items-center justify-center p-4">
   <div class="w-full max-w-2xl bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500 transform transition duration-500 hover:shadow-3xl">
-    <h1 class="text-3xl font-extrabold text-gray-800 text-center mb-1">Create New Service</h1>
-    <p class="text-center text-gray-500 mb-8">Add a new service</p>
+    <h1 class="text-3xl font-extrabold text-gray-800 text-center mb-1">Create New Request</h1>
+    <p class="text-center text-gray-500 mb-8">Add a new Request</p>
 
     <!-- Display Server Message/Error -->
     {#if form?.message}
@@ -18,17 +18,17 @@
     {/if}
 
     <form method="POST" use:enhance class="space-y-6">
-      <!-- service Name -->
+      <!-- Request Name -->
       <div>
         <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
-          Service Name <span class="text-red-500">*</span>
+          Request Name <span class="text-red-500">*</span>
         </label>
         <input
           type="text"
           id="name"
           name="name"
           required
-          placeholder="Enter service name"
+          placeholder="Enter Request name"
           class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition"
         />
       </div>
@@ -119,7 +119,7 @@
           id="description"
           name="description"
           rows="4"
-          placeholder="Detailed service description..."
+          placeholder="Detailed Request description..."
           class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition resize-none"
         ></textarea>
       </div>
@@ -129,10 +129,10 @@
         <button
           type="submit"
           class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 rounded-xl shadow-lg transition duration-300 transform hover:scale-105">
-          Create service
+          Create Request
         </button>
         <a
-          href="/services"
+          href="/Requests"
           class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 rounded-xl shadow-lg transition duration-300 text-center"
         >
           Cancel

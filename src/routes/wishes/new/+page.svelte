@@ -64,17 +64,17 @@
 </script>
 
 <svelte:head>
-  <title>Create New Product - Circle App</title>
+  <title>Create New Wish</title>
 </svelte:head>
 
 <div class="min-h-screen bg-sky-50 flex items-center justify-center p-4">
   <div class="w-full max-w-3xl bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500">
     
     <a href="/products" class="inline-flex items-center text-sky-600 hover:text-sky-800 transition mb-6 font-medium">
-      <ArrowLeft class="w-4 h-4 mr-1" />{m.back_to_products()}
+      <ArrowLeft class="w-4 h-4 mr-1" />{m.back_to_wishes()}
     </a>
 
-    <h1 class="text-3xl font-extrabold text-gray-800 text-center mb-1">{m.create_product()}</h1>
+    <h1 class="text-3xl font-extrabold text-gray-800 text-center mb-1">{m.create_wish()}</h1>
     <!-- <p class="text-center text-gray-500 mb-8">Add a new product to the catalog</p> -->
 
     {#if form?.message}
@@ -88,7 +88,7 @@
 
       <div>
         <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1" for="name">
-          <Pencil class="w-4 h-4" />{m.product_name()}<span class="text-red-500">*</span>
+          <Pencil class="w-4 h-4" />{m.wish_name()}<span class="text-red-500">*</span>
         </label>
         <input type="text" id="name" name="name" bind:value={name} required placeholder="{m.enter_name()}"
           class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-transparent transition" />
@@ -191,6 +191,7 @@
       </div>
     </div>
 
+
       <h2 class="text-lg font-bold text-teal-700 flex items-center gap-2 my-6">
         <Image class="w-5 h-5" />{m.image_urls()} {m.optional()}
       </h2>
@@ -229,7 +230,7 @@
 
       <div class="flex gap-4 mt-6">
         <button type="submit" class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 rounded-xl shadow-lg transition duration-300 transform hover:scale-105 flex items-center justify-center gap-2">
-          <Save class="w-5 h-5"/>{m.create_product()}
+          <Save class="w-5 h-5"/>{m.create_wish()}
         </button>
         <a href="/products" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 rounded-xl shadow-lg text-center transition duration-300 flex items-center justify-center">
           {m.cancel()}
@@ -239,3 +240,4 @@
     </form>
   </div>
 </div>
+

@@ -1,7 +1,7 @@
 // from gemini jundalisay ata 
 
 import { getDb } from "$lib/server/db";
-import { products } from "$lib/server/db/schema";
+import { wishes } from "$lib/server/db/schema";
 import { redirect, fail } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 
@@ -23,7 +23,7 @@ export const actions: Actions = {
     const description = form.get("description") as string | null;
 
     try {
-      await db.insert(products).values({
+      await db.insert(wishes).values({
         name,
         measure,
         points,
@@ -38,6 +38,6 @@ export const actions: Actions = {
       return fail(500, { message: "Could not create product." });
     }
 
-    redirect(303, "/products");   // perform redirect after success
+    redirect(303, "/wishes");   // perform redirect after success
   }
 };

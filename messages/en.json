@@ -16,6 +16,7 @@
 	"back_to_services": "Back to Services",
 	"back_to_requests": "Back to Requests",
 	"back_to_users": "Back to Users",
+	"back_to_wishes": "Back to Wishes",
 	"balance": "Balance",
 	"barter_do": "Make Barter Transaction",
 	"barter_new": "New Barter Transaction",
@@ -172,6 +173,7 @@
 	"quiz_strongly_disagree": "👎👎 Strongly Disagree",
 	"merged": "Your results have been merged with your previous scores",
 	"view_updated_profile": "View Updated Profile",
+	"wish_name": "Wish Name",
 	"back_to_home": "Back to Home",
 	"personality_quiz": "Personality Quiz"
 }

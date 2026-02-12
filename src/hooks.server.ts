@@ -5,6 +5,8 @@ import * as auth from '$lib/server/auth';
 import { redirect } from '@sveltejs/kit';
 import { getDb } from '$lib/server/db';
 
+
+
 /* ------------------ 🗄 DATABASE LOADER ------------------ */
 // Move this UP so db is available to everyone else
 const handleDatabase: Handle = async ({ event, resolve }) => {
@@ -54,7 +56,7 @@ const handleAuth: Handle = async ({ event, resolve }) => {
   }
 
   /* 🏁 Public routes check */
-  const PUBLIC_STARTS = ['/menu', '/wishes', '/requests', '/login', '/register', '/api/', '/stats', '/tracking', '/products', '/services'];
+  const PUBLIC_STARTS = ['/how', '/menu', '/wishes', '/requests', '/login', '/register', '/api/', '/stats', '/tracking', '/products', '/services'];
   const isPublic = PUBLIC_STARTS.some(p => path.startsWith(p) || path.startsWith(`/en${p}`) || path.startsWith(`/vi${p}`));
 
 

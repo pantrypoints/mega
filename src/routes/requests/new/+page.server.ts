@@ -1,5 +1,5 @@
 import { getDb } from "$lib/server/db";
-import { services } from "$lib/server/db/schema";
+import { requests } from "$lib/server/db/schema";
 import { redirect, fail } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 
@@ -22,7 +22,7 @@ export const actions: Actions = {
     const description = form.get("description") as string | null;
 
     try {
-      await db.insert(services).values({
+      await db.insert(requests).values({
         name,
         measure,
         points,
@@ -37,6 +37,6 @@ export const actions: Actions = {
       return fail(500, { message: "Could not create product." });
     }
 
-    redirect(303, "/services");   // perform redirect after success
+    redirect(303, "/requests");   // perform redirect after success
   }
 };
