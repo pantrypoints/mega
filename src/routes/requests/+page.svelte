@@ -72,7 +72,7 @@
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                 <div>
                     <h1 class="text-3xl font-extrabold text-gray-800">{m.requests()}</h1>
-                    <!-- <p class="text-gray-500 mt-1">Browse and manage services</p> -->
+                    <p class="text-gray-500 mt-1">{m.requesting()}</p>
                 </div>
                 <a href="/requests/new"
                     class="w-full sm:w-auto bg-teal-500 hover:bg-teal-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition duration-300 transform hover:scale-105 text-center">

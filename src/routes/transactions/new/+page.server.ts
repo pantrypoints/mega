@@ -20,8 +20,9 @@ export const load: PageServerLoad = async ({ url, locals }) => {
   const category = url.searchParams.get('category');
   const photo = url.searchParams.get('photo');
   const giverId = url.searchParams.get('giverId');
+  const initial = url.searchParams.get('initial');
 
-  if (!name || !points || !measure || !category || !giverId) {
+  if (!name || !points || !measure || !category || !giverId || !initial) {
     throw error(400, 'Missing product information');
   }
 
@@ -42,6 +43,7 @@ export const load: PageServerLoad = async ({ url, locals }) => {
       points: parseFloat(points),
       measure,
       category,
+      initial,
       photo: photo || null
     },
     giver: {
@@ -65,16 +67,14 @@ export const actions: Actions = {
     const amount = formData.get('amount')?.toString();
     const kind = formData.get('kind')?.toString();
     const giverId = formData.get('giverId')?.toString();
+    const initial = formData.get('initial')?.toString();
 
     const productName = formData.get('productName')?.toString();
     const productPoints = formData.get('productPoints')?.toString();
     const productMeasure = formData.get('productMeasure')?.toString();
     const productCategory = formData.get('productCategory')?.toString();
     const productPhoto = formData.get('productPhoto')?.toString();
-
-
-  
-
+    
 
     if (!codename || !pin || !amount || !giverId) {
       return fail(400, { 
@@ -138,6 +138,7 @@ export const actions: Actions = {
     confirmParams.set('photo', productPhoto || '');
     confirmParams.set('amount', amount);
     confirmParams.set('kind', kind);
+    confirmParams.set('initial', initial);
     confirmParams.set('giverId', giverId);
     confirmParams.set('getterId', getter.id);
     // confirmParams.set('giverAvatar', giver.avatar);

@@ -52,6 +52,7 @@
   transactionParams.set('points', String(product.points));
   transactionParams.set('measure', product.measure);
   transactionParams.set('category', product.category);
+  transactionParams.set('initial', "p");
   transactionParams.set('photo', product.photo1 || '');
   transactionParams.set('giverId', product.userId);
 

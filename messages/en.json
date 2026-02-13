@@ -70,6 +70,8 @@
 	"how": "How to Use",
 	"image_urls": "Image Gallery URLs",	
 	"location": "Location",
+	"requesting": "These are the services that users are looking for",
+	"wishing": "These are the products that users are looking for",
 	"measure": "Unit of Measure",
 	"measure_example": "E.g. kg, pcs, liters",
 	"menu_title": "Dashboard Menu",

@@ -28,6 +28,12 @@ Use getDb() directly ONLY for standalone scripts (like seed.ts or migration runn
 unlogged in menu!!!
 
 
+w
+r
+p
+s
+
+
 
 which is better for product and service: need a product, need a service, want a product, want a service
 

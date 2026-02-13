@@ -1,0 +1,1 @@
+ALTER TABLE `transactions` ADD `initial` text NOT NULL;

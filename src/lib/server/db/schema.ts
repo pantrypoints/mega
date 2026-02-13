@@ -142,6 +142,7 @@ export const transactions = sqliteTable('transactions', {
   amount: real('amount'),
   photo: text('photo'),
   notes: text('notes'),
+  initial: text('initial').notNull(), // w r p s
   kind: text('kind').notNull(), // 'debt' or 'credit'
   category: text('category').notNull(), // HS Code or MCC Code
   status: text('status').notNull().default('accepted'), // 'pending', 'accepted', 'cancelled', 'transferred'

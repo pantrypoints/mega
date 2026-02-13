@@ -85,6 +85,7 @@
 
     <form method="POST" use:enhance class="space-y-8">
       <input type="hidden" name="category" value={category} />
+      <input type="hidden" name="initial" value={initial} />
 
       <div>
         <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1" for="name">
