@@ -5,6 +5,7 @@
   import { onMount, onDestroy } from 'svelte';
   import { invalidate, invalidateAll } from '$app/navigation';
   import { page } from '$app/stores';
+  import Hint from '$lib/components/Hint.svelte';
 
   let { data, children } = $props();
 
@@ -32,10 +33,13 @@
   <link rel="icon" href={favicon} sizes="any" type="image/svg+xml">
 </svelte:head>
 
-<!-- Page content -->
+
 <div class="min-h-screen relative">
   {@render children()}
 </div>
 
+
+
+<Hint /> 
 
 <FAB unreadCount={unreadCount} user={data.user} class="fixed bottom-6 right-6 z-[9999]" />
