@@ -32,7 +32,7 @@
 <div class="flex flex-wrap justify-center gap-3 p-4">
     {#each Object.entries(languageNames) as [code, name]}
         <button 
-            class="px-3 py-1 bg-sky-100 rounded-lg hover:bg-sky-200 text-sm font-medium transition duration-150" 
+            class="px-3 py-1 dark:bg-sky-900 bg-sky-100 rounded-lg hover:bg-sky-200 dark:text-white hover:dark:text-black text-black text-sm font-medium transition duration-150" 
             on:click={() => changeLang(code)}
         >
             {name}

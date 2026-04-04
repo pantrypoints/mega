@@ -1,76 +1,82 @@
-import { error } from '@sveltejs/kit';
-import { services, user } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
-import type { PageServerLoad } from './$types';
-import { CircleUser } from 'lucide-svelte';
+import { createItemDetailLoader } from '$lib/server/item';
+
+export const load = createItemDetailLoader('service');
 
 
 
-export const load: PageServerLoad = async ({ params, locals }) => {
-  const db = locals.db;
-  const currentUserId = locals.user?.id || null;
-  const serviceId = params.id;
+// import { error } from '@sveltejs/kit';
+// import { services, user } from '$lib/server/db/schema';
+// import { eq } from 'drizzle-orm';
+// import type { PageServerLoad } from './$types';
+// import { CircleUser } from 'lucide-svelte';
 
-  if (!serviceId) {
-    throw error(404, 'Invalid service ID.');
-  }
 
-  try {
-    // Join services with user table to get owner information
-    const result = await db
-      .select({
-        // Select all service fields
-        service: services,
-        // Select owner information
-        owner: {
-          id: user.id,
-          username: user.username,
-          avatar: user.avatar,
-          slug: user.slug,
-        }
-      })
-      .from(services)
-      .leftJoin(user, eq(services.userId, user.id))
-      .where(eq(services.id, serviceId))
-      .limit(1);
 
-    const data = result[0];
+// export const load: PageServerLoad = async ({ params, locals }) => {
+//   const db = locals.db;
+//   const currentUserId = locals.user?.id || null;
+//   const serviceId = params.id;
 
-    if (!data || !data.service) {
-      throw error(404, 'Service not found.');
-    }
+//   if (!serviceId) {
+//     throw error(404, 'Invalid service ID.');
+//   }
 
-    const service = data.service;
-    const owner = data.owner;
+//   try {
+//     // Join services with user table to get owner information
+//     const result = await db
+//       .select({
+//         // Select all service fields
+//         service: services,
+//         // Select owner information
+//         owner: {
+//           id: user.id,
+//           username: user.username,
+//           avatar: user.avatar,
+//           slug: user.slug,
+//         }
+//       })
+//       .from(services)
+//       .leftJoin(user, eq(services.userId, user.id))
+//       .where(eq(services.id, serviceId))
+//       .limit(1);
 
-    // Check if current user is the owner
-    const isOwner = currentUserId !== null && currentUserId === service.userId;
+//     const data = result[0];
 
-    // Use actual avatar from database, with fallback
-    const ownerAvatar = owner?.avatar || '/user.svg'
+//     if (!data || !data.service) {
+//       throw error(404, 'Service not found.');
+//     }
 
-    return {
-      service: {
-        ...service,
-        photos: [
-          service.photo1,
-          service.photo2,
-          service.photo3,
-        ].filter(url => url),
-      },
-      owner: {
-        id: owner?.id || service.userId,
-        username: owner?.username || 'Unknown User',
-        avatar: ownerAvatar,
-        slug: owner?.slug
-      },
-      isOwner,
-      currentUserId,
-    };
-  } catch (e) {
-    console.error("Database query failed:", e);
-    throw error(500, 'Could not load service data due to a server error.');
-  }
-};
+//     const service = data.service;
+//     const owner = data.owner;
+
+//     // Check if current user is the owner
+//     const isOwner = currentUserId !== null && currentUserId === service.userId;
+
+//     // Use actual avatar from database, with fallback
+//     const ownerAvatar = owner?.avatar || '/user.svg'
+
+//     return {
+//       service: {
+//         ...service,
+//         photos: [
+//           service.photo1,
+//           service.photo2,
+//           service.photo3,
+//         ].filter(url => url),
+//       },
+//       owner: {
+//         id: owner?.id || service.userId,
+//         username: owner?.username || 'Unknown User',
+//         avatar: ownerAvatar,
+//         slug: owner?.slug
+//       },
+//       isOwner,
+//       currentUserId,
+//     };
+//   } catch (e) {
+//     console.error("Database query failed:", e);
+//     throw error(500, 'Could not load service data due to a server error.');
+//   }
+// };
 
 

@@ -65,6 +65,7 @@
 		"chart.js": "^4.5.1",
 		"imagekit": "^6.0.0",
 		"imagekit-javascript": "^4.0.1",
+		"leaflet": "^1.9.4",
 		"lucide-svelte": "^0.555.0",
 		"marked": "^17.0.1",
 		"svelte-chartjs": "^3.1.5"

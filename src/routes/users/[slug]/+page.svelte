@@ -165,11 +165,14 @@
   <title>{user.username} - Circle App</title>
 </svelte:head>
 
-<div class="min-h-screen bg-sky-50 flex flex-col items-center p-4 sm:p-8">
-  <div class="w-full max-w-4xl bg-white p-6 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500 transform transition duration-500 hover:shadow-3xl">
+
+
+
+<div class="min-h-screen bg-sky-50 dark:bg-black flex flex-col items-center p-4 sm:p-8">
+  <div class="w-full max-w-4xl bg-white dark:bg-gray-900 p-6 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500 dark:border-sky-600 transform transition duration-500 hover:shadow-3xl">
     
     <!-- Back Button -->
-    <a href="/users" class="inline-flex items-center text-sky-600 hover:text-sky-800 transition mb-6 font-medium">
+    <a href="/users" class="inline-flex items-center text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 transition mb-6 font-medium">
       <ArrowLeft class="w-4 h-4 mr-1" />
       {m.back_to_users()}
     </a>
@@ -177,29 +180,28 @@
     <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-8">
       <div class="flex-shrink-0">
         {#if user.avatar}
-          <img src={user.avatar} alt={user.username} class="w-32 h-32 rounded-full object-cover border-4 border-teal-100 shadow-xl" />
+          <img src={user.avatar} alt={user.username} class="w-32 h-32 rounded-full object-cover border-4 border-teal-100 dark:border-teal-900 shadow-xl" />
         {:else}
-          <div class="w-32 h-32 rounded-full bg-teal-500 flex items-center justify-center border-4 border-teal-100 shadow-xl">
+          <div class="w-32 h-32 rounded-full bg-teal-500 dark:bg-teal-600 flex items-center justify-center border-4 border-teal-100 dark:border-teal-900 shadow-xl">
             <User class="w-16 h-16 text-white" />
           </div>
         {/if}
         {#if currentUserId !== user.id}
-          <a href="/chat?with={user.id}" class="my-6 flex items-center justify-center gap-2 bg-teal-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md hover:bg-teal-700 transition transform hover:scale-105 text-center">
+          <a href="/chat?with={user.id}" class="my-6 flex items-center justify-center gap-2 bg-teal-600 dark:bg-teal-700 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md hover:bg-teal-700 dark:hover:bg-teal-600 transition transform hover:scale-105 text-center">
             <MessageCircle class="w-4 h-4" />
             {m.chat()}
           </a>
         {:else}
-          <a href="/users/{user.slug}/edit" class="my-6 flex items-center justify-center gap-2 bg-teal-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md hover:bg-teal-700 transition transform hover:scale-105 text-center">
+          <a href="/users/{user.slug}/edit" class="my-6 flex items-center justify-center gap-2 bg-teal-600 dark:bg-teal-700 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md hover:bg-teal-700 dark:hover:bg-teal-600 transition transform hover:scale-105 text-center">
             <Pen class="w-4 h-4" />
             {m.edit()}
           </a>        
-
         {/if}
       </div>
       
       <div class="flex-grow text-center sm:text-left">
-        <h1 class="text-4xl font-extrabold text-gray-900 mb-2">{user.username}</h1>
-        <div class="flex flex-wrap gap-3 justify-center sm:justify-start text-sm text-gray-600 mb-3">
+        <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white mb-2">{user.username}</h1>
+        <div class="flex flex-wrap gap-3 justify-center sm:justify-start text-sm text-gray-600 dark:text-gray-400 mb-3">
           {#if user.city}
             <div class="flex items-center gap-1">
               <MapPin class="w-4 h-4" />
@@ -221,10 +223,10 @@
         </div>
         
         <!-- Dominant Traits with Colorful Badges -->
-        <div class="inline-flex flex-wrap items-center gap-2 bg-teal-50 border border-teal-100 px-4 py-2 rounded-2xl">
+        <div class="inline-flex flex-wrap items-center gap-2 bg-teal-50 dark:bg-teal-950/50 border border-teal-100 dark:border-teal-900 px-4 py-2 rounded-2xl">
           <div class="flex items-center gap-1">
-            <Sparkles class="w-4 h-4 text-teal-600" />
-            <span class="text-xs font-bold text-teal-600 uppercase tracking-widest">{m.dominant()}:</span>
+            <Sparkles class="w-4 h-4 text-teal-600 dark:text-teal-400" />
+            <span class="text-xs font-bold text-teal-600 dark:text-teal-400 uppercase tracking-widest">{m.dominant()}:</span>
           </div>
           <div class="flex flex-wrap items-center gap-2">
             {#each topThree as trait}
@@ -240,30 +242,30 @@
       </div>
     </div>
     
-    <div class="w-full bg-white rounded-2xl border border-gray-100 p-4 sm:p-10 my-8 flex flex-col items-center">
+    <div class="w-full bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-4 sm:p-10 my-8 flex flex-col items-center">
       <header class="text-center mb-6">
-        <h3 class="text-2xl font-bold text-gray-800">{m.personality_id()}</h3>
-        <p class="text-sm text-gray-400">{m.ave()}</p>
+        <h3 class="text-2xl font-bold text-gray-800 dark:text-white">{m.personality_id()}</h3>
+        <p class="text-sm text-gray-400 dark:text-gray-500">{m.ave()}</p>
       </header>
       
       <div class="relative overflow-visible">
         <svg width={center * 2} height={center * 2} viewBox={`0 0 ${center * 2} ${center * 2}`} class="overflow-visible">
           {#each ringPaths as path, i}
-            <path d={path} fill="none" stroke={i === rings - 1 ? '#cbd5e1' : '#f1f5f9'} stroke-width="1.5" />
+            <path d={path} fill="none" stroke={i === rings - 1 ? '#cbd5e1' : '#f1f5f9'} class={i === rings - 1 ? 'dark:stroke-gray-600' : 'dark:stroke-gray-800'} stroke-width="1.5" />
           {/each}
           
           {#each Array(spokes) as _, i}
             {@const { x, y } = getCoordinate(i, 4)}
-            <line x1={center} y1={center} x2={x} y2={y} stroke="#f1f5f9" stroke-width="1" />
+            <line x1={center} y1={center} x2={x} y2={y} stroke="#f1f5f9" class="dark:stroke-gray-800" stroke-width="1" />
           {/each}
           
-          <path d={dataPolygonPath} fill="rgba(13, 148, 136, 0.4)" stroke="#0f766e" stroke-width="3" class:animate-radar={animated} />
+          <path d={dataPolygonPath} fill="rgba(13, 148, 136, 0.4)" stroke="#0f766e" stroke-width="3" class="dark:stroke-teal-500 animate-radar" />
           
           {#each personalityAttributes as d, i}
             {@const { x, y } = getCoordinate(i, d.value)}
             {@const colors = traitColors[d.label]}
-            <circle cx={x} cy={y} r="5" fill={colors.iconColor.slice(5)} stroke="#fff" stroke-width="2" class:animate-point={animated} />
-            <text x={x} y={y} dy={y < center ? -15 : 20} text-anchor="middle" font-size="12" font-weight="bold" fill={colors.iconColor.slice(5)} class:animate-point={animated}>
+            <circle cx={x} cy={y} r="5" fill={colors.iconColor.slice(5)} stroke="#fff" stroke-width="2" class="animate-point" />
+            <text x={x} y={y} dy={y < center ? -15 : 20} text-anchor="middle" font-size="12" font-weight="bold" fill={colors.iconColor.slice(5)} class="animate-point">
               {d.value.toFixed(1)}
             </text>
           {/each}
@@ -280,31 +282,42 @@
     </div>
     
     <!-- Tabs -->
-    <div class="border-b border-gray-200 mb-6">
+    <div class="border-b border-gray-200 dark:border-gray-800 mb-6">
       <nav class="flex gap-8">
         <button on:click={() => setTab('products')} class="pb-4 px-2 font-semibold transition-colors border-b-2"
           class:text-teal-600={activeTab === 'products'}
+          class:dark:text-teal-400={activeTab === 'products'}
           class:border-teal-600={activeTab === 'products'}
+          class:dark:border-teal-400={activeTab === 'products'}
           class:text-gray-500={activeTab !== 'products'}
+          class:dark:text-gray-500={activeTab !== 'products'}
           class:border-transparent={activeTab !== 'products'}
-          class:hover:text-teal-500={activeTab !== 'products'}>
+          class:hover:text-teal-500={activeTab !== 'products'}
+          class:dark:hover:text-teal-400={activeTab !== 'products'}>
           {m.products()} ({products.length})
         </button>
         <button on:click={() => setTab('services')} class="pb-4 px-2 font-semibold transition-colors border-b-2"
           class:text-teal-600={activeTab === 'services'}
+          class:dark:text-teal-400={activeTab === 'services'}
           class:border-teal-600={activeTab === 'services'}
+          class:dark:border-teal-400={activeTab === 'services'}
           class:text-gray-500={activeTab !== 'services'}
+          class:dark:text-gray-500={activeTab !== 'services'}
           class:border-transparent={activeTab !== 'services'}
-          class:hover:text-teal-500={activeTab !== 'services'}>
+          class:hover:text-teal-500={activeTab !== 'services'}
+          class:dark:hover:text-teal-400={activeTab !== 'services'}>
           {m.services()} ({services.length})
         </button>
-        <!-- FIXED: Added proper class bindings for transactions tab -->
         <button on:click={() => setTab('transactions')} class="pb-4 px-2 font-semibold transition-colors border-b-2"
           class:text-teal-600={activeTab === 'transactions'}
+          class:dark:text-teal-400={activeTab === 'transactions'}
           class:border-teal-600={activeTab === 'transactions'}
+          class:dark:border-teal-400={activeTab === 'transactions'}
           class:text-gray-500={activeTab !== 'transactions'}
+          class:dark:text-gray-500={activeTab !== 'transactions'}
           class:border-transparent={activeTab !== 'transactions'}
-          class:hover:text-teal-500={activeTab !== 'transactions'}>
+          class:hover:text-teal-500={activeTab !== 'transactions'}
+          class:dark:hover:text-teal-400={activeTab !== 'transactions'}>
           {m.tx()}
         </button>
       </nav>
@@ -314,28 +327,28 @@
     {#if activeTab === 'products'}
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {#if products.length === 0}
-          <p class="text-gray-500 text-center col-span-full py-10">
+          <p class="text-gray-500 dark:text-gray-400 text-center col-span-full py-10">
             {m.nothing()}
           </p>
         {:else}
           {#each products as product (product.id)}
             <a href="/products/{product.id}">
-              <div class="bg-white rounded-2xl shadow-xl overflow-hidden transform transition duration-300 hover:shadow-2xl hover:-translate-y-1 border border-gray-100">
+              <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transform transition duration-300 hover:shadow-2xl hover:-translate-y-1 border border-gray-100 dark:border-gray-700">
                 <!-- Product Image -->
-                <div class="h-48 overflow-hidden bg-gray-100">
+                <div class="h-48 overflow-hidden bg-gray-100 dark:bg-gray-700">
                   <img src={product.photo1 || 'https://placehold.co/800x600/f0f9ff/0e7490?text=No+Image'} alt={product.name} class="w-full h-full object-cover transition duration-500 group-hover:scale-105" />
                 </div>
                 <!-- Product Info -->
                 <div class="p-6 space-y-3">
-                  <h3 class="text-xl font-bold text-gray-900 truncate">{product.name}</h3>
-                  <p class="text-sm text-gray-500 line-clamp-2">{product.headline || 'No description'}</p>
+                  <h3 class="text-xl font-bold text-gray-900 dark:text-white truncate">{product.name}</h3>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">{product.headline || 'No description'}</p>
                   <!-- Price and Category -->
-                  <div class="flex justify-between items-center pt-2 border-t border-gray-100">
-                    <div class="flex items-center text-lg font-extrabold text-orange-600">
-                      <Star class="w-4 h-4 mr-1 fill-orange-500 text-orange-500" />
+                  <div class="flex justify-between items-center pt-2 border-t border-gray-100 dark:border-gray-700">
+                    <div class="flex items-center text-lg font-extrabold text-orange-600 dark:text-orange-400">
+                      <Star class="w-4 h-4 mr-1 fill-orange-500 text-orange-500 dark:fill-orange-400 dark:text-orange-400" />
                       {product.points.toFixed(0)} {m.points()}
                     </div>
-                    <span class="flex items-center text-xs px-2 py-1 bg-teal-50 text-teal-600 rounded-full font-medium">
+                    <span class="flex items-center text-xs px-2 py-1 bg-teal-50 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-full font-medium">
                       <Tag class="w-3 h-3 mr-1" />
                       {product.category}
                     </span>
@@ -351,28 +364,28 @@
     {:else if activeTab === 'services'}
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {#if services.length === 0}
-          <p class="text-gray-500 text-center col-span-full py-10">
+          <p class="text-gray-500 dark:text-gray-400 text-center col-span-full py-10">
             {m.nothing()}
           </p>
         {:else}
           {#each services as service (service.id)}
             <a href="/services/{service.id}">
-              <div class="bg-white rounded-2xl shadow-xl overflow-hidden transform transition duration-300 hover:shadow-2xl hover:-translate-y-1 border border-gray-100">
+              <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transform transition duration-300 hover:shadow-2xl hover:-translate-y-1 border border-gray-100 dark:border-gray-700">
                 <!-- Service Image -->
-                <div class="h-48 overflow-hidden bg-gray-100">
+                <div class="h-48 overflow-hidden bg-gray-100 dark:bg-gray-700">
                   <img src={service.photo1 || 'https://placehold.co/800x600/f0f9ff/0e7490?text=No+Image'} alt={service.name} class="w-full h-full object-cover transition duration-500 group-hover:scale-105" />
                 </div>
                 <!-- Service Info -->
                 <div class="p-6 space-y-3">
-                  <h3 class="text-xl font-bold text-gray-900 truncate">{service.name}</h3>
-                  <p class="text-sm text-gray-500 line-clamp-2">{service.headline || 'No description'}</p>
+                  <h3 class="text-xl font-bold text-gray-900 dark:text-white truncate">{service.name}</h3>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">{service.headline || 'No description'}</p>
                   <!-- Price and Category -->
-                  <div class="flex justify-between items-center pt-2 border-t border-gray-100">
-                    <div class="flex items-center text-lg font-extrabold text-orange-600">
-                      <Star class="w-4 h-4 mr-1 fill-orange-500 text-orange-500" />
+                  <div class="flex justify-between items-center pt-2 border-t border-gray-100 dark:border-gray-700">
+                    <div class="flex items-center text-lg font-extrabold text-orange-600 dark:text-orange-400">
+                      <Star class="w-4 h-4 mr-1 fill-orange-500 text-orange-500 dark:fill-orange-400 dark:text-orange-400" />
                       {service.points.toFixed(0)} Points
                     </div>
-                    <span class="flex items-center text-xs px-2 py-1 bg-purple-50 text-purple-600 rounded-full font-medium">
+                    <span class="flex items-center text-xs px-2 py-1 bg-purple-50 dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-full font-medium">
                       <Tag class="w-3 h-3 mr-1" />
                       {service.category}
                     </span>
@@ -386,47 +399,47 @@
     
     <!-- Tab Content: Transactions -->
     {:else if activeTab === 'transactions'}
-      <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+      <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
         <table class="w-full text-left border-collapse">
-          <thead class="bg-gray-50 border-b border-gray-100">
+          <thead class="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-100 dark:border-gray-700">
             <tr>
-              <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">{m.type()}</th>
-              <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">{m.role()}</th>
-              <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-center">{m.count()}</th>
+              <th class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{m.type()}</th>
+              <th class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{m.role()}</th>
+              <th class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-center">{m.count()}</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-50">
+          <tbody class="divide-y divide-gray-50 dark:divide-gray-800">
             <tr>
               <td class="px-6 py-4 flex items-center gap-3">
-                <div class="p-2 bg-blue-50 rounded-lg text-blue-600"><HandPlatter class="w-5 h-5" /></div>
-                <span class="font-medium text-gray-700">{m.exchange()}</span>
+                <div class="p-2 bg-blue-50 dark:bg-blue-950 rounded-lg text-blue-600 dark:text-blue-400"><HandPlatter class="w-5 h-5" /></div>
+                <span class="font-medium text-gray-700 dark:text-gray-300">{m.exchange()}</span>
               </td>
-              <td class="px-6 py-4 text-sm text-gray-500">{m.giver()}</td>
-              <td class="px-6 py-4 text-center font-bold text-gray-900">{stats?.exchangeAsGiver || 0}</td>
+              <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{m.giver()}</td>
+              <td class="px-6 py-4 text-center font-bold text-gray-900 dark:text-white">{stats?.exchangeAsGiver || 0}</td>
             </tr>
             <tr>
               <td class="px-6 py-4 flex items-center gap-3">
-                <div class="p-2 bg-blue-50 rounded-lg text-blue-600"><HandHelping class="w-5 h-5" /></div>
-                <span class="font-medium text-gray-700">{m.exchange()}</span>
+                <div class="p-2 bg-blue-50 dark:bg-blue-950 rounded-lg text-blue-600 dark:text-blue-400"><HandHelping class="w-5 h-5" /></div>
+                <span class="font-medium text-gray-700 dark:text-gray-300">{m.exchange()}</span>
               </td>
-              <td class="px-6 py-4 text-sm text-gray-500">{m.getter()}</td>
-              <td class="px-6 py-4 text-center font-bold text-gray-900">{stats?.exchangeAsGetter || 0}</td>
+              <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{m.getter()}</td>
+              <td class="px-6 py-4 text-center font-bold text-gray-900 dark:text-white">{stats?.exchangeAsGetter || 0}</td>
             </tr>
             <tr>
               <td class="px-6 py-4 flex items-center gap-3">
-                <div class="p-2 bg-pink-50 rounded-lg text-pink-600"><HandHeart class="w-5 h-5" /></div>
-                <span class="font-medium text-gray-700">{m.donation()}</span>
+                <div class="p-2 bg-pink-50 dark:bg-pink-950 rounded-lg text-pink-600 dark:text-pink-400"><HandHeart class="w-5 h-5" /></div>
+                <span class="font-medium text-gray-700 dark:text-gray-300">{m.donation()}</span>
               </td>
-              <td class="px-6 py-4 text-sm text-gray-500">{m.giver()}</td>
-              <td class="px-6 py-4 text-center font-bold text-gray-900">{stats?.donationAsGiver || 0}</td>
+              <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{m.giver()}</td>
+              <td class="px-6 py-4 text-center font-bold text-gray-900 dark:text-white">{stats?.donationAsGiver || 0}</td>
             </tr>
             <tr>
               <td class="px-6 py-4 flex items-center gap-3">
-                <div class="p-2 bg-pink-50 rounded-lg text-pink-600"><HandCoins class="w-5 h-5" /></div>
-                <span class="font-medium text-gray-700">{m.donation()}</span>
+                <div class="p-2 bg-pink-50 dark:bg-pink-950 rounded-lg text-pink-600 dark:text-pink-400"><HandCoins class="w-5 h-5" /></div>
+                <span class="font-medium text-gray-700 dark:text-gray-300">{m.donation()}</span>
               </td>
-              <td class="px-6 py-4 text-sm text-gray-500">{m.getter()}</td>
-              <td class="px-6 py-4 text-center font-bold text-gray-900">{stats?.donationAsGetter || 0}</td>
+              <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{m.getter()}</td>
+              <td class="px-6 py-4 text-center font-bold text-gray-900 dark:text-white">{stats?.donationAsGetter || 0}</td>
             </tr>
           </tbody>
         </table>

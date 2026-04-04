@@ -305,7 +305,7 @@
                 </label>
 
                 <!-- Phone -->
-                <label class="block">
+                <!-- <label class="block">
                     <span class="text-gray-700 font-medium">{m.mobile()}</span>
                     <input 
                         type="tel"
@@ -313,7 +313,7 @@
                         placeholder="(555) 555-5555"
                         class="mt-1 block w-full px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus"
                     />
-                </label>
+                </label> -->
 
                 <!-- Location -->
                 <label class="block">

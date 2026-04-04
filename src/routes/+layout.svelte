@@ -16,6 +16,25 @@
   let interval: ReturnType<typeof setInterval>;
 
   onMount(() => {
+    const syncTheme = () => {
+      const saved = localStorage.getItem('theme');
+      const system = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark = saved === 'dark' || (!saved && system);
+      document.documentElement.classList.toggle('dark', isDark);
+    };
+
+    syncTheme();
+
+    const saved = localStorage.getItem('theme');
+    const system = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = saved === 'dark' || (!saved && system);
+
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+
     interval = setInterval(() => {
       // Invalidate all load functions to re-fetch unreadMessageCount from the server
       // invalidateAll();
@@ -37,8 +56,6 @@
 <div class="min-h-screen relative">
   {@render children()}
 </div>
-
-
 
 <Hint /> 
 

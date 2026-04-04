@@ -159,6 +159,8 @@
 	"visible": "Públicamente visible",
 	"welcome": "¡Bienvenido!",
 	"whats_up": "¿Qué está pasando?",
+  "gotopointsbanker": "Go to your Points Banker to Reset Your Password and Update Your Details",
+  "ppismeetup": "Pantrypoints requires physical meetups to verify identity. You have to physically meet the Points Banker for this node to reset your password and update your details. The Details of your Points Banker is:",
 	"a-images": {
 		"title": "Cómo añadir imágenes",
 		"summary": "Usamos enlaces directos (hotlinks) para mostrar imágenes."

@@ -56,7 +56,7 @@ const handleAuth: Handle = async ({ event, resolve }) => {
   }
 
   /* 🏁 Public routes check */
-  const PUBLIC_STARTS = ['/how', '/menu', '/wishes', '/requests', '/login', '/register', '/api/', '/stats', '/tracking', '/products', '/services'];
+  const PUBLIC_STARTS = ['/how', '/banker', '/menu', '/wishes', '/requests', '/login', '/register', '/api/', '/stats', '/tracking', '/products', '/services'];
   const isPublic = PUBLIC_STARTS.some(p => path.startsWith(p) || path.startsWith(`/en${p}`) || path.startsWith(`/vi${p}`));
 
 

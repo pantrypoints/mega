@@ -17,19 +17,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 
-
-
-// export const load: PageServerLoad = async () => {
-//   const user = requireLogin();
-//   return { 
-//     user: {
-//       ...user,
-//       slug: user.slug
-//     } 
-//   };
-// };
-
-
 export const actions: Actions = {
   logout: async (event) => {
     if (!event.locals.session) {
@@ -48,3 +35,16 @@ function requireLogin() {
   }
   return locals.user;
 }
+
+
+
+
+// export const load: PageServerLoad = async () => {
+//   const user = requireLogin();
+//   return { 
+//     user: {
+//       ...user,
+//       slug: user.slug
+//     } 
+//   };
+// };

@@ -46,6 +46,7 @@
 
   // Prepare transaction parameters for the URL
   const transactionParams = new URLSearchParams();
+  transactionParams.set('initial', 'w');
   transactionParams.set('name', wish.name);
   transactionParams.set('points', String(wish.points));
   transactionParams.set('measure', wish.measure);

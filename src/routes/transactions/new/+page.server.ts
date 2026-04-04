@@ -14,13 +14,14 @@ export const load: PageServerLoad = async ({ url, locals }) => {
   }
 
   // Get product details from URL params
+  const initial = url.searchParams.get('initial');
   const name = url.searchParams.get('name');
   const points = url.searchParams.get('points');
   const measure = url.searchParams.get('measure');
   const category = url.searchParams.get('category');
   const photo = url.searchParams.get('photo');
   const giverId = url.searchParams.get('giverId');
-  const initial = url.searchParams.get('initial');
+
 
   if (!name || !points || !measure || !category || !giverId || !initial) {
     throw error(400, 'Missing product information');

@@ -158,5 +158,17 @@
 	"quiz_agree": "👍 أوافق",
 	"quiz_neutral": "محايد",
 	"quiz_disagree": "👎 لا أوافق",
-	"quiz_strongly_disagree": "👎👎 لا أوافق بشدة"
+	"quiz_strongly_disagree": "👎👎 لا أوافق بشدة",
+  "create_service": "Create New Service",
+  "add_service": "Add a new service",
+  "service_name": "Service Name",
+  "service_name_placeholder": "Enter service name",
+  "measure_example": "e.g., kg, pcs, liters",
+  "category_example": "e.g., Electronics, Food",
+  "short_headline": "Short catchy headline",
+  "photo_url": "Photo URL",
+  "photo_url_placeholder": "https://example.com/image.jpg",
+  "gotopointsbanker": "Go to your Points Banker to Reset Your Password and Update Your Details",
+  "ppismeetup": "Pantrypoints requires physical meetups to verify identity. You have to physically meet the Points Banker for this node to reset your password and update your details. The Details of your Points Banker is:",  
+  "add_details": "Detailed service description..."	
 }

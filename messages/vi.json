@@ -162,6 +162,8 @@
 	"visible": "Hiển thị công khai",
 	"welcome": "Chào mừng!",
 	"whats_up": "Chuyện gì đang xảy ra vậy?",
+  "gotopointsbanker": "Go to your Points Banker to Reset Your Password and Update Your Details",
+  "ppismeetup": "Pantrypoints requires physical meetups to verify identity. You have to physically meet the Points Banker for this node to reset your password and update your details. The Details of your Points Banker is:",
 	"a-images": {
 		"title": "Cách thêm hình ảnh",
 		"summary": "Chúng tôi sử dụng liên kết trực tiếp (hotlinks) để hiển thị hình ảnh."

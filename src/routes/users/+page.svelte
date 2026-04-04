@@ -101,14 +101,14 @@
 </svelte:head>
 
 
-<div class="min-h-screen bg-gray-50 p-4 sm:p-8">
+<div class="min-h-screen bg-gray-50 dark:bg-gray-950 p-4 sm:p-8">
   <div class="w-full max-w-6xl mx-auto space-y-8">
     <!-- Header -->
-    <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl border-t-4 border-sky-500 mb-6">
+    <div class="bg-white dark:bg-gray-900 p-6 sm:p-8 rounded-3xl shadow-2xl border-t-4 border-sky-500 dark:border-sky-600 mb-6">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
-          <h1 class="text-3xl font-extrabold text-gray-800">{m.users()}</h1>
-          <p class="text-gray-500 mt-1">{m.browse()}</p>
+          <h1 class="text-3xl font-extrabold text-gray-800 dark:text-white">{m.users()}</h1>
+          <p class="text-gray-500 dark:text-gray-400 mt-1">{m.browse()}</p>
         </div>
       </div>
       
@@ -119,32 +119,32 @@
           <input 
             type="search" 
             bind:value={currentSearch} 
-            placeholder="{m.search_username()}" 
-            class="w-full p-3 pl-10 border border-gray-300 rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition"
+            placeholder={m.search_username()} 
+            class="w-full p-3 pl-10 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition"
           />
-          <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
         </div>
 
         <!-- Search Button -->
         <button 
           type="submit" 
-          class="sm:w-auto px-6 py-3 bg-sky-600 text-white rounded-xl font-semibold shadow-md hover:bg-sky-700 transition">
+          class="sm:w-auto px-6 py-3 bg-sky-600 dark:bg-sky-700 text-white rounded-xl font-semibold shadow-md hover:bg-sky-700 dark:hover:bg-sky-600 transition">
           {m.search()}
         </button>
       </form>
       
 
       <!-- Sort Controls -->
-      <div class="mt-4 flex flex-wrap gap-4 text-sm text-gray-600 pt-4 border-t border-gray-100">
+      <div class="mt-4 flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400 pt-4 border-t border-gray-100 dark:border-gray-800">
         <span class="font-semibold self-center">{m.sort_by()}:</span>
         {#each ['dateCreated', 'username'] as key}
           <button 
             on:click={() => handleSort(key)}
-            class="px-3 py-1.5 rounded-full transition duration-150 flex items-center gap-1"
-            class:bg-teal-100={sort === key}
-            class:text-teal-700={sort === key}
-            class:bg-gray-100={sort !== key}
-            class:hover:bg-teal-200={sort !== key}>
+            class="px-3 py-1.5 rounded-full transition duration-150 flex items-center gap-1
+              {sort === key 
+                ? 'bg-teal-100 dark:bg-teal-900/50 text-teal-700 dark:text-teal-400' 
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-teal-200 dark:hover:bg-teal-900/30'}"
+          >
             {key === 'dateCreated' ? 'Newest' : 'Username'}
             <ArrowUpDown class="w-3 h-3" />
             <span class="ml-1">{getSortArrow(key)}</span>
@@ -155,7 +155,7 @@
     
     <!-- Error Display -->
     {#if error}
-      <div class="bg-red-100 text-red-700 p-4 rounded-xl font-medium">
+      <div class="bg-red-100 dark:bg-red-950/50 text-red-700 dark:text-red-400 p-4 rounded-xl font-medium border border-red-200 dark:border-red-800">
         {error}
       </div>
     {/if}
@@ -164,32 +164,32 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {#if users.length === 0}
         <div class="col-span-full text-center py-10">
-          <p class="text-gray-500">{m.nothing_found()}</p>
+          <p class="text-gray-500 dark:text-gray-400">{m.nothing_found()}</p>
         </div>
       {:else}
         {#each users as user}
           <a href="/users/{user.slug}">
-            <div class="bg-white rounded-2xl shadow-xl overflow-hidden transform transition duration-300 hover:shadow-2xl hover:-translate-y-1">
-              <div class="h-48 overflow-hidden bg-gradient-to-br from-teal-100 to-sky-100 flex items-center justify-center">
+            <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden transform transition duration-300 hover:shadow-2xl hover:-translate-y-1 border border-gray-100 dark:border-gray-800">
+              <div class="h-48 overflow-hidden bg-gradient-to-br from-teal-100 dark:from-teal-950 to-sky-100 dark:to-sky-950 flex items-center justify-center">
                 {#if user.avatar}
                   <img 
                     src={user.avatar} 
                     alt={user.username} 
-                    class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg" 
+                    class="w-32 h-32 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow-lg" 
                   />
                 {:else}
-                  <div class="w-32 h-32 rounded-full bg-sky-500 flex items-center justify-center border-4 border-white shadow-lg">
+                  <div class="w-32 h-32 rounded-full bg-sky-500 dark:bg-sky-600 flex items-center justify-center border-4 border-white dark:border-gray-800 shadow-lg">
                     <User class="w-16 h-16 text-white" />
                   </div>
                 {/if}
               </div>
               
               <div class="p-6 space-y-3">
-                <h3 class="text-xl font-bold text-gray-900 truncate">{user.username}</h3>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white truncate">{user.username}</h3>
                 
-                <div class="flex flex-wrap gap-2 pt-2 border-t border-gray-100">
+                <div class="flex flex-wrap gap-2 pt-2 border-t border-gray-100 dark:border-gray-800">
                   {#each getTopTraits(user) as trait}
-                    <div class="flex items-center gap-1 px-2 py-1 bg-gray-50 text-gray-700 rounded-full border border-gray-100">
+                    <div class="flex items-center gap-1 px-2 py-1 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full border border-gray-100 dark:border-gray-700">
                       <svelte:component this={iconMap[trait.key]} class="w-3 h-3" />
                       <span class="text-[10px] font-bold uppercase">{trait.key}</span>
                       <span class="text-[10px] opacity-70">{trait.val.toFixed(0)}</span>
@@ -204,4 +204,3 @@
     </div>
   </div>
 </div>
-
