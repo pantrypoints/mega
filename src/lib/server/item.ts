@@ -82,3 +82,7 @@ export function createItemDetailLoader(type: ItemType) {
     }
   }) satisfies PageServerLoad;
 }
+
+
+
+

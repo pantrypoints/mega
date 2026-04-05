@@ -2,6 +2,7 @@
   import type { PageData } from './$types';
   import { Handshake, ArrowLeft, Star, User, Package, Tag, ArrowRight, CheckCircle } from 'lucide-svelte';
   import { enhance } from '$app/forms';
+  import { m } from '$lib/paraglide/messages.js';
   
   export let data: PageData;
   

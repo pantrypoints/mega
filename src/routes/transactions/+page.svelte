@@ -80,6 +80,7 @@
 </svelte:head>
 
 
+
 <div class="min-h-screen bg-gradient-to-br from-sky-50 to-teal-50 dark:from-slate-950 dark:to-slate-900 p-4 sm:p-6 lg:p-8 transition-colors">
   <div class="max-w-6xl mx-auto">
     

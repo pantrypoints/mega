@@ -1,4 +1,26 @@
- <script lang="ts">
+<script lang="ts">
+  import type { PageData } from './$types';
+  import ItemDetail from '$lib/components/Servicedetail.svelte';
+  
+  let { data } = $props();
+  const { service, isOwner, owner, currentUserId } = data;
+</script>
+
+<ItemDetail 
+  item={service}
+  isOwner={isOwner}
+  owner={owner}
+  currentUserId={currentUserId}
+  itemType="service"
+  backLink="/services"
+  deleteAction="?/deleterequest"
+  editLink={`/services/${service.id}/edit`}
+/>
+
+
+
+
+<!-- <script lang="ts">
   import type { PageData } from './$types';
   import { ArrowLeft, Star, Tag, Ruler, Briefcase, Camera, Handshake, Edit, Trash2 } from 'lucide-svelte';
   import { enhance } from '$app/forms';
@@ -39,7 +61,6 @@
 
 
 
-
 <svelte:head>
   <title>Service: {service.name}</title>
 </svelte:head>
@@ -54,7 +75,7 @@
       {m.back_to_services()}
     </a>
 
-    <!-- Header & Owner Controls -->
+
     <div class="flex justify-between items-start mb-2">
 
       <div>
@@ -64,7 +85,7 @@
         <p class="text-xl font-semibold text-sky-600 dark:text-sky-400 mb-8">{service.headline}</p>
       </div>
 
-      <!-- OWNER BUTTONS (Updated to use form for delete) -->
+
       {#if isOwner}
         <div class="flex space-x-3 mt-1">
           <button
@@ -75,7 +96,7 @@
             <Edit class="w-5 h-5" />
           </button>
               
-          <!-- Delete Form Action -->
+
           <form 
             method="POST" 
             action="?/deleteService"
@@ -89,12 +110,12 @@
       {/if}
     </div>
 
-    <!-- Service Details Grid -->
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
 
-      <!-- Image Gallery -->
+
       <div class="space-y-4">
-        <!-- Main Display Image -->
+
         <div class="relative overflow-hidden rounded-2xl shadow-xl aspect-[4/3] bg-gray-100 dark:bg-slate-800">
           <img
             src={currentPhoto}
@@ -103,7 +124,7 @@
           />
         </div>
 
-        <!-- Thumbnail Selector -->
+
         {#if service.photos.length > 0}
           <div class="flex flex-wrap gap-2 justify-center p-2 rounded-xl bg-gray-50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700 transition-colors">
             <Camera class="w-5 h-5 text-gray-500 dark:text-slate-400 self-center hidden sm:block" />
@@ -123,9 +144,9 @@
         {/if}
       </div>
 
-      <!-- Info and Description -->
+
       <div class="space-y-6">
-        <!-- Core Info -->
+
         <div class="space-y-3 p-5 bg-sky-50 dark:bg-sky-950/30 rounded-2xl border-l-4 border-sky-400 dark:border-sky-600 transition-colors">
           <div class="flex items-center text-gray-800 dark:text-slate-200">
             <span class="font-bold text-lg">{m.points_value()}:</span>
@@ -156,14 +177,14 @@
       </div>
     </div>
 
-    <!-- Description -->
+
     <div class="p-5 mt-5 bg-gray-50 dark:bg-slate-800/50 rounded-2xl border-t border-gray-100 dark:border-slate-700 lg:col-span-2 transition-colors">
       <p class="text-gray-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
         {service.description || 'No detailed description provided for this service.'}
       </p>
     </div>
 
-    <!-- Action Button (Barter or Owner Message) -->
+
     <div class="mt-10">
       {#if isOwner} 
         <a href={transactionHref} class="w-full bg-teal-600 dark:bg-teal-500 text-white py-3 rounded-2xl font-bold text-lg shadow-lg hover:bg-teal-700 dark:hover:bg-teal-600 transition duration-200 active:scale-[.99] transform flex items-center justify-center gap-2">
@@ -178,3 +199,4 @@
   </div>
 </div>
 
+ -->

@@ -1,4 +1,19 @@
 <script lang="ts">
+  import CreateItem from '$lib/components/Servicecreate.svelte';
+  import type { ActionData } from './$types';
+  
+  let form: ActionData;
+</script>
+
+<CreateItem 
+  form={form}
+  itemType="requests"
+  redirectUrl="/requests"
+/>
+
+
+
+<!-- <script lang="ts">
   import { enhance } from '$app/forms';
   import type { ActionData } from './$types';
   
@@ -10,7 +25,7 @@
     <h1 class="text-3xl font-extrabold text-gray-800 text-center mb-1">Create New Request</h1>
     <p class="text-center text-gray-500 mb-8">Add a new Request</p>
 
-    <!-- Display Server Message/Error -->
+
     {#if form?.message}
       <p class="text-sm bg-red-100 text-red-600 p-3 rounded-lg border border-red-300 mb-4 animate-pulse">
         {form.message}
@@ -18,7 +33,6 @@
     {/if}
 
     <form method="POST" use:enhance class="space-y-6">
-      <!-- Request Name -->
       <div>
         <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
           Request Name <span class="text-red-500">*</span>
@@ -33,8 +47,7 @@
         />
       </div>
 
-      <!-- Measure -->
-      <div>
+    <div>
         <label for="measure" class="block text-sm font-semibold text-gray-700 mb-2">
           Unit of Measure <span class="text-red-500">*</span>
         </label>
@@ -48,9 +61,9 @@
         />
       </div>
 
-      <!-- Points and Category Row -->
+
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <!-- Points -->
+
         <div>
           <label for="points" class="block text-sm font-semibold text-gray-700 mb-2">
             Points <span class="text-red-500">*</span>
@@ -66,7 +79,7 @@
           />
         </div>
 
-        <!-- Category -->
+
         <div>
           <label for="category" class="block text-sm font-semibold text-gray-700 mb-2">
             Category <span class="text-red-500">*</span>
@@ -82,7 +95,7 @@
         </div>
       </div>
 
-      <!-- Headline -->
+
       <div>
         <label for="headline" class="block text-sm font-semibold text-gray-700 mb-2">
           Headline
@@ -96,7 +109,7 @@
         />
       </div>
 
-      <!-- Photo URL -->
+
       <div>
         <label for="photo1" class="block text-sm font-semibold text-gray-700 mb-2">
           Photo URL
@@ -110,7 +123,7 @@
         />
       </div>
 
-      <!-- Description -->
+
       <div>
         <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">
           Description
@@ -124,7 +137,7 @@
         ></textarea>
       </div>
 
-      <!-- Submit Button -->
+
       <div class="flex gap-4">
         <button
           type="submit"
@@ -141,3 +154,4 @@
     </form>
   </div>
 </div>
+ -->

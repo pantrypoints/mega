@@ -83,6 +83,9 @@ export const products = sqliteTable('products', {
   dateModified: text('date_modified').default(sql`(CURRENT_TIMESTAMP)`)
 });
 
+
+
+
 export const services = sqliteTable('services', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   name: text('name').notNull(),

@@ -75,25 +75,25 @@
           </button>
           
           <!-- Delete Form Action -->
-<form 
-  method="POST" 
-  action={deleteAction} 
-  use:enhance 
-  onsubmit={(e) => {
-    const message = itemType === 'request' ? m.confirm_delete_request() : m.confirm_delete_service();
-    if (!confirm(message)) {
-      e.preventDefault();
-    }
-  }}
->
-  <button 
-    type="submit" 
-    class="flex items-center justify-center p-2 bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400 rounded-full shadow-md hover:bg-red-200 dark:hover:bg-red-800 transition duration-150 transform hover:scale-105" 
-    title={itemType === 'request' ? m.delete_request() : m.delete_service()}
-  >
-    <Trash2 class="w-5 h-5" />
-  </button>
-</form>
+          <form 
+            method="POST" 
+            action={deleteAction} 
+            use:enhance 
+            onsubmit={(e) => {
+              const message = itemType === 'request' ? m.confirm_delete_request() : m.confirm_delete_service();
+              if (!confirm(message)) {
+                e.preventDefault();
+              }
+            }}
+          >
+            <button 
+              type="submit" 
+              class="flex items-center justify-center p-2 bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400 rounded-full shadow-md hover:bg-red-200 dark:hover:bg-red-800 transition duration-150 transform hover:scale-105" 
+              title={itemType === 'request' ? m.delete_request() : m.delete_service()}
+            >
+              <Trash2 class="w-5 h-5" />
+            </button>
+          </form>
         </div>
       {/if}
     </div>
