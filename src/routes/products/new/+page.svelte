@@ -1,6 +1,20 @@
+<script lang="ts">
+  import CreateItem from '$lib/components/Createitem.svelte';
+  import type { ActionData } from './$types';
+  
+  let { form } = $props<{ form: ActionData }>();
+</script>
+
+<CreateItem 
+  form={form}
+  itemType="product"
+  redirectUrl="/products"/>
+
+
+
 <!-- from gemini jundalisay ata -->
 
-<script lang="ts">
+<!-- <script lang="ts">
     import { enhance } from '$app/forms';
     import { Save, Pencil, Megaphone, Sigma, ArrowLeft, Pen, Image, Tag, ChevronDown, Ruler } from 'lucide-svelte';
     import type { ActionData } from './$types';
@@ -107,30 +121,31 @@
 
 <div class="min-h-screen bg-sky-50 dark:bg-slate-950 flex items-center justify-center p-4 transition-colors">
     <div class="w-full max-w-3xl bg-white dark:bg-slate-900 p-8 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500 dark:border-sky-600 transition-colors">
-        <!-- Back Button -->
+
+
         <a href="/products" class="inline-flex items-center text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 transition mb-6 font-medium">
             <ArrowLeft class="w-4 h-4 mr-1" />
             {m.back_to_products()}
         </a>
 
-        <!-- Header -->
+
         <h1 class="text-3xl font-extrabold text-gray-800 dark:text-white text-center mb-1">
             {m.create_product()}
         </h1>
         
-        <!-- Error Message -->
+
         {#if form?.message}
             <p class="text-sm bg-red-100 dark:bg-red-950/30 text-red-600 dark:text-red-400 p-3 rounded-lg border border-red-300 dark:border-red-700 mb-4 animate-pulse">
                 {form.message}
             </p>
         {/if}
 
-        <!-- Form -->
+
         <form method="POST" use:enhance class="space-y-8">
-            <!-- Hidden input for category -->
+
             <input type="hidden" name="category" value={category} />
 
-            <!-- Product Name -->
+
             <div>
                 <label class="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2 flex items-center gap-1" for="name">
                     <Pencil class="w-4 h-4" />
@@ -148,42 +163,9 @@
                 />
             </div>
 
-            <!-- Headline -->
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2 flex items-center gap-1" for="headline">
-                    <Megaphone class="w-4 h-4" />
-                    {m.headline()}
-                </label>
-                <input
-                    type="text"
-                    id="headline"
-                    name="headline"
-                    bind:value={headline}
-                    maxlength="100"
-                    placeholder="{m.short_headline()}"
-                    class="w-full px-4 py-3 border-2 border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-transparent transition"
-                />
-            </div>
 
-            <!-- Description -->
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2 flex items-center gap-1" for="description">
-                    <Pen class="w-4 h-4" />
-                    {m.description()}
-                </label>
-                <textarea
-                    id="description"
-                    name="description"
-                    bind:value={description}
-                    rows="4"
-                    placeholder="{m.add_details()}"
-                    class="w-full px-4 py-3 border-2 border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-transparent transition resize-none"
-                ></textarea>
-            </div>
-
-            <!-- Points and Measure -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <!-- Points -->
+
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2 flex items-center gap-1" for="points">
                         <Sigma class="w-4 h-4" />
@@ -202,7 +184,7 @@
                     />
                 </div>
 
-                <!-- Measure -->
+
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2 flex items-center gap-1" for="measure">
                         <Ruler class="w-4 h-4" />
@@ -221,14 +203,14 @@
                 </div>
             </div>
 
-            <!-- HS Code Classification -->
+
             <div class="bg-gray-50 dark:bg-slate-800/50 p-6 rounded-2xl border-2 border-dashed border-gray-200 dark:border-slate-700 transition-colors">
                 <label class="block text-sm font-bold text-gray-700 dark:text-slate-300 mb-4 flex items-center gap-1">
                     <Tag class="w-4 h-4" />
-                    {m.category()} {m.optional()} 
+                    {m.category()} -- {m.justselect()} 
                 </label>
 
-                <!-- Selected Code Display -->
+
                 <div class="mb-6 p-4 bg-white dark:bg-slate-900 rounded-xl border border-sky-200 dark:border-sky-800 shadow-sm transition-colors">
                     <div class="text-xs font-bold text-sky-600 dark:text-sky-400 uppercase tracking-wider mb-1">
                         {m.selected_code()}
@@ -243,10 +225,11 @@
                     {/if}
                 </div>
 
-                <!-- Chapter Selection -->
+
                 <div class="mb-6">
                     <label class="block text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase mb-1">
-                        Chapter
+                        {m.category()}
+
                     </label>
                     <div class="relative">
                         <select
@@ -254,7 +237,7 @@
                             onchange={handleChapterChange}
                             class="w-full px-4 py-3 border-2 border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-xl appearance-none pr-10 focus:ring-2 focus:ring-sky-500 focus:border-transparent transition"
                         >
-                            <option value="">-- {m.select_chapter()} --</option>
+                            <option value="">-- {m.select_category()} --</option>
                             {#each sortedChapters as { code, name }}
                                 <option value={code}>{code} - {name}</option>
                             {/each}
@@ -263,7 +246,7 @@
                     </div>
                 </div>
 
-                <!-- Subcategory Selection (only shown if chapter is selected) -->
+
                 {#if selectedChapter}
                     <div class="mb-6">
                         <label class="block text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase mb-1">
@@ -285,7 +268,7 @@
                     </div>
                 {/if}
 
-                <!-- Detail Selection (only shown if subcategory is selected and has details) -->
+
                 {#if selectedSubcategory && availableDetails.length > 0}
                     <div class="mb-6">
                         <label class="block text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase mb-1">
@@ -307,7 +290,41 @@
                 {/if}
             </div>
 
-            <!-- Image Upload Section -->
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2 flex items-center gap-1" for="headline">
+                    <Megaphone class="w-4 h-4" />
+                    {m.headline()}
+                </label>
+                <input
+                    type="text"
+                    id="headline"
+                    name="headline"
+                    bind:value={headline}
+                    maxlength="100"
+                    placeholder="{m.short_headline()}"
+                    class="w-full px-4 py-3 border-2 border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-transparent transition"
+                />
+            </div>
+
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2 flex items-center gap-1" for="description">
+                    <Pen class="w-4 h-4" />
+                    {m.description()}
+                </label>
+                <textarea
+                    id="description"
+                    name="description"
+                    bind:value={description}
+                    rows="4"
+                    placeholder="{m.add_details()}"
+                    class="w-full px-4 py-3 border-2 border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-transparent transition resize-none"
+                ></textarea>
+            </div>
+
+            
+
             <div>
                 <h2 class="text-lg font-bold text-teal-700 dark:text-teal-400 flex items-center gap-2 mb-4">
                     <Image class="w-5 h-5" />
@@ -348,14 +365,14 @@
                                 {/if}
                             </div>
                             
-                            <!-- Hidden inputs for form submission -->
+
                             <input type="hidden" name="photo{i + 1}" value={photoUrls[i]} />
                         </div>
                     {/each}
                 </div>
             </div>
 
-            <!-- Action Buttons -->
+
             <div class="flex gap-4 pt-6">
                 <button
                     type="submit"
@@ -376,4 +393,4 @@
         </form>
     </div>
 </div>
-
+ -->

@@ -178,9 +178,18 @@
                     class="w-32 h-32 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow-lg" 
                   />
                 {:else}
-                  <div class="w-32 h-32 rounded-full bg-sky-500 dark:bg-sky-600 flex items-center justify-center border-4 border-white dark:border-gray-800 shadow-lg">
-                    <User class="w-16 h-16 text-white" />
-                  </div>
+
+<div class="w-32 h-32 rounded-full flex items-center justify-center border-4 border-white dark:border-gray-800 shadow-lg transition-colors duration-300
+    {user.gender === 'female' 
+        ? 'bg-pink-500 dark:bg-pink-600' 
+        : 'bg-sky-500 dark:bg-sky-600'}">
+    {#if user.gender === 'female'}
+        <UserRound class="w-16 h-16 text-white" />
+    {:else}
+        <User class="w-16 h-16 text-white" />
+    {/if}
+</div>
+
                 {/if}
               </div>
               

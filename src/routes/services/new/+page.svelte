@@ -9,8 +9,7 @@
 <CreateItem 
   form={form}
   itemType="service"
-  redirectUrl="/services"
-/>
+  redirectUrl="/services"/>
 
 
 <!-- <script lang="ts">

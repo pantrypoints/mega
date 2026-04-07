@@ -29,6 +29,7 @@
     basePath="/wishes" 
     title={m.wishes()} 
     createLabel={m.create_wish()} 
-    getDesc={getHSDescription} 
+    getDesc={getHSDescription}
+    user={data.user} 
 />
 

@@ -86,7 +86,7 @@
             <div class="h-16 w-2 bg-sky-500 dark:bg-sky-600 rounded-full"></div>
             <div>
               <p class="text-gray-400 dark:text-gray-500 font-bold text-xs uppercase">
-                {m.total_inventory()}
+                {m.total_items()}
               </p>
               <h2 class="text-5xl font-black text-gray-900 dark:text-white leading-none">
                 {Object.values(data.itemStats.counts).reduce((a, b) => a + b, 0)}

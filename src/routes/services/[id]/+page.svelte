@@ -13,7 +13,7 @@
   currentUserId={currentUserId}
   itemType="service"
   backLink="/services"
-  deleteAction="?/deleterequest"
+  deleteAction="?/deleteService"
   editLink={`/services/${service.id}/edit`}
 />
 

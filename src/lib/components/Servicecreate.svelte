@@ -155,7 +155,7 @@
       <!-- NAICS Category Selection -->
       <div class="space-y-4 bg-slate-50 dark:bg-gray-800/50 p-4 rounded-2xl border border-slate-100 dark:border-gray-700">
         <h3 class="text-sm font-bold text-sky-600 dark:text-sky-400 uppercase tracking-wider">
-          {m.category_selection()}
+          {m.category_selection()} <span class="text-red-500">*</span>
         </h3>
         
         <!-- Step 1: Sector -->
@@ -223,8 +223,8 @@
         <input type="hidden" name="category" value={selectedIndustry} />
       </div>
       
-      <!-- Headline and Photo Row -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <!-- Headline and Photo Row class="grid grid-cols-1 sm:grid-cols-2 gap-6" -->
+      <div>
         <div>
           <label for="headline" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
             {m.headline()}

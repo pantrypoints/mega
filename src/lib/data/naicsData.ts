@@ -1,8 +1,3 @@
-// src/lib/data/naicsData.ts
-
-
-// Add this to your existing naicsData.ts
-
 export function getNAICSDescription(code: string): string {
   if (!code) return 'Unclassified';
 

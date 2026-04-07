@@ -1,347 +1,336 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import type { ActionData } from './$types';
+    import { enhance } from '$app/forms';
+    import { m } from '$lib/paraglide/messages';
+    import { page } from '$app/stores';
+    import { Eye, EyeOff, Upload, User } from 'lucide-svelte';
+
+    let form = $page.form;
     
-    import { setLocale } from '$lib/paraglide/runtime';
-    import { m } from '$lib/paraglide/messages.js';
-
-
-  import ImageKit from 'imagekit-javascript';
-  import { PUBLIC_IMAGEKIT_URL_ENDPOINT, PUBLIC_IMAGEKIT_PUBLIC_KEY } from '$env/static/public';
-
-  let avatarUrl = $state(''); 
-  let uploading = $state(false);
-
-  const ik = new ImageKit({
-    urlEndpoint: PUBLIC_IMAGEKIT_URL_ENDPOINT,
-    publicKey: PUBLIC_IMAGEKIT_PUBLIC_KEY,
-  });
-
-
-    // Define the limit in bytes
-    const MAX_FILE_SIZE = 500 * 1024; 
-    let uploadError = $state(''); // New state for error feedback
-
-    async function uploadImage(e: Event) {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (!file) return;
-
-      // Reset errors
-      uploadError = '';
-
-      // Size Validation
-      if (file.size > MAX_FILE_SIZE) {
-        uploadError = 'File is too large. Please select an image under 500KB.';
-        // Clear the input so the user has to pick a new one
-        (e.target as HTMLInputElement).value = ''; 
-        return;
-      }
-
-      uploading = true;
-      try {
-        const authResponse = await fetch('/api/imagekit-auth');
-        const authData = await authResponse.json();
-
-        const result = await ik.upload({
-          file,
-          fileName: file.name,
-          ...authData
-        });
-
-        avatarUrl = result.url;
-      } catch (err) {
-        console.error("Upload failed", err);
-        uploadError = 'Upload failed. Please try again.';
-      } finally {
-        uploading = false;
-      }
-    }
-
-	let { form }: { form: ActionData } = $props();
-
-	let showPassword = false;
-	let showPin = false;
-
+    // Password visibility states
     let passwordVisible = $state(false);
-
-
-
-
-
-
-
-
-
-    function togglePasswordVisibility() {
-        passwordVisible = !passwordVisible;
-    }
-
     let confirmPasswordVisible = $state(false);
-
-    // State for PIN visibility toggles
     let pinVisible = $state(false);
     let confirmPinVisible = $state(false);
-
-    function toggleVisibility(fieldState: string) {
-        if (fieldState === 'password') passwordVisible = !passwordVisible;
-        if (fieldState === 'confirmPassword') confirmPasswordVisible = !confirmPasswordVisible;
-        if (fieldState === 'pin') pinVisible = !pinVisible;
-        if (fieldState === 'confirmPin') confirmPinVisible = !confirmPinVisible;
+    
+    // Avatar upload states
+    let avatarUrl = $state('');
+    let uploading = $state(false);
+    let uploadError = $state('');
+    
+    // Toggle visibility functions
+    function toggleVisibility(field: string) {
+        if (field === 'password') passwordVisible = !passwordVisible;
+        if (field === 'confirmPassword') confirmPasswordVisible = !confirmPasswordVisible;
+        if (field === 'pin') pinVisible = !pinVisible;
+        if (field === 'confirmPin') confirmPinVisible = !confirmPinVisible;
+    }
+    
+    // Image upload handler
+    async function uploadImage(event: Event) {
+        const input = event.target as HTMLInputElement;
+        const file = input.files?.[0];
+        
+        if (!file) return;
+        
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            uploadError = 'Please upload an image file';
+            return;
+        }
+        
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            uploadError = 'Image must be less than 5MB';
+            return;
+        }
+        
+        uploading = true;
+        uploadError = '';
+        
+        // Simulate upload - replace with your actual upload endpoint
+        const formData = new FormData();
+        formData.append('image', file);
+        
+        try {
+            // Replace with your actual upload API
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!response.ok) throw new Error('Upload failed');
+            
+            const data = await response.json();
+            avatarUrl = data.url;
+        } catch (err) {
+            uploadError = 'Failed to upload image. Please try again.';
+            console.error(err);
+        } finally {
+            uploading = false;
+        }
     }
 </script>
 
-
-
-
-<!-- Main Registration Card -->
-<div class="min-h-screen bg-sky-50 flex items-center justify-center p-4">
-    <div class="w-full max-w-xl bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500 transform transition duration-500 hover:shadow-3xl">
-        <h1 class="text-3xl font-extrabold text-gray-800 text-center mb-1">{m.create_account()}</h1>
-        <p class="text-center text-gray-500 mb-8">{m.enter_details()}</p>
+<div class="min-h-screen bg-gradient-to-br from-sky-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4">
+    <div class="w-full max-w-xl bg-white dark:bg-gray-800 p-8 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500 dark:border-sky-500 transform transition-all duration-500 hover:shadow-3xl">
+        <h1 class="text-3xl font-extrabold text-gray-800 dark:text-gray-100 text-center mb-1">{m.create_account()}</h1>
+        <p class="text-center text-gray-500 dark:text-gray-400 mb-8">{m.enter_details()}</p>
 
         <!-- Display Server Message/Error -->
         {#if form?.message}
-            <p class="text-sm bg-red-100 text-red-600 p-3 rounded-lg border border-red-300 mb-4 animate-pulse">
+            <p class="text-sm bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 p-3 rounded-lg border border-red-300 dark:border-red-700 mb-4 animate-pulse">
                 {form.message}
             </p>
         {/if}
 
-<form 
-  method="post" 
-  action="?/register" 
-  use:enhance={({ formData }) => {
-    // Manually ensure the latest avatarUrl is in the payload
-    if (avatarUrl) {
-      formData.set('avatar', avatarUrl);
-    }
-  }} 
-  class="space-y-6">
-
+        <form 
+            method="post" 
+            action="?/register" 
+            use:enhance={({ formData }) => {
+                if (avatarUrl) {
+                    formData.set('avatar', avatarUrl);
+                }
+            }} 
+            class="space-y-6">
 
             <div class="grid grid-cols-1 gap-4">
-                <!-- Username (Standard) -->
+                <!-- Username -->
                 <label class="block">
-                    <span class="text-gray-700 font-medium">{m.username()}</span>
+                    <span class="text-gray-700 dark:text-gray-300 font-medium">{m.username()}</span>
                     <input 
                         name="username" 
                         placeholder="e.g. haruna"
                         required
-                        class="mt-1 block w-full px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus"
+                        class="mt-1 block w-full px-4 py-2 bg-sky-50 dark:bg-gray-700 border border-sky-200 dark:border-gray-600 rounded-xl shadow-inner text-gray-800 dark:text-gray-100 input-focus"
                     />
                 </label>
 
                 <!-- Codename (Unique Required) -->
                 <label class="block">
-                    <span class="text-gray-700 font-medium">{m.codename()} ({m.required()}, {m.unique()})</span>
+                    <span class="text-gray-700 dark:text-gray-300 font-medium">
+                        {m.codename()} ({m.required()}, {m.unique()})
+                    </span>
                     <input 
                         name="codename" 
                         placeholder="e.g. snakeeyes"
                         required
-                        class="mt-1 block w-full px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus"
+                        class="mt-1 block w-full px-4 py-2 bg-sky-50 dark:bg-gray-700 border border-sky-200 dark:border-gray-600 rounded-xl shadow-inner text-gray-800 dark:text-gray-100 input-focus"
                     />
                 </label>
             </div>
 
-
             <!-- Password and Confirmation -->
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <!-- Password Field -->
                 <label class="block">
-                    <span class="text-gray-700 font-medium">{m.password()}</span>
+                    <span class="text-gray-700 dark:text-gray-300 font-medium">{m.password()}</span>
                     <div class="relative mt-1">
                         <input 
                             type={passwordVisible ? 'text' : 'password'} 
                             name="password"
                             placeholder="••••••••"
                             required
-                            class="block w-full pr-12 px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus"
+                            class="block w-full pr-10 px-4 py-2 bg-sky-50 dark:bg-gray-700 border border-sky-200 dark:border-gray-600 rounded-xl shadow-inner text-gray-800 dark:text-gray-100 input-focus"
                         />
-                        <!-- <ToggleButton fieldType="password" visible={passwordVisible} toggleFn={toggleVisibility} /> -->
+                        <button
+                            type="button"
+                            onclick={() => toggleVisibility('password')}
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                        >
+                            {#if passwordVisible}
+                                <EyeOff class="w-4 h-4" />
+                            {:else}
+                                <Eye class="w-4 h-4" />
+                            {/if}
+                        </button>
                     </div>
                 </label>
 
                 <!-- Confirm Password Field -->
                 <label class="block">
-                    <span class="text-gray-700 font-medium">{m.password_confirm()}</span>
+                    <span class="text-gray-700 dark:text-gray-300 font-medium">{m.password_confirm()}</span>
                     <div class="relative mt-1">
                         <input 
                             type={confirmPasswordVisible ? 'text' : 'password'} 
                             name="passwordConfirm"
                             placeholder="••••••••"
                             required
-                            class="block w-full pr-12 px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus"
+                            class="block w-full pr-10 px-4 py-2 bg-sky-50 dark:bg-gray-700 border border-sky-200 dark:border-gray-600 rounded-xl shadow-inner text-gray-800 dark:text-gray-100 input-focus"
                         />
-                        <!-- <ToggleButton fieldType="confirmPassword" visible={confirmPasswordVisible} toggleFn={toggleVisibility} /> -->
+                        <button
+                            type="button"
+                            onclick={() => toggleVisibility('confirmPassword')}
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                        >
+                            {#if confirmPasswordVisible}
+                                <EyeOff class="w-4 h-4" />
+                            {:else}
+                                <Eye class="w-4 h-4" />
+                            {/if}
+                        </button>
                     </div>
                 </label>
             </div>
 
             <!-- PIN and Confirmation -->
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <!-- PIN Field -->
                 <label class="block">
-                    <span class="text-gray-700 font-medium">6-Digit PIN (Required)</span>
+                    <span class="text-gray-700 dark:text-gray-300 font-medium">6-Digit PIN ({m.required()})</span>
                     <div class="relative mt-1">
                         <input 
                             name="pin"
-                            type='password'
+                            type={pinVisible ? 'text' : 'password'}
                             placeholder="••••••"
                             required
                             maxlength="6"
-                            class="block w-full pr-12 px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus"
+                            class="block w-full pr-10 px-4 py-2 bg-sky-50 dark:bg-gray-700 border border-sky-200 dark:border-gray-600 rounded-xl shadow-inner text-gray-800 dark:text-gray-100 input-focus"
                         />
-                        <!-- <ToggleButton fieldType="pin" visible={pinVisible} toggleFn={toggleVisibility} /> -->
+                        <button
+                            type="button"
+                            onclick={() => toggleVisibility('pin')}
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                        >
+                            {#if pinVisible}
+                                <EyeOff class="w-4 h-4" />
+                            {:else}
+                                <Eye class="w-4 h-4" />
+                            {/if}
+                        </button>
                     </div>
                 </label>
 
                 <!-- Confirm PIN Field -->
                 <label class="block">
-                    <span class="text-gray-700 font-medium">Confirm PIN</span>
+                    <span class="text-gray-700 dark:text-gray-300 font-medium">{m.pin_confirm()}</span>
                     <div class="relative mt-1">
                         <input 
                             name="pinConfirm"
-                            type='password'
+                            type={confirmPinVisible ? 'text' : 'password'}
                             placeholder="••••••"
                             required
                             maxlength="6"
-                            class="block w-full pr-12 px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus"
+                            class="block w-full pr-10 px-4 py-2 bg-sky-50 dark:bg-gray-700 border border-sky-200 dark:border-gray-600 rounded-xl shadow-inner text-gray-800 dark:text-gray-100 input-focus"
                         />
-                        <!-- <ToggleButton fieldType="confirmPin" visible={confirmPinVisible} toggleFn={toggleVisibility} /> -->
+                        <button
+                            type="button"
+                            onclick={() => toggleVisibility('confirmPin')}
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                        >
+                            {#if confirmPinVisible}
+                                <EyeOff class="w-4 h-4" />
+                            {:else}
+                                <Eye class="w-4 h-4" />
+                            {/if}
+                        </button>
                     </div>
                 </label>
             </div>
 
             <!-- Gender -->
             <label class="block">
-                <span class="text-gray-700 font-medium">Gender</span>
+                <span class="text-gray-700 dark:text-gray-300 font-medium">{m.gender()}</span>
                 <select 
                     name="gender" 
-                    class="mt-1 block w-full px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus appearance-none"
+                    class="mt-1 block w-full px-4 py-2 bg-sky-50 dark:bg-gray-700 border border-sky-200 dark:border-gray-600 rounded-xl shadow-inner text-gray-800 dark:text-gray-100 input-focus appearance-none"
                 >
-                    <option value="">Select Gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
+                    <option value="">{m.gender_select()}</option>
+                    <option value="male">{m.male()}</option>
+                    <option value="female">{m.female()}</option>
+                    <option value="other">{m.other()}</option>
                 </select>
             </label>
 
-
             <!-- Separator -->
-            <div class="border-t border-sky-200 pt-6 mt-6"></div>
+            <div class="border-t border-sky-200 dark:border-gray-700 pt-6 mt-6"></div>
 
             <!-- OPTIONAL FIELDS SECTION -->
-            <h2 class="text-xl font-bold text-gray-600 mb-4">{m.optional()}</h2>
+            <h2 class="text-xl font-bold text-gray-600 dark:text-gray-400 mb-4">{m.optional()}</h2>
 
             <div class="grid grid-cols-1 gap-4">
-                <!-- Avatar -->
-                <!-- <label class="block">
-                    <span class="text-gray-700 font-medium">Avatar URL</span>
-                    <input 
-                        name="avatar" 
-                        placeholder="https://example.com/avatar.png"
-                        class="mt-1 block w-full px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus"
-                    />
-                </label> -->
+                <!-- Avatar Upload -->
+                <label class="block">
+                    <span class="text-gray-700 dark:text-gray-300 font-medium">{m.avatar()}</span>
+                    <div class="mt-2 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                        <div class="flex-shrink-0">
+                            {#if avatarUrl}
+                                <img src={avatarUrl} alt="Preview" class="w-16 h-16 rounded-full object-cover border-2 border-sky-500 dark:border-teal-500" />
+                            {:else}
+                                <div class="w-16 h-16 rounded-full bg-sky-100 dark:bg-gray-700 flex items-center justify-center text-sky-400 dark:text-gray-500">
+                                    <User class="h-8 w-8" />
+                                </div>
+                            {/if}
+                        </div>
 
-
-<label class="block">
-  <span class="text-gray-700 font-medium">Profile Picture</span>
-  <div class="mt-2 flex items-center gap-4">
-    {#if avatarUrl}
-      <img src={avatarUrl} alt="Preview" class="w-16 h-16 rounded-full object-cover border-2 border-sky-500" />
-    {:else}
-        <div class="w-16 h-16 rounded-full bg-sky-100 flex items-center justify-center text-sky-400">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-        </div>
-    {/if}
-
-
-    <input type="file" 
-      accept="image/*" 
-      onchange={uploadImage} 
-      class="text-sm ..."/>
-
-    {#if uploadError}
-      <p class="text-xs text-red-500 mt-2 font-medium">{uploadError}</p>
-    {/if}
-
-    {#if uploading}
-      <p class="text-xs text-teal-600 mt-1 animate-pulse">Uploading image...</p>
-    {/if}
-
-
-  </div>
-  
-  <input type="hidden" name="avatar" value={avatarUrl} />
-  
-  {#if uploading}
-    <p class="text-xs text-teal-600 mt-1 animate-pulse">Uploading image...</p>
-  {/if}
-</label>
-
-
-
+                        <div class="flex-1">
+                            <label class="inline-flex items-center px-4 py-2 bg-teal-600 dark:bg-teal-500 text-white rounded-xl cursor-pointer hover:bg-teal-700 dark:hover:bg-teal-600 transition-colors">
+                                <Upload class="w-4 h-4 mr-2" />
+                                <span class="text-sm font-medium">{m.upload_image()}</span>
+                                <input type="file" accept="image/*" onchange={uploadImage} class="hidden" />
+                            </label>
+                            
+                            {#if uploadError}
+                                <p class="text-xs text-red-500 dark:text-red-400 mt-2 font-medium">{uploadError}</p>
+                            {/if}
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" name="avatar" value={avatarUrl} />
+                    
+                    {#if uploading}
+                        <p class="text-xs text-teal-600 dark:text-teal-400 mt-2 animate-pulse">{m.uploading_image()}...</p>
+                    {/if}
+                </label>
 
                 <!-- Date of Birth -->
                 <label class="block">
-                    <span class="text-gray-700 font-medium">{m.dob()}</span>
+                    <span class="text-gray-700 dark:text-gray-300 font-medium">{m.dob()}</span>
                     <input 
                         type="date"
                         name="dateOfBirth" 
-                        class="mt-1 block w-full px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus"
+                        class="mt-1 block w-full px-4 py-2 bg-sky-50 dark:bg-gray-700 border border-sky-200 dark:border-gray-600 rounded-xl shadow-inner text-gray-800 dark:text-gray-100 input-focus"
                     />
                 </label>
 
                 <!-- Email -->
                 <label class="block">
-                    <span class="text-gray-700 font-medium">Email</span>
+                    <span class="text-gray-700 dark:text-gray-300 font-medium">{m.email()}</span>
                     <input 
                         type="email"
                         name="email" 
                         placeholder="you@example.com"
-                        class="mt-1 block w-full px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus"
+                        class="mt-1 block w-full px-4 py-2 bg-sky-50 dark:bg-gray-700 border border-sky-200 dark:border-gray-600 rounded-xl shadow-inner text-gray-800 dark:text-gray-100 input-focus"
                     />
                 </label>
 
-                <!-- Phone -->
-                <!-- <label class="block">
-                    <span class="text-gray-700 font-medium">{m.mobile()}</span>
-                    <input 
-                        type="tel"
-                        name="phone" 
-                        placeholder="(555) 555-5555"
-                        class="mt-1 block w-full px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus"
-                    />
-                </label> -->
-
                 <!-- Location -->
                 <label class="block">
-                    <span class="text-gray-700 font-medium">{m.location()}</span>
+                    <span class="text-gray-700 dark:text-gray-300 font-medium">{m.location()}</span>
                     <input 
                         name="city" 
-                        placeholder="City"
-                        class="mt-1 block w-full px-4 py-2 bg-sky-50 border border-sky-200 rounded-xl shadow-inner text-gray-800 input-focus"
+                        placeholder="{m.city()}"
+                        class="mt-1 block w-full px-4 py-2 bg-sky-50 dark:bg-gray-700 border border-sky-200 dark:border-gray-600 rounded-xl shadow-inner text-gray-800 dark:text-gray-100 input-focus"
                     />
                 </label>
             </div>
             
             <!-- Register Button -->
-            <button disabled={uploading}
-              class="w-full bg-teal-600 text-white font-bold px-4 py-3 rounded-xl shadow-lg hover:bg-teal-700 focus:outline-none focus:ring-4 focus:ring-teal-300 transition duration-150 transform hover:scale-[1.01] mt-8">
-              {#if uploading}
-                Processing Image...
-              {:else}
-                {m.register_here()}
-              {/if}
+            <button 
+                disabled={uploading}
+                class="w-full bg-teal-600 dark:bg-teal-500 text-white font-bold px-4 py-3 rounded-xl shadow-lg hover:bg-teal-700 dark:hover:bg-teal-600 focus:outline-none focus:ring-4 focus:ring-teal-300 dark:focus:ring-teal-700 transition duration-150 transform hover:scale-[1.01] disabled:opacity-50 disabled:cursor-not-allowed mt-8"
+            >
+                {#if uploading}
+                    {m.processing_image()}...
+                {:else}
+                    {m.register_here()}
+                {/if}
             </button>
-
 
             <!-- Back to Login Link -->
             <div class="text-center pt-2">
-                <p class="text-sm text-gray-600">
+                <p class="text-sm text-gray-600 dark:text-gray-400">
                     {m.have_account()}
-                    <a href="/login" class="font-semibold text-sky-600 hover:text-teal-500 transition duration-150">
+                    <a href="/login" class="font-semibold text-sky-600 dark:text-teal-400 hover:text-teal-500 dark:hover:text-teal-300 transition duration-150">
                         {m.sign_in()}
                     </a>
                 </p>
@@ -351,15 +340,19 @@
 </div>
 
 <style>
-    /* Custom style for input focus state to reuse teal color */
+    /* Custom style for input focus state */
     .input-focus {
         transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     }
     .input-focus:focus {
-        border-color: var(--color-teal-500); /* Teal color in focus */
-        box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2); /* Teal ring */
+        border-color: #14b8a6;
+        box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
+        outline: none;
     }
-    :root {
-        --color-teal-500: #14b8a6;
+    
+    /* Dark mode focus styles */
+    .dark .input-focus:focus {
+        border-color: #14b8a6;
+        box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.3);
     }
 </style>

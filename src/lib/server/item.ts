@@ -1,14 +1,23 @@
 import { error } from '@sveltejs/kit';
-import { requests, services, user } from '$lib/server/db/schema';
+import { requests, services, wishes, products, user } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 
-type ItemType = 'request' | 'service' | 'product' | 'wish';
+type ItemType = 'request' | 'wish' | 'service' | 'product';
 
 
 export function createItemDetailLoader(type: ItemType) {
-  const table = type === 'request' ? requests : services;
-  const itemName = type === 'request' ? 'request' : 'service';
+  const table = type === 'request' ? requests 
+    : type === 'wish' ? wishes 
+    : type === 'service' ? services 
+    : products;
+    
+  const itemName = type === 'request' ? 'request' 
+    : type === 'wish' ? 'wish' 
+    : type === 'service' ? 'service' 
+    : 'product';
+
+
   
   return (async ({ params, locals }) => {
     const db = locals.db;

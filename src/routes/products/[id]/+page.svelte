@@ -1,4 +1,41 @@
 <script lang="ts">
+    import type { PageData } from './$types';
+    import ItemDetail from '$lib/components/Productdetail.svelte';
+    import { hsChapters, hsSubcategories, hsDetails } from '$lib/data/hsData';
+    
+    let { data } = $props();
+    const { product, isOwner, owner, currentUserId } = data;
+    
+    // HS Code description function
+    function getHSDescription(code: string): string {
+        if (!code) return 'Not Classified';
+        const cleanCode = code.replace(/\D/g, '');
+        const chapter = cleanCode.substring(0, 2);
+        const subcategory = cleanCode.substring(0, 4);
+        
+        if (hsDetails[subcategory]?.[code]) return hsDetails[subcategory][code];
+        if (hsSubcategories[chapter]?.[subcategory]) return hsSubcategories[chapter][subcategory];
+        if (hsChapters[chapter]) return hsChapters[chapter];
+        return 'Unknown Category';
+    }
+</script>
+
+<ItemDetail 
+    item={product}
+    isOwner={isOwner}
+    owner={owner}
+    currentUserId={currentUserId}
+    itemType="product"
+    backLink="/products"
+    deleteAction="?/deleteProduct"
+    editLink={`/products/${product.id}/edit`}
+    getDescription={getHSDescription}
+/>
+
+
+
+
+<!-- <script lang="ts">
   import type { PageData } from './$types';
   import { ArrowLeft, Star, Tag, Ruler, Briefcase, Camera, Handshake, Edit, Trash2 } from 'lucide-svelte';
   import { hsChapters, hsSubcategories, hsDetails } from '$lib/data/hsData';
@@ -44,7 +81,7 @@
     currentPhoto = url;
   }
 
-//  let currentPhoto = $state(product.photos[0]);
+  //  let currentPhoto = $state(product.photos[0]);
 
   // Prepare transaction parameters for the URL
   const transactionParams = new URLSearchParams();
@@ -83,14 +120,14 @@
 
       {#if isOwner}
         <div class="flex space-x-3 mt-1">
-          <!-- Edit Button -->
+          
           <a href={`/products/${product.id}/edit`}
             class="flex items-center justify-center p-2 bg-sky-100 dark:bg-sky-900/50 text-sky-600 dark:text-sky-400 rounded-full shadow-md hover:bg-sky-200 dark:hover:bg-sky-800 transition duration-150 transform hover:scale-105"
             title="Edit Product">
             <Edit class="w-5 h-5" />
           </a>
 
-          <!-- Delete Button -->
+          
           <form 
             method="POST" 
             action="?/delete"
@@ -111,9 +148,9 @@
       {product.headline}
     </p>
 
-    <!-- Product Details Grid -->
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-      <!-- Image Gallery -->
+      
       <div class="space-y-4">
         <div class="relative w-full h-96 bg-gray-100 dark:bg-slate-800 rounded-2xl overflow-hidden mb-4 shadow-inner">
           {#key currentPhoto}
@@ -141,9 +178,9 @@
         </div>
       </div>
 
-      <!-- Info and Description -->
+
       <div class="space-y-6">
-        <!-- Core Info -->
+        
         <div class="space-y-3 p-5 bg-sky-50 dark:bg-sky-950/30 rounded-2xl border-l-4 border-sky-400 dark:border-sky-600 transition-colors">
           <div class="flex items-center text-gray-800 dark:text-slate-200">
             <span class="font-bold text-lg">{m.points_value()}:</span>
@@ -173,7 +210,7 @@
         </div>
       </div>
       
-      <!-- Description -->
+
       <div class="lg:col-span-2 p-5 bg-gray-50 dark:bg-slate-800/50 rounded-2xl border-t border-gray-100 dark:border-slate-700 transition-colors">
         <h3 class="text-2xl font-bold text-gray-800 dark:text-white mb-3 border-b pb-2 dark:border-slate-700">{m.description()}</h3>
         <p class="text-gray-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
@@ -194,4 +231,4 @@
       {/if}
     </div>
   </div>
-</div>
+</div> -->

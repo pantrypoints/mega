@@ -1,36 +1,37 @@
-/*@import "tailwindcss";
-@plugin "@tailwindcss/forms";
-@plugin "@tailwindcss/typography";
-
-@layer base {
-  *, ::after, ::before {
-    @apply transition-colors duration-200;
-  }
-}*/
-
+/* 1. Import the actual font files from Google */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Varela+Round&display=swap');
 
 
 @import "tailwindcss";
 
-/* Configure dark mode to use class strategy */
 @variant dark (&:where(.dark, .dark *));
 
 @plugin "@tailwindcss/forms";
 @plugin "@tailwindcss/typography";
 
-/* Smooth transitions for theme switching */
+@theme {
+  /* 2. Map the variables to the imported fonts */
+  --font-display: "Varela Round", sans-serif;
+  --font-body: "DM Sans", sans-serif;
+}
+
 @layer base {
+  /* 3. Actually apply the fonts to the document */
+  html {
+    @apply font-body; /* Uses DM Sans for everything by default */
+    color-scheme: light dark;
+  }
+
+  h1, h2, h3, h4, .title {
+    @apply font-display; /* Uses Varela Round for headings */
+  }
+
+  /* Smooth transitions */
   *, ::after, ::before {
     @apply transition-colors duration-200;
-  }
-  
-  /* Ensure html element can have dark class */
-  html {
-    color-scheme: light dark;
   }
   
   html.dark {
     color-scheme: dark;
   }
 }
-

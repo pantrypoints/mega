@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import { PiggyBank, Sun, Moon, HandHelping, HandCoins, ListChecks, Bell, MessageCircle, LogOut, ScrollText, ChartNoAxesCombined, CircleQuestionMark, Megaphone, Shirt, Utensils, Users, User, Tally5 } from 'lucide-svelte';
+  import { BookOpen, PiggyBank, Sun, Moon, HandHelping, HandCoins, ListChecks, Bell, MessageCircle, LogOut, ScrollText, ChartNoAxesCombined, CircleQuestionMark, Megaphone, Shirt, Utensils, Users, User, Tally5 } from 'lucide-svelte';
   import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
 
@@ -103,9 +103,9 @@
     </div>
     
     <Lang />
-    
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-8">
-      <!-- Products -->
+
+    <div class="grid grid-cols-2  gap-3 mt-8">
+      <!-- Products md:grid-cols-4 -->
       <a href="/products" class="bg-sky-50 dark:bg-slate-800 border border-sky-200 dark:border-slate-700 p-3 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center min-h-24 flex flex-col justify-center items-center group">
         <div class="p-2 mb-1">
           <Shirt class="w-10 h-10 sm:w-12 sm:h-12 text-gray-500 dark:text-slate-400 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors" />
@@ -249,7 +249,16 @@
         <div class="text-gray-800 dark:text-slate-200 font-semibold text-xs sm:text-sm whitespace-nowrap">
           {m.banker()}
         </div>
-      </a>      
+      </a>  
+
+      <a href="https://pantrypoints.com/docs" class="bg-sky-50 dark:bg-slate-800 border border-sky-200 dark:border-slate-700 p-3 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center min-h-24 flex flex-col justify-center items-center group">
+        <div class="p-2 mb-1">
+          <BookOpen class="w-10 h-10 sm:w-12 sm:h-12 text-gray-500 dark:text-slate-400 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors" />
+        </div>
+        <div class="text-gray-800 dark:text-slate-200 font-semibold text-xs sm:text-sm whitespace-nowrap">
+          {m.docs()}
+        </div>
+      </a>
       
       <!-- How To Use 
       <a href="/how" class="bg-sky-50 dark:bg-slate-800 border border-sky-200 dark:border-slate-700 p-3 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center min-h-24 flex flex-col justify-center items-center group">
@@ -264,7 +273,7 @@
       {#if user}   
         <!-- Logout Button -->
         <form method='post' action='?/logout' use:enhance class="contents">
-          <button class="bg-red-50 dark:bg-red-900/30 border border-sky-200 dark:border-slate-700 p-3 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center min-h-24 flex flex-col justify-center items-center w-full group">
+          <button class="bg-red-50 col-span-2 dark:bg-red-900/30 border border-sky-200 dark:border-slate-700 p-3 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center min-h-24 flex flex-col justify-center items-center w-full group">
             <div class="p-2 mb-1">
               <LogOut class="w-10 h-10 sm:w-12 sm:h-12 text-gray-500 dark:text-slate-400 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors" />
             </div>
@@ -274,7 +283,7 @@
           </button>
         </form>
       {:else}
-        <a href="/login" class="bg-teal-500 dark:bg-teal-600 text-white p-3 rounded-2xl text-center flex flex-col items-center justify-center col-span-2 md:col-span-1 hover:bg-teal-600 dark:hover:bg-teal-700 transition-colors">
+        <a href="/login" class="bg-teal-500 col-span-2 dark:bg-teal-600 text-white p-3 rounded-2xl text-center flex flex-col items-center justify-center col-span-2 md:col-span-1 hover:bg-teal-600 dark:hover:bg-teal-700 transition-colors">
           <User class="w-10 h-10 mb-1" />
           <div class="font-bold">{m.sign_in()}</div>
         </a>  

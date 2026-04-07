@@ -1,6 +1,13 @@
+import { createItemAction } from '$lib/server/createproduct';
+
+export const actions = {
+  default: createItemAction('wish')
+};
+
+
 // from gemini jundalisay ata 
 
-import { getDb } from "$lib/server/db";
+/*import { getDb } from "$lib/server/db";
 import { wishes } from "$lib/server/db/schema";
 import { redirect, fail } from "@sveltejs/kit";
 import type { Actions } from "./$types";
@@ -40,4 +47,6 @@ export const actions: Actions = {
 
     redirect(303, "/wishes");   // perform redirect after success
   }
-};
+};*/
+
+

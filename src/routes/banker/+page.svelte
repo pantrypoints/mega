@@ -186,6 +186,27 @@
             {m.holiday_note()}
           </div>
         </div> -->
+
+        <!-- Quick Contact Form (Optional) -->
+        <div class="bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-950/30 dark:to-blue-950/30 rounded-2xl p-6 border border-sky-200 dark:border-sky-800">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-xl bg-sky-500 dark:bg-sky-600 flex items-center justify-center">
+              <MessageCircle class="w-5 h-5 text-white" />
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white">{m.quick_question()}</h3>
+          </div>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+            {m.quick_question_desc()}
+          </p>
+          <a href="https://www.facebook.com/pantrypoints/" 
+             target="_blank" 
+             rel="noopener noreferrer"
+             class="flex items-center justify-center gap-2 w-full bg-sky-600 hover:bg-sky-700 text-white font-semibold py-3 rounded-xl transition transform hover:scale-[1.02]">
+            <MessageCircle class="w-4 h-4" />
+            {m.message_us_on_messenger()}
+          </a>
+        </div>
+        
       </div>
 
       <!-- Right Column: Map -->
@@ -213,32 +234,12 @@
             </a>
           </div>
         </div>
-
-        <!-- Quick Contact Form (Optional) -->
-        <div class="bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-950/30 dark:to-blue-950/30 rounded-2xl p-6 border border-sky-200 dark:border-sky-800">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-10 h-10 rounded-xl bg-sky-500 dark:bg-sky-600 flex items-center justify-center">
-              <MessageCircle class="w-5 h-5 text-white" />
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white">{m.quick_question()}</h3>
-          </div>
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
-            {m.quick_question_desc()}
-          </p>
-          <a href="https://www.facebook.com/pantrypoints/" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             class="flex items-center justify-center gap-2 w-full bg-sky-600 hover:bg-sky-700 text-white font-semibold py-3 rounded-xl transition transform hover:scale-[1.02]">
-            <MessageCircle class="w-4 h-4" />
-            {m.message_us_on_messenger()}
-          </a>
-        </div>
       </div>
     </div>
 
     <!-- Footer Note -->
-    <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800 text-center text-sm text-gray-500 dark:text-gray-400">
+<!--     <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800 text-center text-sm text-gray-500 dark:text-gray-400">
       <p>{m.contact_response_time()}</p>
-    </div>
+    </div> -->
   </div>
 </div>

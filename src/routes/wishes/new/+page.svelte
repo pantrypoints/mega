@@ -1,6 +1,18 @@
+<script lang="ts">
+  import CreateItem from '$lib/components/Createitem.svelte';
+  import type { ActionData } from './$types';
+  
+  let { form } = $props<{ form: ActionData }>();
+</script>
+
+<CreateItem 
+  form={form}
+  itemType="wish"
+  redirectUrl="/wishes"/>
+
 <!-- from gemini jundalisay ata -->
 
-<script lang="ts">
+<!-- <script lang="ts">
   import { enhance } from '$app/forms';
   import { 
     Save, Pencil, Megaphone, Sigma, ArrowLeft, 
@@ -26,9 +38,6 @@
   let photo1 = $state("");
   let photo2 = $state("");
   let photo3 = $state("");
-  let photo4 = $state("");
-  let photo5 = $state("");
-  let photo6 = $state("");
 
   // --- HS Selection State ---
   let selectedChapter = $state('');
@@ -75,7 +84,6 @@
     </a>
 
     <h1 class="text-3xl font-extrabold text-gray-800 text-center mb-1">{m.create_wish()}</h1>
-    <!-- <p class="text-center text-gray-500 mb-8">Add a new product to the catalog</p> -->
 
     {#if form?.message}
       <p class="text-sm bg-red-100 text-red-600 p-3 rounded-lg border border-red-300 mb-4 animate-pulse">
@@ -242,3 +250,4 @@
   </div>
 </div>
 
+ -->

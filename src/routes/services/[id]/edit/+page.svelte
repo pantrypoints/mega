@@ -1,4 +1,21 @@
 <script lang="ts">
+  import type { PageData } from './$types';
+  import EditItem from '$lib/components/Serviceedit.svelte';
+  
+  let { data } = $props();
+</script>
+
+<EditItem 
+  item={data.service}
+  itemType="service"
+  backLink={`/services/${data.service.id}`}
+/>
+
+
+
+
+
+<!-- <script lang="ts">
   import { Image, Sigma, ArrowLeft, Save, Pen, Ruler, Tag, ChevronDown, DollarSign } from 'lucide-svelte';
   import { enhance } from '$app/forms';
   import { onMount } from 'svelte';
@@ -246,3 +263,4 @@
     </form>
   </div>
 </div>
+ -->

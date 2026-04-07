@@ -3,11 +3,14 @@
     import { goto } from '$app/navigation';
     import { m } from '$lib/paraglide/messages.js';
 
-    let { items, search, sort, direction, error, basePath, title, createLabel, getDesc }: any = $props();
+    let { items, search, sort, direction, error, basePath, title, createLabel, getDesc, user }: any = $props();
 
     let currentSearch = $state(search);
+    
+    // Determine if user is logged in
+    let isLoggedIn = $derived(!!user);
 
-    // 2. CRITICAL: Sync currentSearch if the user navigates (e.g., clicking a link or back button)
+    // Sync currentSearch if the user navigates
     $effect(() => {
         currentSearch = search;
     });
@@ -19,12 +22,11 @@
             else params.delete(k);
         });
         
-        // Use keepFocus: true so the input doesn't lose focus while typing
         goto(`${basePath}?${params.toString()}`, { keepFocus: true });
     }
 
     const handleSearch = (e: SubmitEvent) => {
-        e.preventDefault(); // Stop page reload
+        e.preventDefault();
         updateUrl({ search: currentSearch });
     };
     
@@ -34,39 +36,35 @@
     };
 </script>
 
-
-
-
-
-
-
 <div class="min-h-screen bg-gray-50 dark:bg-slate-950 p-4 sm:p-8 transition-colors">
     <div class="w-full max-w-6xl mx-auto space-y-8">
         <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-xl border-t-4 border-sky-500">
             <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
                 <h1 class="text-3xl font-black text-gray-800 dark:text-white">{title}</h1>
-                <a href="{basePath}/new" class="bg-teal-500 hover:bg-teal-600 text-white font-bold px-6 py-3 rounded-xl shadow-lg transition transform hover:scale-105 text-center">
-                    {createLabel}
-                </a>
+                
+                <!-- Only show create button if user is logged in -->
+                {#if isLoggedIn}
+                    <a href="{basePath}/new" class="bg-teal-500 hover:bg-teal-600 text-white font-bold px-6 py-3 rounded-xl shadow-lg transition transform hover:scale-105 text-center">
+                        {createLabel}
+                    </a>
+                {/if}
             </div>
 
-<form onsubmit={handleSearch} class="flex flex-col sm:flex-row gap-4">
-    <div class="relative flex-grow">
-        <input 
-            type="search" 
-            bind:value={currentSearch} 
-            placeholder={m.search_by()} 
-            class="w-full p-3 pl-10 border dark:border-slate-700 rounded-xl dark:bg-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-sky-500" 
-        />
-        <Search class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-    </div>
-    <button type="submit" class="px-6 py-3 bg-sky-600 text-white rounded-xl font-bold hover:bg-sky-700 transition">
-        {m.search()}
-    </button>
-</form>
-
-
-
+            <!-- Rest of your template remains the same -->
+            <form onsubmit={handleSearch} class="flex flex-col sm:flex-row gap-4">
+                <div class="relative flex-grow">
+                    <input 
+                        type="search" 
+                        bind:value={currentSearch} 
+                        placeholder={m.search_by()} 
+                        class="w-full p-3 pl-10 border dark:border-slate-700 rounded-xl dark:bg-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-sky-500" 
+                    />
+                    <Search class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                </div>
+                <button type="submit" class="px-6 py-3 bg-sky-600 text-white rounded-xl font-bold hover:bg-sky-700 transition">
+                    {m.search()}
+                </button>
+            </form>
 
             <div class="mt-6 flex flex-wrap gap-3 text-sm border-t dark:border-slate-800 pt-4">
                 <span class="font-bold text-gray-500 self-center">{m.sort_by()}:</span>
@@ -87,7 +85,10 @@
                 <a href="{basePath}/{item.id}">
                     <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-lg overflow-hidden transition transform hover:-translate-y-1 hover:shadow-2xl">
                         <div class="h-48 bg-gray-200 dark:bg-slate-800">
-                            <img src={item.mainPhoto} alt={item.name} class="w-full h-full object-cover" />
+                            <img src={item.mainPhoto || '/blank.jpg'} 
+                              onerror={(e) => (e.currentTarget.src = '/blank.jpg')}
+                              alt={item.name} 
+                              class="w-full h-full object-cover" />
                         </div>
                         <div class="p-6 space-y-3">
                             <h3 class="text-xl font-bold dark:text-white truncate">{item.name}</h3>

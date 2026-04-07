@@ -29,6 +29,7 @@
     basePath="/products" 
     title={m.products()} 
     createLabel={m.create_product()} 
-    getDesc={getHSDescription} 
+    getDesc={getHSDescription}
+    user={data.user} 
 />
 

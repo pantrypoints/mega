@@ -1,5 +1,26 @@
 <script lang="ts">
   import type { PageData } from './$types';
+  import ItemDetail from '$lib/components/Servicedetail.svelte';
+  
+  let { data } = $props();
+  const { wish, isOwner, owner, currentUserId } = data;
+</script>
+
+<ItemDetail 
+  item={wish}
+  isOwner={isOwner}
+  owner={owner}
+  currentUserId={currentUserId}
+  itemType="wish"
+  backLink="/wishes"
+  deleteAction="?/deleteWish"
+  editLink={`/wishes/${wish.id}/edit`}
+/>
+
+
+
+<!-- <script lang="ts">
+  import type { PageData } from './$types';
   import { ArrowLeft, Star, Tag, Ruler, Briefcase, Camera, Handshake, Edit, Trash2 } from 'lucide-svelte';
 
   import { hsChapters, hsSubcategories, hsDetails } from '$lib/data/hsData';
@@ -80,14 +101,14 @@
 
       {#if isOwner}
         <div class="flex space-x-3 mt-1">
-            <!-- Edit Button -->
+            
             <a href={`/wishs/${wish.id}/edit`}
                 class="flex items-center justify-center p-2 bg-sky-100 text-sky-600 rounded-full shadow-md hover:bg-sky-200 transition duration-150 transform hover:scale-105"
                 title="Edit wish">
                 <Edit class="w-5 h-5" />
             </a>
 
-            <!-- Delete Button -->
+            
             <form 
                 method="POST" 
                 action="?/delete"
@@ -110,11 +131,11 @@
     </p>
 
     
-    <!-- wish Details Grid -->
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-      <!-- Image Gallery -->
+
       <div class="space-y-4">
-        <!-- Main Display Image -->
+
         <div class="relative overflow-hidden rounded-2xl shadow-xl aspect-[4/3] bg-gray-100">
           <img
             src={currentPhoto}
@@ -123,13 +144,13 @@
           />
         </div>
 
-        <!-- Thumbnail Selector -->
+
         {#if wish.photos.length > 0}
           <div class="flex flex-wrap gap-2 justify-center p-2 rounded-xl bg-gray-50 border border-gray-100">
             <Camera class="w-5 h-5 text-gray-500 self-center hidden sm:block" />
 
 
-            <!-- {#each wish.photos as photo, index (photo)} -->
+
             {#each wish.photos as photo, i (i)}            
               <button
                 on:click={() => handleThumbnailClick(photo)}
@@ -149,23 +170,23 @@
         {/if}
       </div>
 
-      <!-- Info and Description -->
+
       <div class="space-y-6">
-        <!-- Core Info -->
+
         <div class="space-y-3 p-5 bg-sky-50 rounded-2xl border-l-4 border-sky-400">
           <div class="flex items-center text-gray-800">
-            <!-- <Star class="w-5 h-5 text-orange-500 mr-2" /> -->
+
             <span class="font-bold text-lg">{m.points_value()}:</span>
             <span class="ml-2 text-2xl font-extrabold text-sky-700">{wish.points.toFixed(0)}</span>
           </div>
           <div class="flex items-center text-gray-600">
-            <!-- <Ruler class="w-5 h-5 mr-2" /> -->
+
             <span class="font-semibold">{m.measure()}:</span>
             <span class="ml-2">{wish.measure}</span>
           </div>
                 
           <div class="text-gray-600">
-            <!-- <span><Tag class="w-5 h-5 mr-2" /></span> -->
+
             <span class="font-semibold">{m.category()}:</span>
             <span class="ml-2">
               {getHSDescription(wish.category)} ({wish.category})
@@ -175,7 +196,7 @@
 
 
           <div class="flex items-center text-gray-600">
-            <!-- <Briefcase class="w-5 h-5 mr-2" /> -->
+
             <span class="font-semibold">{m.owner()}:</span>          
               <img src={owner.avatar || '/user.svg'} 
                 alt="Seller Avatar" 
@@ -185,7 +206,7 @@
         </div>
       </div>
       
-      <!-- Description -->
+
       <div class="lg:col-span-2 p-5 bg-gray-50 rounded-2xl border-t border-gray-100">
         <h3 class="text-2xl font-bold text-gray-800 mb-3 border-b pb-2">{m.description()}</h3>
         <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">
@@ -210,3 +231,4 @@
     </div>
   </div>
 </div>
+ -->

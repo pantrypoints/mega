@@ -13,6 +13,6 @@
   currentUserId={currentUserId}
   itemType="request"
   backLink="/requests"
-  deleteAction="?/deleterequest"
+  deleteAction="?/deleteRequest"
   editLink={`/requests/${request.id}/edit`}
 />

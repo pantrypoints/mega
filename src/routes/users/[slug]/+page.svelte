@@ -201,7 +201,7 @@
       
       <div class="flex-grow text-center sm:text-left">
         <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white mb-2">{user.username}</h1>
-        <div class="flex flex-wrap gap-3 justify-center sm:justify-start text-sm text-gray-600 dark:text-gray-400 mb-3">
+        <div class="flex flex-wrap gap-3 justify-center sm:justify-start text-sm text-gray-600 dark:text-white mb-3">
           {#if user.city}
             <div class="flex items-center gap-1">
               <MapPin class="w-4 h-4" />
@@ -214,12 +214,12 @@
               <span>{user.email}</span>
             </div>
           {/if}
-          {#if user.phone}
+<!--           {#if user.phone}
             <div class="flex items-center gap-1">
               <Phone class="w-4 h-4" />
               <span>{user.phone}</span>
             </div>
-          {/if}
+          {/if} -->
         </div>
         
         <!-- Dominant Traits with Colorful Badges -->
@@ -245,39 +245,76 @@
     <div class="w-full bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-4 sm:p-10 my-8 flex flex-col items-center">
       <header class="text-center mb-6">
         <h3 class="text-2xl font-bold text-gray-800 dark:text-white">{m.personality_id()}</h3>
-        <p class="text-sm text-gray-400 dark:text-gray-500">{m.ave()}</p>
+        <p class="text-sm text-gray-400 dark:text-gray-100">{m.ave()}</p>
       </header>
       
       <div class="relative overflow-visible">
         <svg width={center * 2} height={center * 2} viewBox={`0 0 ${center * 2} ${center * 2}`} class="overflow-visible">
-          {#each ringPaths as path, i}
-            <path d={path} fill="none" stroke={i === rings - 1 ? '#cbd5e1' : '#f1f5f9'} class={i === rings - 1 ? 'dark:stroke-gray-600' : 'dark:stroke-gray-800'} stroke-width="1.5" />
-          {/each}
-          
-          {#each Array(spokes) as _, i}
-            {@const { x, y } = getCoordinate(i, 4)}
-            <line x1={center} y1={center} x2={x} y2={y} stroke="#f1f5f9" class="dark:stroke-gray-800" stroke-width="1" />
-          {/each}
-          
-          <path d={dataPolygonPath} fill="rgba(13, 148, 136, 0.4)" stroke="#0f766e" stroke-width="3" class="dark:stroke-teal-500 animate-radar" />
-          
-          {#each personalityAttributes as d, i}
-            {@const { x, y } = getCoordinate(i, d.value)}
-            {@const colors = traitColors[d.label]}
-            <circle cx={x} cy={y} r="5" fill={colors.iconColor.slice(5)} stroke="#fff" stroke-width="2" class="animate-point" />
-            <text x={x} y={y} dy={y < center ? -15 : 20} text-anchor="middle" font-size="12" font-weight="bold" fill={colors.iconColor.slice(5)} class="animate-point">
-              {d.value.toFixed(1)}
-            </text>
-          {/each}
-          
-          {#each personalityAttributes as d, i}
-            {@const { x, y } = getCoordinate(i, 4.4)}
-            {@const colors = traitColors[d.label]}
-            <text x={x} y={y} text-anchor="middle" dominant-baseline="middle" fill={colors.iconColor.slice(5)} font-size="13" font-weight="800" class="uppercase tracking-tighter">
-              {d.label}
-            </text>
-          {/each}
-        </svg>
+  {#each ringPaths as path, i}
+    <path 
+      d={path} 
+      fill="none" 
+      stroke={i === rings - 1 ? '#cbd5e1' : '#f1f5f9'} 
+      class={i === rings - 1 ? 'dark:stroke-gray-500' : 'dark:stroke-gray-700/50'} 
+      stroke-width="1.5" 
+    />
+  {/each}
+
+  {#each Array(spokes) as _, i}
+    {@const { x, y } = getCoordinate(i, 4)}
+    <line 
+      x1={center} y1={center} x2={x} y2={y} 
+      stroke="#f1f5f9" 
+      class="dark:stroke-gray-700" 
+      stroke-width="1" 
+    />
+  {/each}
+
+  <path 
+    d={dataPolygonPath} 
+    fill="rgba(13, 148, 136, 0.4)" 
+    stroke="#0f766e" 
+    stroke-width="3" 
+    class="dark:stroke-teal-400 animate-radar" 
+  />
+
+  {#each personalityAttributes as d, i}
+    {@const { x, y } = getCoordinate(i, d.value)}
+    {@const colors = traitColors[d.label]}
+    <circle 
+      cx={x} cy={y} r="5" 
+      fill={colors.iconColor.slice(5)} 
+      stroke="#fff" 
+      stroke-width="2" 
+      class="animate-point shadow-sm" 
+    />
+    <text 
+      x={x} y={y} dy={y < center ? -15 : 20} 
+      text-anchor="middle" 
+      font-size="12" 
+      font-weight="bold" 
+      class="animate-point fill-current text-gray-700 dark:text-white"
+      style="filter: drop-shadow(0px 0px 2px rgba(0,0,0,0.2));"
+    >
+      {d.value.toFixed(1)}
+    </text>
+  {/each}
+
+  {#each personalityAttributes as d, i}
+    {@const { x, y } = getCoordinate(i, 4.5)} <text 
+      x={x} y={y} 
+      text-anchor="middle" 
+      dominant-baseline="middle" 
+      font-size="13" 
+      font-weight="800" 
+      class="uppercase tracking-tighter fill-current text-gray-800 dark:text-teal-300"
+    >
+      {d.label}
+    </text>
+  {/each}
+</svg>
+
+
       </div>
     </div>
     
