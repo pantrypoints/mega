@@ -1,0 +1,53 @@
+{
+  "0101": {
+    "0101.21": "Pure-bred breeding horses",
+    "0101.29": "Other horses",
+    "0101.30": "Asses",
+    "0101.90": "Other"
+  },
+  "0102": {
+    "0102.21": "Pure-bred breeding bovine animals",
+    "0102.29": "Other bovine animals",
+    "0102.31": "Pure-bred breeding buffalo",
+    "0102.39": "Other buffalo",
+    "0102.90": "Other"
+  },
+  "0103": {
+    "0103.10": "Pure-bred breeding animals",
+    "0103.91": "Other: Weighing less than 50 kg",
+    "0103.92": "Other: Weighing 50 kg or more"
+  },
+  "0104": {
+    "0104.10": "Sheep",
+    "0104.20": "Goats"
+  },
+  "0105": {
+    "0105.11": "Fowls of the species Gallus domesticus (weighing ≤ 185g)",
+    "0105.12": "Turkeys (weighing ≤ 185g)",
+    "0105.13": "Ducks (weighing ≤ 185g)",
+    "0105.14": "Geese (weighing ≤ 185g)",
+    "0105.15": "Guinea fowls (weighing ≤ 185g)",
+    "0105.94": "Fowls of the species Gallus domesticus (other)",
+    "0105.99": "Other poultry"
+  },
+  "0106": {
+    "0106.11": "Primates",
+    "0106.12": "Whales, dolphins and porpoises; manatees and dugongs; seals, sea lions and walruses",
+    "0106.13": "Camels and other camelids (Camelidae)",
+    "0106.14": "Rabbits and hares",
+    "0106.19": "Other mammals",
+    "0106.20": "Reptiles (including snakes and turtles)",
+    "0106.31": "Birds of prey",
+    "0106.32": "Psittaciformes (including parrots, parakeets, macaws and cockatoos)",
+    "0106.33": "Ostriches; emus (Dromaius novaehollandiae)",
+    "0106.39": "Other birds",
+    "0106.41": "Bees",
+    "0106.49": "Other insects",
+    "0106.90": "Other live animals"
+  },
+  "0201": {
+    "0201.10": "Carcasses and half-carcasses",
+    "0201.20": "Other cuts with bone in",
+    "0201.30": "Boneless"
+  }
+}
