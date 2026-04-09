@@ -91,11 +91,11 @@
                               class="w-full h-full object-cover" />
                         </div>
                         <div class="p-6 space-y-3">
-                            <h3 class="text-xl font-bold dark:text-white truncate">{item.name}</h3>
+                            <h3 class="text-xl font-bold text-black dark:text-white truncate">{item.name}</h3>
                             <p class="text-sm text-gray-500 line-clamp-2">{item.headline}</p>
-                            <span class="inline-flex items-center text-xs px-3 py-1 bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 rounded-full font-bold">
+                            <!-- <span class="inline-flex items-center text-xs px-3 py-1 bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 rounded-full font-bold">
                                 <Tag size={12} class="mr-1" /> {getDesc(item.category)}
-                            </span>
+                            </span> -->
                             <div class="flex justify-between items-center pt-3 border-t dark:border-slate-800">
                                 <div class="flex items-center text-lg font-black text-orange-600">
                                     <Star size={16} class="mr-1 fill-orange-500" /> {item.points} Points

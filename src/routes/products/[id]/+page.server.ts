@@ -1,12 +1,61 @@
 import { createItemDetailLoader } from '$lib/server/item';
 import { createDeleteAction } from '$lib/server/delete';
+import { error, fail } from '@sveltejs/kit';
+import { products } from '$lib/db/schema'; // adjust path to your schema
+import { eq } from 'drizzle-orm';
 import type { Actions } from './$types';
+
 
 export const load = createItemDetailLoader('product');
 
 export const actions: Actions = {
   ...createDeleteAction('product')
+
+    updateAmount: async ({ request, locals }) => {
+        // 1. Check authentication
+        if (!locals.user) {
+            return fail(401, { message: 'Unauthorized' });
+        }
+
+        const formData = await request.formData();
+        const productId = Number(formData.get('productId'));
+        const newAmount = parseFloat(formData.get('amount') as string);
+
+        if (isNaN(productId) || isNaN(newAmount)) {
+            return fail(400, { message: 'Invalid data provided' });
+        }
+
+        try {
+            // 2. Verify ownership before updating
+            const [product] = await locals.db
+                .select()
+                .from(products)
+                .where(eq(products.id, productId))
+                .limit(1);
+
+            if (!product || product.userId !== locals.user.id) {
+                return fail(403, { message: 'You do not own this product' });
+            }
+
+            // 3. Perform the update
+            await locals.db
+                .update(products)
+                .set({ 
+                    amount: newAmount,
+                    // Use standard JS ISO string or sql template depending on your DB driver
+                    dateAmountChange: new Date().toISOString() 
+                })
+                .where(eq(products.id, productId));
+
+            return { success: true, message: 'Amount updated successfully' };
+        } catch (err) {
+            console.error(err);
+            return fail(500, { message: 'Database update failed' });
+        }
+    }
 };
+
+
 
 
 

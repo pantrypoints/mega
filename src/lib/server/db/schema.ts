@@ -66,12 +66,15 @@ export const posts = sqliteTable('posts', {
   dateModified: text('date_modified').default(sql`(CURRENT_TIMESTAMP)`)
 });
 
+
 export const products = sqliteTable('products', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   name: text('name').notNull(),
   measure: text('measure').notNull(),
   points: real('points').notNull(),
-  category: text('category').notNull(), // HS Code
+  amount: real('amount').notNull().default(0), // New: Snapshot amount
+  dateAmountChange: text('date_amount_change').default(sql`(CURRENT_TIMESTAMP)`), // New: Last updated
+  category: text('category').notNull(), 
   photo1: text('photo1'),
   photo2: text('photo2'),
   photo3: text('photo3'),
@@ -82,8 +85,6 @@ export const products = sqliteTable('products', {
   dateCreated: text('date_created').default(sql`(CURRENT_TIMESTAMP)`),
   dateModified: text('date_modified').default(sql`(CURRENT_TIMESTAMP)`)
 });
-
-
 
 
 export const services = sqliteTable('services', {
