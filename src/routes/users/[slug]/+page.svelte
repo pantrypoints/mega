@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { PageData } from './$types';
-  import { Pen, HandPlatter, HandHelping, HandHeart, HandCoins, ArrowRightLeft, Heart, Brain, BicepsFlexed, Moon, FlaskConical, Orbit, Sun, HandFist, Flower, Sword, Sparkles, MessageCircle, Users, ArrowLeft, User, Star, Tag, MapPin, Calendar, Mail, Phone } from 'lucide-svelte';
+  import { LockKeyholeOpen, Info, Pen, HandPlatter, HandHelping, HandHeart, HandCoins, ArrowRightLeft, Heart, Brain, BicepsFlexed, Moon, FlaskConical, Orbit, Sun, HandFist, Flower, Sword, Sparkles, MessageCircle, Users, ArrowLeft, User, Star, Tag, MapPin, Calendar, Mail, Phone } from 'lucide-svelte';
   import { page } from '$app/stores';
   import { m } from '$lib/paraglide/messages.js';
   
@@ -18,7 +18,8 @@
       activeTab = hash as 'products' | 'services' | 'transactions';
     }
   }
-  
+
+
   // FIXED: Added 'transactions' type to parameter
   function setTab(tab: 'products' | 'services' | 'transactions') {
     activeTab = tab;
@@ -127,8 +128,11 @@
   const center = radius + 40;
   const rings = 4; // Represents scores 1, 2, 3, 4
   const angleStep = (2 * Math.PI) / spokes;
-  
-  // Function to calculate coordinates (Max value is now 4 instead of 100)
+
+
+
+
+// Function to calculate coordinates (Max value is now 4 instead of 100)
   function getCoordinate(index: number, value: number, max: number = 4) {
     const angle = angleStep * index - (Math.PI / 2);
     const currentRadius = (value / max) * radius;
@@ -137,13 +141,57 @@
     return { x, y };
   }
   
+  // --- EXISTING PATH FOR VIEWED USER ---
   $: dataPolygonPath = personalityAttributes
     .map((d, i) => {
       const { x, y } = getCoordinate(i, d.value);
       return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
     })
     .join(' ') + ' Z';
-  
+
+
+
+
+
+
+  // --- NEW: LOGIC FOR CURRENT USER OVERLAY ---
+  let currentUserAttributes: {label: string, value: number}[] = [];
+  let matchPercentage = 0;
+  let currentUserPolygonPath = '';
+
+  $: if (data.currentUser && currentUserId !== user.id) {
+    // 1. Map current user attributes
+    currentUserAttributes = [
+      { label: 'Heart', value: data.currentUser.heart || 0 },
+      { label: 'Brain', value: data.currentUser.brain || 0 },
+      { label: 'Body', value: data.currentUser.body || 0 },
+      { label: 'Luna', value: data.currentUser.luna || 0 },
+      { label: 'Mercury', value: data.currentUser.mercury || 0 },
+      { label: 'Saturn', value: data.currentUser.saturn || 0 },
+      { label: 'Apollo', value: data.currentUser.apollo || 0 },
+      { label: 'Jupiter', value: data.currentUser.jupiter || 0 },
+      { label: 'Venus', value: data.currentUser.venus || 0 },
+      { label: 'Mars', value: data.currentUser.mars || 0 }
+    ];
+
+    // 2. Calculate % Match (Max difference per trait is 4. Total max diff is 4 * 10 = 40)
+    let totalDiff = 0;
+    for (let i = 0; i < personalityAttributes.length; i++) {
+      totalDiff += Math.abs(personalityAttributes[i].value - currentUserAttributes[i].value);
+    }
+    const maxDiff = 40; 
+    matchPercentage = Math.round(((maxDiff - totalDiff) / maxDiff) * 100);
+
+    // 3. Generate Current User Path
+    currentUserPolygonPath = currentUserAttributes
+      .map((d, i) => {
+        const { x, y } = getCoordinate(i, d.value);
+        return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
+      })
+      .join(' ') + ' Z';
+  }
+
+
   let ringPaths: string[] = [];
   for (let r = 1; r <= rings; r++) {
     const ringPath = personalityAttributes
@@ -159,6 +207,86 @@
   onMount(() => {
     animated = true;
   });
+
+
+    
+    // Helper to get status label from code
+    function getStatusLabel(code: string): string {
+        const statusMap: Record<string, string> = {
+            's': m.status_single(),
+            'sp': m.status_single_parent(),
+            'rnc': m.status_relationship_no_children(),
+            'rwc': m.status_relationship_with_children(),
+            'enc': m.status_engaged_no_children(),
+            'ewc': m.status_engaged_with_children(),
+            'mnc': m.status_married_no_children(),
+            'mwc': m.status_married_with_children(),
+            'dnc': m.status_divorced_no_children(),
+            'dwc': m.status_divorced_with_children(),
+            'wnc': m.status_widowed_no_children(),
+            'wwc': m.status_widowed_with_children(),
+            'sepnc': m.status_separated_no_children(),
+            'sepwc': m.status_separated_with_children()
+        };
+        return statusMap[code] || code || m.not_specified();
+    }
+
+    // Helper to get seeking labels from comma-separated codes
+    function getSeekingLabels(codes: string): string[] {
+        if (!codes) return [];
+        const codeArray = codes.split(',');
+        const seekingMap: Record<string, string> = {
+            'pc': m.seeking_professional_connections(),
+            'bc': m.seeking_business_connections(),
+            'ap': m.seeking_activity_partner(),
+            'f': m.seeking_friendship(),
+            'cf': m.seeking_close_friendship(),
+            'rr': m.seeking_romantic_relationship(),
+            'm': m.seeking_marriage()
+        };
+        return codeArray.map(code => seekingMap[code] || code);
+    }
+
+    // Helper to get ethnicity label
+    function getEthnicityLabel(code: string): string {
+        const ethnicityMap: Record<string, string> = {
+            'east_asian': m.ethnicity_east_asian(),
+            'south_asian': m.ethnicity_south_asian(),
+            'southeast_asian': m.ethnicity_southeast_asian(),
+            'middle_eastern': m.ethnicity_middle_eastern(),
+            'white': m.ethnicity_white(),
+            'latino': m.ethnicity_latino(),
+            'native_american': m.ethnicity_native_american(),
+            'african': m.ethnicity_african(),
+            'pacific_islander': m.ethnicity_pacific_islander(),
+            'arctic': m.ethnicity_arctic(),
+            'other': m.ethnicity_other()
+        };
+        return ethnicityMap[code] || code || m.not_specified();
+    }
+
+    // Helper to get nationality label
+    function getNationalityLabel(code: string): string {
+        const nationalityMap: Record<string, string> = {
+            'us': 'United States',
+            'uk': 'United Kingdom',
+            'ca': 'Canada',
+            'au': 'Australia',
+            'de': 'Germany',
+            'fr': 'France',
+            'jp': 'Japan',
+            'cn': 'China',
+            'in': 'India',
+            'ph': 'Philippines',
+            'vn': 'Vietnam',
+            'th': 'Thailand',
+            'id': 'Indonesia',
+            'my': 'Malaysia',
+            'sg': 'Singapore',
+            'other': m.other()
+        };
+        return nationalityMap[code] || code || m.not_specified();
+    }
 </script>
 
 <svelte:head>
@@ -195,129 +323,211 @@
           <a href="/users/{user.slug}/edit" class="my-6 flex items-center justify-center gap-2 bg-teal-600 dark:bg-teal-700 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md hover:bg-teal-700 dark:hover:bg-teal-600 transition transform hover:scale-105 text-center">
             <Pen class="w-4 h-4" />
             {m.edit()}
-          </a>        
+          </a>  
+          <a href="/security" class="my-6 flex items-center justify-center gap-2 bg-teal-600 dark:bg-teal-700 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md hover:bg-teal-700 dark:hover:bg-teal-600 transition transform hover:scale-105 text-center">
+            <LockKeyholeOpen class="w-4 h-4" />
+            {m.reset_password()}
+          </a>
+
         {/if}
       </div>
       
       <div class="flex-grow text-center sm:text-left">
-        <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white mb-2">{user.username}</h1>
-        <div class="flex flex-wrap gap-3 justify-center sm:justify-start text-sm text-gray-600 dark:text-white mb-3">
-          {#if user.city}
-            <div class="flex items-center gap-1">
-              <MapPin class="w-4 h-4" />
-              <span>{user.city}</span>
-            </div>
-          {/if}
-          {#if user.email}
-            <div class="flex items-center gap-1">
-              <Mail class="w-4 h-4" />
-              <span>{user.email}</span>
-            </div>
-          {/if}
-<!--           {#if user.phone}
-            <div class="flex items-center gap-1">
-              <Phone class="w-4 h-4" />
-              <span>{user.phone}</span>
-            </div>
-          {/if} -->
-        </div>
-        
-        <!-- Dominant Traits with Colorful Badges -->
-        <div class="inline-flex flex-wrap items-center gap-2 bg-teal-50 dark:bg-teal-950/50 border border-teal-100 dark:border-teal-900 px-4 py-2 rounded-2xl">
-          <div class="flex items-center gap-1">
-            <Sparkles class="w-4 h-4 text-teal-600 dark:text-teal-400" />
-            <span class="text-xs font-bold text-teal-600 dark:text-teal-400 uppercase tracking-widest">{m.dominant()}:</span>
+          <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white mb-2">{user.username}</h1>
+          
+          <!-- Basic Info - Always visible -->
+          <div class="flex flex-wrap gap-3 justify-center sm:justify-start text-sm text-gray-600 dark:text-gray-400 mb-3">
+              {#if user.city}
+                  <div class="flex items-center gap-1">
+                      <MapPin class="w-4 h-4" />
+                      <span>{user.city}</span>
+                  </div>
+              {/if}
+              {#if user.email}
+                  <div class="flex items-center gap-1">
+                      <Mail class="w-4 h-4" />
+                      <span>{user.email}</span>
+                  </div>
+              {/if}
           </div>
-          <div class="flex flex-wrap items-center gap-2">
-            {#each topThree as trait}
-              {@const colors = traitColors[trait.label]}
-              <div class="flex items-center gap-2 px-3 py-2 rounded-xl border shadow-sm {colors.bg} {colors.border}">
-                <svelte:component this={colors.icon} class="w-4 h-4 {colors.iconColor}" />
-                <span class="text-sm font-bold {colors.text}">{trait.label}</span>
-                <span class="text-xs font-semibold {colors.text} opacity-80">({trait.value.toFixed(1)})</span>
+
+
+          <!-- Relationship Bar - Conditional Display -->
+          {#if currentUserId === user.id}
+              <!-- Current User - Always see their own details -->
+              <div class="flex flex-wrap items-center gap-3 mb-4 p-3 bg-gradient-to-r from-pink-50 to-rose-50 dark:from-pink-950/30 dark:to-rose-950/30 rounded-xl border border-pink-200 dark:border-pink-800">
+                  <!-- Relationship Mode -->
+                  <div class="flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-gray-800 rounded-full shadow-sm">
+                      <Heart class="w-3.5 h-3.5 text-rose-500" />
+                      <span class="text-xs font-medium text-gray-700 dark:text-gray-300">
+                          {user.rel === 'on' ? m.visible() : m.hidden()}
+                      </span>
+                  </div>
+
+                  <!-- Status -->
+                  {#if user.status}
+                      <div class="flex items-center gap-1.5 px-3 py-1.5 bg-purple-100 dark:bg-purple-900/30 rounded-full">
+                          <Users class="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+                          <span class="text-xs font-medium text-purple-700 dark:text-purple-300">{getStatusLabel(user.status)}</span>
+                      </div>
+                  {/if}
+
+                  <!-- Seeking -->
+                  {#if user.seeking}
+                      <div class="flex items-center gap-1.5 px-3 py-1.5 bg-pink-100 dark:bg-pink-900/30 rounded-full">
+                          <Sparkles class="w-3.5 h-3.5 text-pink-600 dark:text-pink-400" />
+                          <span class="text-xs font-medium text-pink-700 dark:text-pink-300">
+                              {getSeekingLabels(user.seeking).slice(0, 2).join(', ')}{#if getSeekingLabels(user.seeking).length > 2}+{/if}
+                          </span>
+                      </div>
+                  {/if}
+
+                  <!-- Ethnicity -->
+                  {#if user.ethnicity}
+                      <div class="flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 dark:bg-amber-900/30 rounded-full">
+                          <Users class="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                          <span class="text-xs font-medium text-amber-700 dark:text-amber-300">{getEthnicityLabel(user.ethnicity)}</span>
+                      </div>
+                  {/if}
+
+                  <!-- Nationality -->
+                  {#if user.nationality}
+                      <div class="flex items-center gap-1.5 px-3 py-1.5 bg-green-100 dark:bg-green-900/30 rounded-full">
+                          <MapPin class="w-3.5 h-3.5 text-green-600 dark:text-green-400" />
+                          <span class="text-xs font-medium text-green-700 dark:text-green-300">{getNationalityLabel(user.nationality)}</span>
+                      </div>
+                  {/if}
               </div>
-            {/each}
+
+          {:else if user.rel === 'on'}
+              <!-- Other User - Only show if they have view ON -->
+              <div class="flex flex-wrap items-center gap-3 mb-4 p-3 bg-gradient-to-r from-pink-50 to-rose-50 dark:from-pink-950/30 dark:to-rose-950/30 rounded-xl border border-pink-200 dark:border-pink-800">
+                  <!-- Status -->
+                  {#if user.status}
+                      <div class="flex items-center gap-1.5 px-3 py-1.5 bg-purple-100 dark:bg-purple-900/30 rounded-full">
+                          <Users class="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+                          <span class="text-xs font-medium text-purple-700 dark:text-purple-300">{getStatusLabel(user.status)}</span>
+                      </div>
+                  {/if}
+
+                  <!-- Seeking -->
+                  {#if user.seeking}
+                      <div class="flex items-center gap-1.5 px-3 py-1.5 bg-pink-100 dark:bg-pink-900/30 rounded-full">
+                          <Sparkles class="w-3.5 h-3.5 text-pink-600 dark:text-pink-400" />
+                          <span class="text-xs font-medium text-pink-700 dark:text-pink-300">
+                              {getSeekingLabels(user.seeking).slice(0, 2).join(', ')}{#if getSeekingLabels(user.seeking).length > 2}+{/if}
+                          </span>
+                      </div>
+                  {/if}
+
+                  <!-- Ethnicity -->
+                  {#if user.ethnicity}
+                      <div class="flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 dark:bg-amber-900/30 rounded-full">
+                          <Users class="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                          <span class="text-xs font-medium text-amber-700 dark:text-amber-300">{getEthnicityLabel(user.ethnicity)}</span>
+                      </div>
+                  {/if}
+
+                  <!-- Nationality -->
+                  {#if user.nationality}
+                      <div class="flex items-center gap-1.5 px-3 py-1.5 bg-green-100 dark:bg-green-900/30 rounded-full">
+                          <MapPin class="w-3.5 h-3.5 text-green-600 dark:text-green-400" />
+                          <span class="text-xs font-medium text-green-700 dark:text-green-300">{getNationalityLabel(user.nationality)}</span>
+                      </div>
+                  {/if}
+              </div>
+          {:else}
+              <!-- Other User with view OFF - Show privacy notice -->
+              <div class="flex items-center justify-center gap-2 mb-4 p-3 bg-gray-100 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                  <Info class="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                  <span class="text-xs text-gray-500 dark:text-gray-400">{m.privacy_view_off()}</span>
+              </div>
+          {/if}
+
+          <!-- Dominant Traits with Colorful Badges bar -->
+          <div class="inline-flex flex-wrap items-center gap-2 bg-teal-50 dark:bg-teal-950/50 border border-teal-100 dark:border-teal-900 px-4 py-2 rounded-2xl">
+              <div class="flex items-center gap-1">
+                  <Sparkles class="w-4 h-4 text-teal-600 dark:text-teal-400" />
+                  <span class="text-xs font-bold text-teal-600 dark:text-teal-400 uppercase tracking-widest">{m.dominant()}:</span>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                  {#each topThree as trait}
+                      {@const colors = traitColors[trait.label]}
+                      <div class="flex items-center gap-2 px-3 py-2 rounded-xl border shadow-sm {colors.bg} {colors.border}">
+                          <svelte:component this={colors.icon} class="w-4 h-4 {colors.iconColor}" />
+                          <span class="text-sm font-bold {colors.text}">{trait.label}</span>
+                          <span class="text-xs font-semibold {colors.text} opacity-80">({trait.value.toFixed(1)})</span>
+                      </div>
+                  {/each}
+              </div>
           </div>
-        </div>
       </div>
-    </div>
-    
-    <div class="w-full bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-4 sm:p-10 my-8 flex flex-col items-center">
+</div>
+
+
+
+
+
+<div class="w-full bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-4 sm:p-10 my-8 flex flex-col items-center">
       <header class="text-center mb-6">
         <h3 class="text-2xl font-bold text-gray-800 dark:text-white">{m.personality_id()}</h3>
         <p class="text-sm text-gray-400 dark:text-gray-100">{m.ave()}</p>
+        
+        {#if data.currentUser && currentUserId !== user.id}
+          <p class="text-sm font-bold mt-2 px-3 py-1 bg-teal-50 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400 rounded-full inline-block">
+            Personality ID {matchPercentage}% match with yours
+          </p>
+        {/if}
       </header>
       
       <div class="relative overflow-visible">
         <svg width={center * 2} height={center * 2} viewBox={`0 0 ${center * 2} ${center * 2}`} class="overflow-visible">
-  {#each ringPaths as path, i}
-    <path 
-      d={path} 
-      fill="none" 
-      stroke={i === rings - 1 ? '#cbd5e1' : '#f1f5f9'} 
-      class={i === rings - 1 ? 'dark:stroke-gray-500' : 'dark:stroke-gray-700/50'} 
-      stroke-width="1.5" 
-    />
-  {/each}
+          {#each ringPaths as path, i}
+            <path d={path} fill="none" stroke={i === rings - 1 ? '#cbd5e1' : '#f1f5f9'} class={i === rings - 1 ? 'dark:stroke-gray-500' : 'dark:stroke-gray-700/50'} stroke-width="1.5" />
+          {/each}
 
-  {#each Array(spokes) as _, i}
-    {@const { x, y } = getCoordinate(i, 4)}
-    <line 
-      x1={center} y1={center} x2={x} y2={y} 
-      stroke="#f1f5f9" 
-      class="dark:stroke-gray-700" 
-      stroke-width="1" 
-    />
-  {/each}
+          {#each Array(spokes) as _, i}
+            {@const { x, y } = getCoordinate(i, 4)}
+            <line x1={center} y1={center} x2={x} y2={y} stroke="#f1f5f9" class="dark:stroke-gray-700" stroke-width="1" />
+          {/each}
 
-  <path 
-    d={dataPolygonPath} 
-    fill="rgba(13, 148, 136, 0.4)" 
-    stroke="#0f766e" 
-    stroke-width="3" 
-    class="dark:stroke-teal-400 animate-radar" 
-  />
+          {#if data.currentUser && currentUserId !== user.id}
+            <path 
+              d={currentUserPolygonPath} 
+              fill={data.currentUser.gender === 'f' ? 'rgba(255, 182, 193, 0.15)' : 'rgba(59, 130, 246, 0.15)'} 
+              stroke={data.currentUser.gender === 'f' ? 'rgba(219, 39, 119, 0.5)' : 'rgba(37, 99, 235, 0.5)'} 
+              stroke-width="2" 
+              stroke-dasharray="4,4"
+              class="animate-radar" 
+            />
+          {/if}
 
-  {#each personalityAttributes as d, i}
-    {@const { x, y } = getCoordinate(i, d.value)}
-    {@const colors = traitColors[d.label]}
-    <circle 
-      cx={x} cy={y} r="5" 
-      fill={colors.iconColor.slice(5)} 
-      stroke="#fff" 
-      stroke-width="2" 
-      class="animate-point shadow-sm" 
-    />
-    <text 
-      x={x} y={y} dy={y < center ? -15 : 20} 
-      text-anchor="middle" 
-      font-size="12" 
-      font-weight="bold" 
-      class="animate-point fill-current text-gray-700 dark:text-white"
-      style="filter: drop-shadow(0px 0px 2px rgba(0,0,0,0.2));"
-    >
-      {d.value.toFixed(1)}
-    </text>
-  {/each}
+          <path 
+            d={dataPolygonPath} 
+            fill={user.gender === 'f' ? 'rgba(255, 182, 193, 0.4)' : 'rgba(59, 130, 246, 0.4)'} 
+            stroke={user.gender === 'f' ? '#db2777' : '#2563eb'} 
+            stroke-width="3" 
+            class="animate-radar" 
+          />
 
-  {#each personalityAttributes as d, i}
-    {@const { x, y } = getCoordinate(i, 4.5)} <text 
-      x={x} y={y} 
-      text-anchor="middle" 
-      dominant-baseline="middle" 
-      font-size="13" 
-      font-weight="800" 
-      class="uppercase tracking-tighter fill-current text-gray-800 dark:text-teal-300"
-    >
-      {d.label}
-    </text>
-  {/each}
-</svg>
+          {#each personalityAttributes as d, i}
+            {@const { x, y } = getCoordinate(i, d.value)}
+            {@const colors = traitColors[d.label]}
+            <circle cx={x} cy={y} r="5" fill={colors.iconColor.slice(5)} stroke="#fff" stroke-width="2" class="animate-point shadow-sm" />
+            <text x={x} y={y} dy={y < center ? -15 : 20} text-anchor="middle" font-size="12" font-weight="bold" class="animate-point fill-current text-gray-700 dark:text-white" style="filter: drop-shadow(0px 0px 2px rgba(0,0,0,0.2));">{d.value.toFixed(1)}</text>
+          {/each}
 
-
+          {#each personalityAttributes as d, i}
+            {@const { x, y } = getCoordinate(i, 4.5)} 
+            <text x={x} y={y} text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="800" class="uppercase tracking-tighter fill-current text-gray-800 dark:text-teal-300">{d.label}</text>
+          {/each}
+        </svg>
       </div>
     </div>
-    
+
+
+
+
     <!-- Tabs -->
     <div class="border-b border-gray-200 dark:border-gray-800 mb-6">
       <nav class="flex gap-8">

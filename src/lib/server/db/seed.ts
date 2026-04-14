@@ -1,5 +1,5 @@
 import { getDb } from './index';
-import { user, products, services, posts, transactions, tracker, wishes, requests } from './schema';
+import { user, products, services, posts, transactions, wishes, requests } from './schema';
 import { nanoid } from 'nanoid';
 import bcrypt from 'bcryptjs';
 import { sql } from 'drizzle-orm';
@@ -21,7 +21,7 @@ async function seed() {
     // --- 1. CLEAR TABLES ---
     // The order matters: Children first, then Parents.
     // 3. Clear EVERYTHING (Order doesn't matter now because FK is OFF)
-    await db.delete(tracker); 
+    // await db.delete(tracker); 
     await db.delete(transactions);
     await db.delete(wishes); 
     await db.delete(requests); 
@@ -36,7 +36,12 @@ async function seed() {
 
     // --- 2. CREATE USERS ---
     const users = [
-      {id: nanoid(), username: "jose", codename: "jose", slug: "jose", pin: hash("111111"), passwordHash: hash("123123"), avatar: "/jose.jpg", gender: "male", dateOfBirth: "1995-01-05", email: "jose@example.com", phone: "+123456789", city: "Manila", country: "Philippines",
+      {id: nanoid(), username: "jose", codename: "jose", slug: "jose", pin: hash("111111"), passwordHash: hash("123123"), 
+        avatar: "/jose.jpg", gender: "male", dateOfBirth: "1995-01-05", email: "jose@example.com", phone: "+123456789", city: "Manila", 
+        status: "wwc",  seeking: "rr",
+        rel: "on",
+        nationality: "ph",
+        ethnicity: "southeast_asian",
         heart: 3,
         brain: 1,
         body: 3,
@@ -48,7 +53,12 @@ async function seed() {
         venus: 2,
         mars: 0
       },
-      {id: nanoid(), username: "jing", codename: "jing", slug: "jing", pin: hash("111111"), passwordHash: hash("123123"), avatar: "/jing.jpg", gender: "male", dateOfBirth: "1995-01-05", email: "jing@example.com", phone: "+123456789", city: "Manila", country: "Philippines",
+      {id: nanoid(), username: "jing", codename: "jing", slug: "jing", pin: hash("111111"), passwordHash: hash("123123"), 
+        avatar: "/jing.jpg", gender: "male", dateOfBirth: "1995-01-05", email: "jing@example.com", phone: "+123456789", city: "Manila",
+        status: "wwc",  seeking: "rr",
+        rel: "on",
+        nationality: "ph",
+        ethnicity: "southeast_asian",
         heart: 3,
         brain: 3,
         body: 3,
@@ -60,7 +70,12 @@ async function seed() {
         venus: 0,
         mars: 1
       },
-      {id: nanoid(), username: "jun", codename: "jun", slug: "jun", pin: hash("123123"), passwordHash: hash("123123"), avatar: "/jun.jpg", gender: "male", dateOfBirth: "1980-09-08", email: "jundalisay@yahoo.com", phone: "+639..", city: "Manila", country: "Philippines",
+      {id: nanoid(), username: "jun", codename: "jun", slug: "jun", pin: hash("123123"), passwordHash: hash("123123"), 
+        avatar: "/jun.jpg", gender: "male", dateOfBirth: "1980-09-08", email: "jundalisay@yahoo.com", phone: "+639..", city: "Manila",
+        status: "sepwc",  seeking: "rr",
+        rel: "on",
+        nationality: "ph",
+        ethnicity: "southeast_asian",
         heart: 3,
         brain: 4,
         body: 2,
@@ -72,7 +87,12 @@ async function seed() {
         venus: 2,
         mars: 0
       },
-      {id: nanoid(), username: "anh", codename: "anh", slug: "anh", pin: hash("444444"), passwordHash: hash("123123"), avatar: "/anh.jpg", gender: "female", dateOfBirth: "1990-11-23", email: "anh@example.com", phone: "+1029384756", city: "Manila", country: "Philippines",
+      {id: nanoid(), username: "anh", codename: "anh", slug: "anh", pin: hash("123123"), passwordHash: hash("123123"), 
+        avatar: "/anh.jpg", gender: "female", dateOfBirth: "1990-11-23", email: "anh@example.com", phone: "+1029384756", city: "Manila", 
+        status: "wwc",  seeking: "rr",
+        rel: "on",
+        nationality: "vn",
+        ethnicity: "southeast_asian",
         heart: 1,
         brain: 1,
         body: 4,
@@ -117,7 +137,40 @@ async function seed() {
       },
       {name: "Stainless Vacuum Black Tumbler", measure: "piece", points: 2, category: "9617.00.00", photo1: "/tumbler.jpg", description: "Stainless Vacuum Black Tumbler with Canva logo.", headline: "From a Canva event", userId: users[2].id },
       {name: "Foldable Blue Umbrella", measure: "piece", points: 10, category: " 6601.99.00", photo1: "/umbrella.jpg", description: "Foldable Blue Umbrella.", headline: "Huawei brand", userId: users[2].id },
-      {name: "Colored Foldable Hand Fans", measure: "piece", points: 4, category: "3926.90", photo1: "/fan.jpg", description: "Foldable hand fans made of plastic and cloth", headline: "Attractive colors available!", userId: users[3].id }
+      {name: "Colored Foldable Hand Fans", measure: "piece", points: 4, category: "3926.90", photo1: "/fan.jpg", description: "Foldable hand fans made of plastic and cloth", headline: "Attractive colors available!", userId: users[3].id },
+      {
+        name: "Pencils 12 pcs per pack",
+        measure: "pack",
+        points: 1,
+        amount: 2.0,
+        category: "9609.10.00",
+        photo1: "/pencils.jpg",
+        description: "Jot brand Pencils at 12 pcs per pack",
+        headline: "Extra pencils from our class",
+        userId: users[1].id
+      },
+      {
+        name: "Stationary Set",
+        measure: "pack",
+        points: 0.5,
+        amount: 2.0,
+        category: "9609.10.00",
+        photo1: "/stationary.jpg",
+        description: "Pack includes eraser, sharperner, pencil and notepad",
+        headline: "Extra Stationary from our class",
+        userId: users[1].id
+      },
+      {
+        name: "Post it",
+        measure: "pack",
+        points: 0.5,
+        amount: 2.0,
+        category: "4811.41.10",
+        photo1: "/postit.jpg",
+        description: "Small size",
+        headline: "Extra Post it from our class",
+        userId: users[1].id
+      },      
     ]).returning({ id: products.id }); 
 
     console.log("✔ Products inserted");
@@ -154,17 +207,17 @@ async function seed() {
     const postsToInsert = [
       // NEW: Jose's Honey Post
       {
-        content: `Fresh batch of organic honey just arrived! 🍯 Directly from the mountains. Check it out [here](/products/${insertedProducts[0].id}) or [message me](/users/${users[0].slug}) to order! ![image](/honey.jpg)`,
+        content: `Fresh batch of organic honey just arrived! 🍯 Directly from the mountains. Check it out [here](/products/${insertedProducts[0].id}). ![image](/honey.jpg)`,
         userId: users[0].id,
       },
       // Existing Yoga Post (Corrected index to 5 for Yoga)
       {
-        content: `We have new Yoga classes available! Please [send me a message](/users/${users[0].slug}) Check it out [here](/services/${insertedServices[4].id}) ![image](/yoga.jpg)`,
+        content: `We have new Yoga classes available! Please [send me a message](/users/${users[3].slug}) Check it out [here](/services/${insertedServices[4].id}) ![image](/yoga.jpg)`,
         userId: users[3].id,
       },
       // Existing Flutter Post
       {
-        content: `I'm free to make Flutter apps for Android! Please [send me a message](/users/${users[3].slug}) Check it out [here](/services/${insertedServices[0].id}) ![image](/flutter2.jpg)`,
+        content: `I'm free to make Flutter apps for Android! Please [send me a message](/users/${users[2].slug}) Check it out [here](/services/${insertedServices[0].id}) ![image](/flutter2.jpg)`,
         userId: users[2].id,
       },
     ];

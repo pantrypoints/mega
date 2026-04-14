@@ -24,8 +24,96 @@ Use getDb() directly ONLY for standalone scripts (like seed.ts or migration runn
     "summary": "نستخدم الروابط المباشرة لعرض الصور"
   }
 
+        { code: 's', label: m.status_single() },
+        { code: 'sp', label: m.status_single_parent() },
+        { code: 'rnc', label: m.status_relationship_no_children() },
+        { code: 'rwc', label: m.status_relationship_with_children() },
+        { code: 'enc', label: m.status_engaged_no_children() },
+        { code: 'ewc', label: m.status_engaged_with_children() },
+        { code: 'mnc', label: m.status_married_no_children() },
+        { code: 'mwc', label: m.status_married_with_children() },
+        { code: 'dnc', label: m.status_divorced_no_children() },
+        { code: 'dwc', label: m.status_divorced_with_children() },
+        { code: 'wnc', label: m.status_widowed_no_children() },
+        { code: 'wwc', label: m.status_widowed_with_children() },
+        { code: 'sepnc', label: m.status_separated_no_children() },
+        { code: 'sepwc', label: m.status_separated_with_children() }
+    ];
+    
+    // Seeking options with unique letter codes
+    const seekingOptions = [
+        { code: 'pc', label: m.seeking_professional_connections() },
+        { code: 'bc', label: m.seeking_business_connections() },
+        { code: 'ap', label: m.seeking_activity_partner() },
+        { code: 'f', label: m.seeking_friendship() },
+        { code: 'cf', label: m.seeking_close_friendship() },
+        { code: 'rr', label: m.seeking_romantic_relationship() },
+        { code: 'm', label: m.seeking_marriage() }
+
+
+        { code: 'east_asian', label: m.ethnicity_east_asian() },
+        { code: 'south_asian', label: m.ethnicity_south_asian() },
+        { code: 'southeast_asian', label: m.ethnicity_southeast_asian() },
+        { code: 'middle_eastern', label: m.ethnicity_middle_eastern() },
+        { code: 'white', label: m.ethnicity_white() },
+        { code: 'latino', label: m.ethnicity_latino() },
+        { code: 'native_american', label: m.ethnicity_native_american() },
+        { code: 'african', label: m.ethnicity_african() },
+        { code: 'pacific_islander', label: m.ethnicity_pacific_islander() },
+        { code: 'arctic', label: m.ethnicity_arctic() },
+        { code: 'other', label: m.ethnicity_other() }
+    ];
+    
+    // Nationality options (common countries)
+    const nationalityOptions = [
+        { code: 'us', label: 'United States' },
+        { code: 'uk', label: 'United Kingdom' },
+        { code: 'ca', label: 'Canada' },
+        { code: 'au', label: 'Australia' },
+        { code: 'de', label: 'Germany' },
+        { code: 'fr', label: 'France' },
+        { code: 'jp', label: 'Japan' },
+        { code: 'cn', label: 'China' },
+        { code: 'in', label: 'India' },
+        { code: 'ph', label: 'Philippines' },
+        { code: 'vn', label: 'Vietnam' },
+        { code: 'th', label: 'Thailand' },
+        { code: 'id', label: 'Indonesia' },
+        { code: 'my', label: 'Malaysia' },
+        { code: 'sg', label: 'Singapore' },
+        { code: 'other', label: m.other() }
+
 
 unlogged in menu!!!
+
+
+East Asian (e.g. Chinese, Japanese)
+
+White (e.g. Westerner)
+
+Latino (e.g. South American)
+
+African
+
+Middle Eastern (e.g. Arab)
+
+South Asian (e.g. Indian, Nepalese)
+
+Southeast Asian (e.g. Vietnamese, Indonesian)
+
+Pacific Islander (e.g. Samoan, Hawaiian)
+
+South Asian (e.g. Indian, Nepalese)
+
+Native American 
+
+Arctic (e.g Inuit)
+
+Other
+
+
+Mixed / Multiracial
+
 
 
 w

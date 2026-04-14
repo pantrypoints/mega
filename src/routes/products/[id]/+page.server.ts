@@ -1,15 +1,15 @@
+import { products } from '$lib/server/db/schema';
+import { eq } from 'drizzle-orm';
 import { createItemDetailLoader } from '$lib/server/item';
 import { createDeleteAction } from '$lib/server/delete';
 import { error, fail } from '@sveltejs/kit';
-import { products } from '$lib/db/schema'; // adjust path to your schema
-import { eq } from 'drizzle-orm';
 import type { Actions } from './$types';
 
 
 export const load = createItemDetailLoader('product');
 
 export const actions: Actions = {
-  ...createDeleteAction('product')
+  ...createDeleteAction('product'),
 
     updateAmount: async ({ request, locals }) => {
         // 1. Check authentication

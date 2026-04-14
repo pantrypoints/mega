@@ -4,7 +4,7 @@
     import { hsChapters, hsSubcategories, hsDetails } from '$lib/data/hsData';
     
     let { data } = $props();
-    const { product, isOwner, owner, currentUserId } = data;
+    // const { product, isOwner, owner, currentUserId } = data;
     
     // HS Code description function
     function getHSDescription(code: string): string {
@@ -21,6 +21,18 @@
 </script>
 
 <ItemDetail 
+    item={data.product}
+    isOwner={data.isOwner}
+    owner={data.owner}
+    currentUserId={data.currentUserId}
+    itemType="product"
+    backLink="/products"
+    deleteAction="?/deleteProduct"
+    editLink={`/products/${data.product.id}/edit`}
+    getDescription={getHSDescription}
+/>
+
+<!-- <ItemDetail 
     item={product}
     isOwner={isOwner}
     owner={owner}
@@ -30,8 +42,7 @@
     deleteAction="?/deleteProduct"
     editLink={`/products/${product.id}/edit`}
     getDescription={getHSDescription}
-/>
-
+/> -->
 
 
 

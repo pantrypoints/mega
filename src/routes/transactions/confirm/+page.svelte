@@ -105,7 +105,7 @@
             class="w-16 h-16 rounded-full mx-auto mb-3 object-cover border-2 border-teal-400 dark:border-teal-500"
           />
           <div class="font-bold text-gray-900 dark:text-white">{getter.username}</div>
-          <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">{m.this_is_you()}</div>
+          <!-- <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">{m.this_is_you()}</div> -->
         </div>
       </div>
     </div>

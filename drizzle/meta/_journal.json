@@ -99,6 +99,34 @@
       "when": 1775725034053,
       "tag": "0013_sticky_tigra",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "6",
+      "when": 1775957185198,
+      "tag": "0014_heavy_carmella_unuscione",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "6",
+      "when": 1776039443755,
+      "tag": "0015_slim_electro",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "6",
+      "when": 1776067332087,
+      "tag": "0016_peaceful_wrecker",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "6",
+      "when": 1776154770090,
+      "tag": "0017_right_skullbuster",
+      "breakpoints": true
     }
   ]
 }

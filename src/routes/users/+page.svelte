@@ -184,7 +184,7 @@
         ? 'bg-pink-500 dark:bg-pink-600' 
         : 'bg-sky-500 dark:bg-sky-600'}">
     {#if user.gender === 'female'}
-        <UserRound class="w-16 h-16 text-white" />
+        <User class="w-16 h-16 text-white" />
     {:else}
         <User class="w-16 h-16 text-white" />
     {/if}

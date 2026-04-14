@@ -94,7 +94,9 @@
 
     <div class="text-center mb-4">
       <h1 class="text-3xl font-extrabold text-gray-800 dark:text-white mb-1">
-        {m.welcome()}!
+        {#if user}
+          {m.welcome()} {user.username}!
+        {/if}
       </h1>
     </div>
 
@@ -251,7 +253,7 @@
         </div>
       </a>  
 
-      <a href="https://pantrypoints.com/docs" class="bg-sky-50 dark:bg-slate-800 border border-sky-200 dark:border-slate-700 p-3 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center min-h-24 flex flex-col justify-center items-center group">
+      <a href="https://pantrypoints.com/docs/circle" class="bg-sky-50 dark:bg-slate-800 border border-sky-200 dark:border-slate-700 p-3 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center min-h-24 flex flex-col justify-center items-center group">
         <div class="p-2 mb-1">
           <BookOpen class="w-10 h-10 sm:w-12 sm:h-12 text-gray-500 dark:text-slate-400 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors" />
         </div>

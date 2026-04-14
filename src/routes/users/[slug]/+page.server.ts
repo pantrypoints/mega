@@ -4,7 +4,6 @@ import { getDb } from '$lib/server/db';
 import { user as userTable, products, services, transactions } from '$lib/server/db/schema'; 
 import { eq, desc, or } from 'drizzle-orm';
 
-
 export const load: PageServerLoad = async ({ params, platform, locals }) => {
     const { slug } = params;
 
@@ -15,7 +14,7 @@ export const load: PageServerLoad = async ({ params, platform, locals }) => {
     try {
         const db = getDb(platform?.env);
 
-        // 1. Fetch user by slug
+        // 1. Fetch the user being viewed by slug
         const foundUsers = await db
             .select()
             .from(userTable)
@@ -27,7 +26,25 @@ export const load: PageServerLoad = async ({ params, platform, locals }) => {
         }
 
         const foundUser = foundUsers[0];
-        const userId = foundUser.id; // Extract the actual ID from the found user record
+        const userId = foundUser.id;
+
+        // 2. Fetch the FULL current user to get their personality traits and gender
+        let fullCurrentUser = null;
+        if (locals.user && locals.user.id) {
+            const currentUsers = await db
+                .select()
+                .from(userTable)
+                .where(eq(userTable.id, locals.user.id))
+                .limit(1);
+            
+            if (currentUsers.length > 0) {
+                fullCurrentUser = currentUsers[0];
+            }
+        }
+
+
+
+
 
         // 2. Fetch user's products using the ID we just found
         const userProducts = await db
@@ -64,13 +81,18 @@ export const load: PageServerLoad = async ({ params, platform, locals }) => {
             donationAsGetter: allTransactions.filter(t => t.kind === 'donation' && t.getterId === userId).length,
         };
 
+
+
+
         return {
             user: foundUser,
-            currentUser: locals.user,
+            currentUser: fullCurrentUser,
+            // currentUser: locals.user,
             products: userProducts ?? [],
             services: userServices ?? [],
             stats // Pass the calculated counts to the frontend
         };
+
 
 
     } catch (err) {
@@ -84,3 +106,10 @@ export const load: PageServerLoad = async ({ params, platform, locals }) => {
         throw error(500, 'Failed to load user data');
     }
 };
+
+
+
+
+
+
+
