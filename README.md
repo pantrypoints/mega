@@ -19,6 +19,8 @@ bun run db:generate && bun run db:push && bun run src/lib/server/db/seed.ts
 bun run db:seed
 bun src/lib/server/db/seed.ts
 
+
+
 Use locals.db for your load functions and Actions.
 
 Use getDb() directly ONLY for standalone scripts (like seed.ts or migration runners) where SvelteKit's hooks aren't running.

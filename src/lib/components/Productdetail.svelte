@@ -45,17 +45,6 @@ function closeAmountModal() {
     newAmount = item.amount || 0; // reset on close
 }
 
-// Crucial: Update the local 'newAmount' state if the 'item' prop changes (e.g. if someone else updates it or after a successful save)
-// $effect(() => {
-//     newAmount = item.amount || 0;
-// });
-
-// function closeAmountModal() {
-//     isAmountModalOpen = false;
-// }
-
-
-
 
 // Transaction params builder
 function defaultBuildTransactionParams(item: any): URLSearchParams {
@@ -81,19 +70,11 @@ const labels = {
 }[itemType] || { back: 'Back', type: 'Item', typeLower: 'item', action: 'Exchange' };
 
 
-// Format date for the UI
-// const lastUpdated = item.dateAmountChange 
-//     ? new Date(item.dateAmountChange).toLocaleDateString() 
-//     : 'Never';
-
 // Use $derived so these update automatically when the 'item' prop changes
 const lastUpdated = $derived(item.dateAmountChange 
     ? new Date(item.dateAmountChange).toLocaleDateString() 
     : 'Never');
 </script>
-
-
-
 
 
 
@@ -168,6 +149,13 @@ const lastUpdated = $derived(item.dateAmountChange
             {/if}
         </div>
 
+
+
+
+
+
+
+
         <p class="text-xl font-semibold text-sky-600 dark:text-sky-400 mb-8">{item.headline}</p>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
@@ -190,8 +178,34 @@ const lastUpdated = $derived(item.dateAmountChange
 
             <div class="space-y-6">
                 <div class="space-y-3 p-5 bg-sky-50 dark:bg-sky-950/30 rounded-2xl border-l-4 border-sky-400 dark:border-sky-600">
+
+
+
+<!-- Amount Section - Only show for products/wishes that have amount -->
+{#if (itemType === 'product' || itemType === 'wish') && item.amount !== undefined}
+    <div class="flex items-center justify-between bg-white dark:bg-slate-800 p-3 rounded-xl shadow-sm mb-4 border border-sky-100 dark:border-slate-700">
+        <div>
+            <div class="flex items-center text-gray-800 dark:text-slate-200">
+                <Package class="w-4 h-4 mr-2 text-teal-600 dark:text-teal-400" />
+                <span class="font-bold text-lg">{m.available()}:</span>
+                <span class="ml-2 text-2xl font-extrabold text-teal-600 dark:text-teal-400">
+                    {item.amount || 0}
+                </span>
+            </div>
+            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 ml-6">
+                {m.last_updated()}: {lastUpdated}
+            </div>
+        </div>
+        
+        {#if isOwner}
+            <button onclick={() => isAmountModalOpen = true} class="p-2 text-sky-600 hover:text-sky-800 dark:text-sky-400 dark:hover:text-sky-300 bg-sky-50 hover:bg-sky-100 dark:bg-slate-700 dark:hover:bg-slate-600 rounded-lg transition">
+                <Edit class="w-4 h-4" />
+            </button>
+        {/if}
+    </div>
+{/if}
                     
-                    {#if itemType === 'product'}
+<!--                     {#if itemType === 'product'}
                         <div class="flex items-center justify-between bg-white dark:bg-slate-800 p-3 rounded-xl shadow-sm mb-4 border border-sky-100 dark:border-slate-700">
                             <div>
                                 <div class="flex items-center text-gray-800 dark:text-slate-200">
@@ -212,7 +226,7 @@ const lastUpdated = $derived(item.dateAmountChange
                                 </button>
                             {/if}
                         </div>
-                    {/if}
+                    {/if} -->
 
                     <div class="flex items-center text-gray-800 dark:text-slate-200">
                         <span class="font-bold text-lg">{m.points_value()}:</span>
@@ -266,5 +280,15 @@ const lastUpdated = $derived(item.dateAmountChange
         </div>
     </div>
 </div>
+
+
+
+
+
+
+
+
+
+
 
 

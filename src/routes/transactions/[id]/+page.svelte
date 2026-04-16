@@ -1,60 +1,54 @@
 <script lang="ts">
-  import type { PageData } from './$types';
-  import { HandCoins, HandHelping, ArrowLeft, Calendar, DollarSign, Tag, FileText, CheckCircle, XCircle, Clock, Users, Package, ArrowUpRight, ArrowDownRight } from 'lucide-svelte';
-  import { page } from '$app/state';
-  
-  export let data: PageData;
-  
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'accepted': return 'bg-green-100 text-green-800';
-      case 'pending': return 'bg-yellow-100 text-yellow-800';
-      case 'cancelled': return 'bg-red-100 text-red-800';
-      case 'transferred': return 'bg-blue-100 text-blue-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
-  
-  const getKindColor = (kind: string) => {
-    switch (kind) {
-      case 'debt': return 'bg-red-100 text-red-800';
-      case 'credit': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
-  
-  const formatDate = (dateString: string) => {
-    if (!dateString) return 'N/A';
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-  
-  const getUserRole = () => {
-    if (data.transaction.giverId === data.currentUserId) {
-      return 'giver';
-    } else if (data.transaction.getterId === data.currentUserId) {
-      return 'getter';
-    }
-    return 'unknown';
-  };
+    import type { PageData } from './$types';
+    import { HandCoins, HandHelping, ArrowLeft, Calendar, DollarSign, Tag, FileText, CheckCircle, XCircle, Clock, Users, Package, ArrowUpRight, ArrowDownRight, User } from 'lucide-svelte';
+    import { page } from '$app/state';
+    
+    export let data: PageData;
+    
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case 'accepted': return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+            case 'pending': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
+            case 'cancelled': return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
+            case 'transferred': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400';
+            default: return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400';
+        }
+    };
+    
+    const getKindColor = (kind: string) => {
+        switch (kind) {
+            case 'debt': return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
+            case 'credit': return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+            default: return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400';
+        }
+    };
+    
+    const formatDate = (dateString: string) => {
+        if (!dateString) return 'N/A';
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    };
+    
+    const getUserRole = () => {
+        if (data.transaction.giver?.id === data.currentUserId) {
+            return 'giver';
+        } else if (data.transaction.getter?.id === data.currentUserId) {
+            return 'getter';
+        }
+        return 'unknown';
+    };
 </script>
 
-
-
 <svelte:head>
-  <title>Transaction #{data.transaction.id} - {data.transaction.name}</title>
+    <title>Transaction #{data.transaction.id} - {data.transaction.name}</title>
 </svelte:head>
 
-
-
-
 <div class="min-h-screen bg-sky-50 dark:bg-gradient-to-br dark:from-slate-950 dark:to-slate-900 flex flex-col items-center p-4 sm:p-8 transition-colors duration-300">
-    
     <div class="w-full max-w-4xl bg-white dark:bg-slate-900 p-6 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500 transform transition duration-500 hover:shadow-3xl dark:shadow-2xl/50 dark:border-t-sky-600">
         
         <a href="/transactions" class="inline-flex items-center text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 transition mb-6 font-medium">
@@ -79,7 +73,6 @@
                     </span>
                 </div>
             </div>
-            
             <div class="text-center">
                 <div class="text-4xl font-bold text-sky-700 dark:text-sky-400">
                     {data.transaction.points.toFixed(2)}
@@ -89,66 +82,77 @@
         </div>
         
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-
+            <!-- Giver Section -->
             <div class="space-y-3 p-5 bg-sky-50 dark:bg-sky-900/20 rounded-2xl border-l-4 border-sky-400 dark:border-sky-600 transition-colors">
                 <div class="flex items-center text-gray-600 dark:text-slate-300">
                     <HandHelping class="w-5 h-5 mr-2 text-sky-600 dark:text-sky-400" />
-                    <span class="font-semibold">Giver</span>
+                    <span class="font-semibold">Giver (Seller)</span>
                 </div>
-                <div class="flex items-center">
-                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-sky-400 to-teal-500 flex items-center justify-center mr-3">
-                        <span class="text-white font-bold">
-                            {data.transaction.giver?.codename?.charAt(0).toUpperCase() || 'G'}
-                        </span>
+                <a href={`/users/${data.transaction.giver?.slug}`} class="flex items-center group">
+                    <div class="w-14 h-14 rounded-full overflow-hidden bg-gradient-to-br from-sky-400 to-teal-500 flex items-center justify-center mr-4 shadow-md">
+                        {#if data.transaction.giver?.avatar}
+                            <img 
+                                src={data.transaction.giver.avatar} 
+                                alt={data.transaction.giver.username}
+                                class="w-full h-full object-cover"
+                            />
+                        {:else}
+                            <User class="w-7 h-7 text-white" />
+                        {/if}
                     </div>
                     <div>
-                        <div class="font-bold text-gray-900 dark:text-white">
-                            {data.transaction.giver?.codename || data.transaction.giver?.username || 'Unknown'}
+                        <div class="font-bold text-gray-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
+                            {data.transaction.giver?.username || 'Unknown User'}
                         </div>
                         <div class="text-sm text-gray-600 dark:text-slate-400">
                             {getUserRole() === 'giver' ? 'You' : 'Provided goods/services'}
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
-
+            
+            <!-- Getter Section -->
             <div class="space-y-3 p-5 bg-teal-50 dark:bg-teal-900/20 rounded-2xl border-l-4 border-teal-400 dark:border-teal-600 transition-colors">
                 <div class="flex items-center text-gray-600 dark:text-slate-300">
                     <HandCoins class="w-5 h-5 mr-2 text-teal-600 dark:text-teal-400" />
-                    <span class="font-semibold">Getter</span>
+                    <span class="font-semibold">Getter (Buyer)</span>
                 </div>
-                <div class="flex items-center">
-                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-teal-400 to-green-500 flex items-center justify-center mr-3">
-                        <span class="text-white font-bold">
-                            {data.transaction.getter?.codename?.charAt(0).toUpperCase() || 'R'}
-                        </span>
+                <a href={`/users/${data.transaction.getter?.slug}`} class="flex items-center group">
+                    <div class="w-14 h-14 rounded-full overflow-hidden bg-gradient-to-br from-teal-400 to-green-500 flex items-center justify-center mr-4 shadow-md">
+                        {#if data.transaction.getter?.avatar}
+                            <img 
+                                src={data.transaction.getter.avatar} 
+                                alt={data.transaction.getter.username}
+                                class="w-full h-full object-cover"
+                            />
+                        {:else}
+                            <User class="w-7 h-7 text-white" />
+                        {/if}
                     </div>
                     <div>
-                        <div class="font-bold text-gray-900 dark:text-white">
-                            {data.transaction.getter?.codename || data.transaction.getter?.username || 'Unknown'}
+                        <div class="font-bold text-gray-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
+                            {data.transaction.getter?.username || 'Unknown User'}
                         </div>
                         <div class="text-sm text-gray-600 dark:text-slate-400">
                             {getUserRole() === 'getter' ? 'You' : 'Received goods/services'}
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
-
-            <div class="space-y-6">
-                {#if data.transaction.photo}
+            
+            <!-- Photo Section -->
+            {#if data.transaction.photo}
+                <div class="space-y-6">
                     <div>
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">Photo</h3>
                         <div class="relative overflow-hidden rounded-2xl shadow-xl aspect-[4/3] bg-gray-100 dark:bg-slate-800 border dark:border-slate-700">
-                            <img 
-                                src={data.transaction.photo} 
-                                alt={data.transaction.name} 
-                                class="w-full h-full object-cover transition-opacity duration-300"
-                            />
+                            <img src={data.transaction.photo} alt={data.transaction.name} class="w-full h-full object-cover transition-opacity duration-300" />
                         </div>
                     </div>
-                {/if}
-            </div>
+                </div>
+            {/if}
             
+            <!-- Transaction Details -->
             <div class="space-y-6">
                 <div class="space-y-3 p-5 bg-gray-50 dark:bg-slate-800/50 rounded-2xl border-l-4 border-gray-400 dark:border-slate-600 transition-colors">
                     <div class="flex items-center text-gray-600 dark:text-slate-300">
@@ -156,6 +160,18 @@
                         <span class="font-semibold">Transaction Details</span>
                     </div>
                     <div class="grid grid-cols-1 gap-3">
+                        {#if data.transaction.measure}
+                            <div>
+                                <div class="text-sm text-gray-500 dark:text-slate-400">Measure</div>
+                                <div class="font-bold text-gray-900 dark:text-white">{data.transaction.measure}</div>
+                            </div>
+                        {/if}
+                        {#if data.transaction.amount}
+                            <div>
+                                <div class="text-sm text-gray-500 dark:text-slate-400">Amount</div>
+                                <div class="font-bold text-gray-900 dark:text-white">{data.transaction.amount}</div>
+                            </div>
+                        {/if}
                         <div>
                             <div class="text-sm text-gray-500 dark:text-slate-400">Category</div>
                             <div class="font-bold text-gray-900 dark:text-white">{data.transaction.category}</div>

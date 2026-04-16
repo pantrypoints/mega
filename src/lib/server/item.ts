@@ -1,50 +1,136 @@
 import { error } from '@sveltejs/kit';
 import { requests, services, wishes, products, user } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
+import { getDb } from '$lib/server/db';
 import type { PageServerLoad } from './$types';
 
 type ItemType = 'request' | 'wish' | 'service' | 'product';
 
 
+
+
+
+
+// Remove 'platform' from the outer function arguments
 export function createItemDetailLoader(type: ItemType) {
   const table = type === 'request' ? requests 
     : type === 'wish' ? wishes 
     : type === 'service' ? services 
     : products;
     
-  const itemName = type === 'request' ? 'request' 
-    : type === 'wish' ? 'wish' 
-    : type === 'service' ? 'service' 
-    : 'product';
-
-
+  const itemName = type;
   
-  return (async ({ params, locals }) => {
-    const db = locals.db;
+  // SvelteKit passes { params, locals, platform } to this inner function
+  return (async ({ params, locals, platform }) => {
+    // 1. Get the DB using the platform env available at RUNTIME
+    const db = getDb(platform?.env); 
+    
     const currentUserId = locals.user?.id || null;
     const itemId = params.id;
-    
+
     if (!itemId) {
       throw error(404, `Invalid ${itemName} ID.`);
     }
+
+    // Convert string ID from URL to Number for the DB query
+    const numericId = parseInt(itemId, 10);
+
+
+
+// export function createItemDetailLoader(type: ItemType) {
+//   const table = type === 'request' ? requests 
+//     : type === 'wish' ? wishes 
+//     : type === 'service' ? services 
+//     : products;
+    
+//   const itemName = type === 'request' ? 'request' 
+//     : type === 'wish' ? 'wish' 
+//     : type === 'service' ? 'service' 
+//     : 'product';
+  
+//   return (async ({ params, locals }) => {
+//     // const db = locals.db;
+//     const db = getDb(platform?.env);
+//     const currentUserId = locals.user?.id || null;
+//     const itemId = params.id;
+    
+//     if (!itemId) {
+//       throw error(404, `Invalid ${itemName} ID.`);
+//     }
     
     try {
-      // Join table with user table to get owner information
-      const result = await db
-        .select({
-          // Select all item fields
-          item: table,
-          // Select owner information
+      // Define which fields to select based on item type
+      let selectFields: any;
+      
+      if (type === 'wish' || type === 'product') {
+        // Wishes and Products have amount column
+        selectFields = {
+          item: {
+            id: table.id,
+            name: table.name,
+            measure: table.measure,
+            points: table.points,
+            amount: (table as any).amount,
+            dateAmountChange: (table as any).dateAmountChange,
+            category: table.category,
+            photo1: table.photo1,
+            photo2: table.photo2,
+            photo3: table.photo3,
+            description: table.description,
+            headline: table.headline,
+            status: table.status,
+            userId: table.userId,
+            dateCreated: table.dateCreated,
+            dateModified: table.dateModified
+          },
           owner: {
             id: user.id,
             username: user.username,
             avatar: user.avatar,
             slug: user.slug,
           }
-        })
+        };
+      } else {
+        // Services and Requests don't have amount column
+        selectFields = {
+          item: {
+            id: table.id,
+            name: table.name,
+            measure: table.measure,
+            points: table.points,
+            category: table.category,
+            photo1: table.photo1,
+            photo2: table.photo2,
+            photo3: table.photo3,
+            description: table.description,
+            headline: table.headline,
+            status: table.status,
+            userId: table.userId,
+            dateCreated: table.dateCreated,
+            dateModified: table.dateModified
+          },
+          owner: {
+            id: user.id,
+            username: user.username,
+            avatar: user.avatar,
+            slug: user.slug,
+          }
+        };
+      }
+
+    // Convert itemId to a number for auto-increment tables
+    const numericId = parseInt(itemId, 10);
+    
+    if (isNaN(numericId)) {
+        throw error(400, "Invalid ID format. ID must be a number.");
+    }
+
+      const result = await db
+        .select(selectFields)
         .from(table)
         .leftJoin(user, eq(table.userId, user.id))
-        .where(eq(table.id, itemId))
+        // .where(eq(table.id, itemId))
+        .where(eq(table.id, numericId)) // Use numericId here
         .limit(1);
       
       const data = result[0];
@@ -91,7 +177,6 @@ export function createItemDetailLoader(type: ItemType) {
     }
   }) satisfies PageServerLoad;
 }
-
 
 
 

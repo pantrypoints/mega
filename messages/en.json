@@ -428,5 +428,9 @@
     "update_codename": "Update Codename",
     "current_password": "Current Password",
     "pin_length": "PIN must be 4-8 digits",
-    "codename_rules": "3-31 characters (letters, numbers, underscore, hyphen)"
+    "codename_rules": "3-31 characters (letters, numbers, underscore, hyphen)",
+    "available": "Available",
+    "last_updated": "Last updated",
+    "notes": "Notes",
+    "cancel_tx": "Cancel Transaction"
 }

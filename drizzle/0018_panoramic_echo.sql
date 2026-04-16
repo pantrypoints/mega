@@ -1,0 +1,1 @@
+ALTER TABLE `wishes` ADD `amount` real DEFAULT 0 NOT NULL;

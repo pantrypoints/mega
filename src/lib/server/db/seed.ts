@@ -36,7 +36,7 @@ async function seed() {
 
     // --- 2. CREATE USERS ---
     const users = [
-      {id: nanoid(), username: "jose", codename: "jose", slug: "jose", pin: hash("111111"), passwordHash: hash("123123"), 
+      {id: nanoid(), username: "jose", codename: "jose", slug: "jose", pin: hash("123123"), passwordHash: hash("123123"), 
         avatar: "/jose.jpg", gender: "male", dateOfBirth: "1995-01-05", email: "jose@example.com", phone: "+123456789", city: "Manila", 
         status: "wwc",  seeking: "rr",
         rel: "on",
@@ -53,7 +53,7 @@ async function seed() {
         venus: 2,
         mars: 0
       },
-      {id: nanoid(), username: "jing", codename: "jing", slug: "jing", pin: hash("111111"), passwordHash: hash("123123"), 
+      {id: nanoid(), username: "jing", codename: "jing", slug: "jing", pin: hash("123123"), passwordHash: hash("123123"), 
         avatar: "/jing.jpg", gender: "male", dateOfBirth: "1995-01-05", email: "jing@example.com", phone: "+123456789", city: "Manila",
         status: "wwc",  seeking: "rr",
         rel: "on",

@@ -127,6 +127,13 @@
       "when": 1776154770090,
       "tag": "0017_right_skullbuster",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "6",
+      "when": 1776314111475,
+      "tag": "0018_panoramic_echo",
+      "breakpoints": true
     }
   ]
 }

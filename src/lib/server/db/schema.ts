@@ -164,6 +164,7 @@ export const wishes = sqliteTable('wishes', {
   name: text('name').notNull(),
   measure: text('measure').notNull(),
   points: real('points').notNull(),
+  amount: real('amount').notNull().default(0), // New: Snapshot amount
   category: text('category').notNull(),
   photo1: text('photo1'),
   photo2: text('photo2'),
@@ -197,15 +198,3 @@ export const transactions = sqliteTable('transactions', {
   dateCreated: text('date_created').default(sql`(CURRENT_TIMESTAMP)`),
   dateModified: text('date_modified').default(sql`(CURRENT_TIMESTAMP)`)
 });
-
-
-// export const tracker = sqliteTable('tracker', {
-//   // We use a unique ID for every single log entry
-//   logId: text('log_id').primaryKey().$defaultFn(() => crypto.randomUUID()),
-//   emailId: text('email_id'), // The ID of the specific email/campaign
-//   title: text('title'),
-//   country: text('country'),
-//   device: text('device'),
-//   dateCreated: text('date_created').default(sql`(CURRENT_TIMESTAMP)`)
-// });
-
