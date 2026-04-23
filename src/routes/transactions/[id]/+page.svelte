@@ -195,7 +195,7 @@
                     <div>
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3 flex items-center">
                             <FileText class="w-5 h-5 mr-2 text-gray-600 dark:text-slate-400" />
-                            Notes
+                            {m.notes()}
                         </h3>
                         <div class="p-5 bg-gray-50 dark:bg-slate-800 rounded-2xl border-t border-gray-100 dark:border-slate-700 transition-colors">
                             <p class="text-gray-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
@@ -212,7 +212,7 @@
                 <div class="flex gap-4">
                     <button class="flex-1 bg-red-600 dark:bg-red-700 text-white py-3 rounded-2xl font-bold hover:bg-red-700 dark:hover:bg-red-600 transition duration-200 active:scale-[.99] transform flex items-center justify-center gap-2">
                         <XCircle class="w-5 h-5" />
-                        Cancel Transaction
+                        {m.cancel_tx()}
                     </button>
                 </div>
             </div>

@@ -1,3 +1,4 @@
+// page.server.ts
 import * as bcrypt from 'bcryptjs';
 import { encodeBase32LowerCase } from '@oslojs/encoding';
 import { fail, redirect } from '@sveltejs/kit';
@@ -14,15 +15,12 @@ export const load: PageServerLoad = async (event) => {
     return {};
 };
 
-
-
-
 export const actions: Actions = {
     register: async (event) => {
         const db = event.locals.db;
         const form = await event.request.formData();
-
-        // Extract form data
+        
+        // Extract and validate
         const username = form.get('username');
         const codename = form.get('codename');
         const pin = form.get('pin');
@@ -30,36 +28,31 @@ export const actions: Actions = {
         const password = form.get('password');
         const passwordConfirm = form.get('passwordConfirm');
         const genderInput = form.get('gender') as string | null;
-
-        // Validate required fields are not null
+        
         if (!username || !codename || !pin || !pinConfirm || !password || !passwordConfirm) {
             return fail(400, { message: m.error_all_fields() });
         }
-
-        // Convert to string for validation
+        
         const usernameStr = username as string;
         const codenameStr = codename as string;
         const pinStr = pin as string;
         const pinConfirmStr = pinConfirm as string;
         const passwordStr = password as string;
         const passwordConfirmStr = passwordConfirm as string;
-
-        // Generate initial slug from username
-        const slug = usernameStr.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-
-        // ---------- VALIDATION ----------
+        
+        // Validate
         if (!validateUsername(usernameStr)) return fail(400, { message: m.error_invalid_username() });
         if (!validateCodename(codenameStr)) return fail(400, { message: 'Invalid codename' });
         if (!validatePassword(passwordStr)) return fail(400, { message: 'Password too weak' });
         if (!validatePIN(pinStr)) return fail(400, { message: 'Invalid PIN' });
         if (passwordStr !== passwordConfirmStr) return fail(400, { message: 'Passwords do not match' });
         if (pinStr !== pinConfirmStr) return fail(400, { message: 'PIN does not match' });
-
-        // Gender Validation
+        
+        // Gender validation
         if (!genderInput || genderInput === 'Select Gender' || genderInput === '') {
             return fail(400, { message: m.error_gender_required() });
         }
-
+        
         let normalizedGender: 'm' | 'f' | null = null;
         const lowerCaseGender = genderInput.toLowerCase();
         if (lowerCaseGender === 'male' || lowerCaseGender === 'm') {
@@ -69,10 +62,9 @@ export const actions: Actions = {
         } else {
             return fail(400, { message: 'Invalid gender selection.' });
         }
-
-
-
-        // Check for duplicate username, codename, or slug
+        
+        // Check for existing user
+        const slug = usernameStr.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
         const existingUser = await db
             .select()
             .from(table.user)
@@ -81,7 +73,7 @@ export const actions: Actions = {
                 eq(table.user.codename, codenameStr),
                 eq(table.user.slug, slug)
             ));
-
+            
         if (existingUser.length > 0) {
             const conflicts = [];
             if (existingUser.some(u => u.username === usernameStr)) conflicts.push('username');
@@ -89,15 +81,15 @@ export const actions: Actions = {
             if (existingUser.some(u => u.slug === slug)) conflicts.push('slug');
             return fail(400, { message: `The following are already taken: ${conflicts.join(', ')}` });
         }
-
+        
         try {
             // Hash password and PIN
             const passwordHash = await bcrypt.hash(passwordStr, saltRounds);
             const pinHash = await bcrypt.hash(pinStr, saltRounds);
-
+            
             // Generate user ID
             const userId = generateUserId();
-
+            
             // Extract optional fields
             const avatar = form.get('avatar') as string | null;
             const dateOfBirth = form.get('dateOfBirth') as string | null;
@@ -105,16 +97,13 @@ export const actions: Actions = {
             const phone = form.get('phone') as string | null;
             const city = form.get('city') as string | null;
             const country = form.get('country') as string | null;
-            
-            // Extract new optional fields
             const status = form.get('status') as string | null;
-            // const seeking = form.get('seeking') as string | null;
             const seekingRaw = form.get('seeking') as string | null;
             const relationshipMode = form.get('relationshipMode') as string | null;
             const ethnicity = form.get('ethnicity') as string | null;
             const nationality = form.get('nationality') as string | null;
-
-            // Insert user into database
+            
+            // Insert user
             await db.insert(table.user).values({
                 id: userId,
                 username: usernameStr,
@@ -130,28 +119,27 @@ export const actions: Actions = {
                 city,
                 country,
                 status: status || null,
-                // seeking: seeking || null,
-                seeking: seekingRaw || null,  // Stores as "pc,ap,f"
-                rel: relationshipMode || null,  // relationship mode stored in 'view' field
+                seeking: seekingRaw || null,
+                view: relationshipMode || null,
                 ethnicity: ethnicity || null,
                 nationality: nationality || null
             });
-
+            
             // Create session
             const sessionToken = auth.generateSessionToken();
             const session = await auth.createSession(db, sessionToken, userId);
             auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
-
+            
         } catch (err) {
             console.error('Registration error:', err);
             return fail(500, { message: 'Registration failed. Please try again.' });
         }
-
+        
         throw redirect(302, '/welcome');
     }
 };
 
-// ---------- HELPER FUNCTIONS ----------
+// Helper functions
 function generateUserId(): string {
     const bytes = crypto.getRandomValues(new Uint8Array(15));
     return encodeBase32LowerCase(bytes);
@@ -170,7 +158,5 @@ function validatePassword(str: string): boolean {
 }
 
 function validatePIN(str: string): boolean {
-    return /^[0-9]{4,8}$/.test(str);
+    return /^[0-9]{4,8}$/.test(str);  // Accepts 4-8 digits
 }
-
-
