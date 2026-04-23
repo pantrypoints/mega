@@ -134,6 +134,13 @@
       "when": 1776314111475,
       "tag": "0018_panoramic_echo",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "6",
+      "when": 1776917237814,
+      "tag": "0019_lowly_khan",
+      "breakpoints": true
     }
   ]
 }

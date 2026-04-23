@@ -432,5 +432,6 @@
     "available": "Available",
     "last_updated": "Last updated",
     "notes": "Notes",
-    "cancel_tx": "Cancel Transaction"
+    "cancel_tx": "Cancel Transaction",
+    "uploading_image": "Uploading Image.."
 }

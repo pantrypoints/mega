@@ -6,8 +6,8 @@ import { v4 as uuidv4 } from 'uuid'; // Standard for unique log IDs
 
 export const user = sqliteTable('user', {
   id: text('id').primaryKey(),
-  username: text('username').notNull(),
-  codename: text('codename').notNull().unique(),
+  username: text('username').notNull().unique(),
+  codename: text('codename').notNull(),
   pin: text('pin').notNull(),
   passwordHash: text('password_hash').notNull(),
   slug: text('slug').notNull(),
