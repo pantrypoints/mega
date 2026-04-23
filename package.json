@@ -55,6 +55,7 @@
 		"db:push": "drizzle-kit push",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
+		"db:reset": "bun src/lib/server/db/reset.ts && bun run db:push",
 		"db:studio": "drizzle-kit studio",
 		"deploy": "pnpm run build && wrangler pages deploy",
 		"cf-typegen": "wrangler types src/worker-configuration.d.ts"

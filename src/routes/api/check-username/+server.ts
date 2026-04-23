@@ -1,20 +1,32 @@
 import { json } from '@sveltejs/kit';
-import { db } from '$lib/server/db'; // Adjust this import based on your database setup
-import { users } from '$lib/server/db/schema'; // Adjust based on your schema
-import { eq } from 'drizzle-orm'; // Or your ORM's equivalent
+import { eq } from 'drizzle-orm';
+import * as table from '$lib/server/db/schema';
+import type { RequestHandler } from './$types';
 
-export const GET = async ({ url }) => {
+export const GET: RequestHandler = async ({ url, locals }) => {
     const username = url.searchParams.get('username');
     
     if (!username) {
         return json({ error: 'Username parameter is required' }, { status: 400 });
     }
 
+    // Validate username format (matching your server-side validation)
+    if (!/^[a-zA-Z0-9_-]{3,31}$/.test(username)) {
+        return json({ 
+            available: false,
+            error: 'Invalid username format',
+            message: 'Username must be 3-31 characters and can only contain letters, numbers, underscores, and hyphens'
+        });
+    }
+
     try {
-        // Check if username exists in database
-        const existingUser = await db.select()
-            .from(users)
-            .where(eq(users.username, username))
+        const db = locals.db;
+        
+        // Check if username exists
+        const existingUser = await db
+            .select({ username: table.user.username })
+            .from(table.user)
+            .where(eq(table.user.username, username))
             .limit(1);
 
         const isAvailable = existingUser.length === 0;
@@ -28,3 +40,4 @@ export const GET = async ({ url }) => {
         return json({ error: 'Failed to check username availability' }, { status: 500 });
     }
 };
+

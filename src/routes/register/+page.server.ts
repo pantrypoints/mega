@@ -141,8 +141,8 @@ export const actions: Actions = {
             console.error('Registration error:', err);
             return fail(500, { message: 'Registration failed. Please try again.' });
         }
-
-        throw redirect(302, '/welcome');
+        throw redirect(303, '/welcome');
+        // throw redirect(302, '/welcome');
     }
 };
 

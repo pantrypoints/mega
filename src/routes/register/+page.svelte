@@ -2,9 +2,17 @@
     import { enhance } from '$app/forms';
     import { m } from '$lib/paraglide/messages';
     import { page } from '$app/stores';
-    import { Info, Eye, EyeOff, Upload, User } from 'lucide-svelte';
+    import { Loader2, Check, Info, Eye, EyeOff, Upload, User } from 'lucide-svelte';
+    import { debounce } from '$lib/utils/debounce';
 
     let form = $page.form;
+
+    // Username validation states
+    let usernameValue = $state('');
+    let usernameChecking = $state(false);
+    let usernameAvailable = $state<boolean | null>(null);
+    let usernameError = $state('');
+
 
     // Password visibility states
     let passwordVisible = $state(false);
@@ -175,7 +183,66 @@
 
 
 
+
+
+// Debounced username check
+const checkUsername = debounce(async (value: string) => {
+    if (!value || value.length < 3) {
+        usernameAvailable = null;
+        usernameError = value ? 'Username must be at least 3 characters' : '';
+        return;
+    }
+    
+    // Format validation (matching server-side)
+    if (!/^[a-zA-Z0-9_-]{3,31}$/.test(value)) {
+        usernameAvailable = false;
+        usernameError = 'Username can only contain letters, numbers, underscores, and hyphens (3-31 characters)';
+        return;
+    }
+    
+    usernameChecking = true;
+    usernameError = '';
+    
+    try {
+        const response = await fetch(`/api/check-username?username=${encodeURIComponent(value)}`);
+        const data = await response.json();
+        
+        if (response.ok) {
+            usernameAvailable = data.available;
+            if (!data.available) {
+                usernameError = data.message || 'Username is already taken';
+            }
+        } else {
+            usernameError = data.error || 'Failed to check username';
+            usernameAvailable = null;
+        }
+    } catch (error) {
+        console.error('Error checking username:', error);
+        usernameError = 'Failed to check username availability';
+        usernameAvailable = null;
+    } finally {
+        usernameChecking = false;
+    }
+}, 500);
+
+// Handle username input
+function handleUsernameInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    usernameValue = input.value;
+    checkUsername(usernameValue);
+}
 </script>
+
+
+
+<!-- use:enhance={({ formData }) => {
+                if (avatarUrl) formData.set('avatar', avatarUrl);
+                if (selectedStatus) formData.set('status', selectedStatus);
+                if (selectedSeekingArray.length > 0) formData.set('seeking', selectedSeekingArray.join(','));
+                if (selectedRel) formData.set('relationshipMode', selectedRel);
+                if (selectedEthnicity) formData.set('ethnicity', selectedEthnicity);
+                if (selectedNationality) formData.set('nationality', selectedNationality);
+            }} -->
 
 <div class="min-h-screen bg-gradient-to-br from-sky-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4">
     <div class="w-full max-w-xl bg-white dark:bg-gray-800 p-8 sm:p-10 rounded-3xl shadow-2xl border-t-4 border-sky-500 dark:border-sky-500 transform transition-all duration-500 hover:shadow-3xl">
@@ -191,21 +258,83 @@
         <form
             method="post"
             action="?/register"
-            use:enhance={({ formData }) => {
-                if (avatarUrl) formData.set('avatar', avatarUrl);
-                if (selectedStatus) formData.set('status', selectedStatus);
-                if (selectedSeekingArray.length > 0) formData.set('seeking', selectedSeekingArray.join(','));
-                if (selectedRel) formData.set('relationshipMode', selectedRel);
-                if (selectedEthnicity) formData.set('ethnicity', selectedEthnicity);
-                if (selectedNationality) formData.set('nationality', selectedNationality);
-            }}
+            use:enhance={({ formData, cancel }) => {
+    // Prevent submission if username is not available
+    if (usernameAvailable === false) {
+        cancel();
+        usernameError = 'Please choose an available username';
+        return;
+    }
+    
+    // Prevent submission if still checking
+    if (usernameChecking) {
+        cancel();
+        return;
+    }
+    
+    if (avatarUrl) formData.set('avatar', avatarUrl);
+    if (selectedStatus) formData.set('status', selectedStatus);
+    if (selectedSeekingArray.length > 0) formData.set('seeking', selectedSeekingArray.join(','));
+    if (selectedRel) formData.set('relationshipMode', selectedRel);
+    if (selectedEthnicity) formData.set('ethnicity', selectedEthnicity);
+    if (selectedNationality) formData.set('nationality', selectedNationality);
+    
+    return async ({ result, update }) => {
+        if (result.type === 'failure') {
+            // Handle server-side validation errors
+            if (result.data?.message?.includes('username')) {
+                usernameAvailable = false;
+                usernameError = 'Username is already taken';
+            }
+        }
+        await update();
+    };
+}}
+
             class="space-y-6"
         >
             <div class="grid grid-cols-1 gap-4">
-                <label class="block">
+                <!-- <label class="block">
                     <span class="text-gray-700 dark:text-gray-300 font-medium">{m.username()}</span>
                     <input name="username" placeholder="e.g. haruna" required class="mt-1 block w-full px-4 py-2 bg-sky-50 dark:bg-gray-700 border border-sky-200 dark:border-gray-600 rounded-xl shadow-inner text-gray-800 dark:text-gray-100 input-focus" />
-                </label>
+                </label> -->
+
+<label class="block">
+    <span class="text-gray-700 dark:text-gray-300 font-medium">{m.username()}</span>
+    <div class="relative mt-1">
+        <input 
+            name="username" 
+            placeholder="e.g. haruna" 
+            required 
+            value={usernameValue}
+            oninput={handleUsernameInput}
+            class={`
+                block w-full px-4 py-2 
+                bg-sky-50 dark:bg-gray-700 
+                border rounded-xl shadow-inner 
+                text-gray-800 dark:text-gray-100 
+                input-focus
+                ${usernameAvailable === true ? 'border-green-500 dark:border-green-500 pr-10' : ''}
+                ${usernameAvailable === false ? 'border-red-500 dark:border-red-500 pr-10' : ''}
+                ${usernameValue && !usernameAvailable && usernameAvailable !== null ? 'border-red-500 dark:border-red-500' : 'border-sky-200 dark:border-gray-600'}
+            `}
+        />
+        <div class="absolute right-3 top-1/2 -translate-y-1/2">
+            {#if usernameChecking}
+                <Loader2 class="w-5 h-5 text-gray-400 animate-spin" />
+            {:else if usernameAvailable === true}
+                <Check class="w-5 h-5 text-green-500" />
+            {:else if usernameAvailable === false}
+                <X class="w-5 h-5 text-red-500" />
+            {/if}
+        </div>
+    </div>
+    {#if usernameError}
+        <p class="text-xs text-red-500 dark:text-red-400 mt-1">{usernameError}</p>
+    {:else if usernameAvailable === true}
+        <p class="text-xs text-green-500 dark:text-green-400 mt-1">✓ Username is available!</p>
+    {/if}
+</label>
 
                 <label class="block">
                     <span class="text-gray-700 dark:text-gray-300 font-medium">{m.codename()} ({m.required()}, {m.unique()})</span>
