@@ -1,6 +1,6 @@
 <script lang="ts">
     import { m } from '$lib/paraglide/messages';
-    import { Package, ShoppingBag, Megaphone, Sparkles, ArrowRight } from 'lucide-svelte';
+    import { Binoculars, Package, ShoppingBag, Megaphone, Sparkles, ArrowRight } from 'lucide-svelte';
     import { fly } from 'svelte/transition';
     import { quintOut } from 'svelte/easing';
 
@@ -31,10 +31,10 @@
         },
         {
             id: 3,
-            icon: Megaphone,
+            icon: Binoculars,
             title: m.welcome_card3_title(),
             description: m.welcome_card3_desc(),
-            link: '/',
+            link: '/users',
             color: 'from-blue-500 to-cyan-500',
             bgGradient: 'from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30',
             borderColor: 'border-blue-200 dark:border-blue-800',

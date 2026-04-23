@@ -2,7 +2,7 @@
     import { enhance } from '$app/forms';
     import { m } from '$lib/paraglide/messages';
     import { page } from '$app/stores';
-    import { Loader2, Check, Info, Eye, EyeOff, Upload, User } from 'lucide-svelte';
+    import { Hand, Loader2, Check, Info, Eye, EyeOff, Upload, User } from 'lucide-svelte';
     import { debounce } from '$lib/utils/debounce';
 
     let form = $page.form;
@@ -409,19 +409,12 @@ function handleUsernameInput(event: Event) {
                                 <img src={avatarUrl} alt="Preview" class="w-16 h-16 rounded-full object-cover border-2 border-sky-500 dark:border-teal-500" />
                             {:else}
                                 <div class="w-16 h-16 rounded-full bg-sky-100 dark:bg-gray-700 flex items-center justify-center text-sky-400 dark:text-gray-500">
-                                    <User class="h-8 w-8" />
+                                    <Hand class="h-8 w-8" />
                                 </div>
                             {/if}
                         </div>
                         <div class="flex-1 w-full space-y-3">
-                            <input
-                                type="url"
-                                bind:value={avatarUrl}
-                                placeholder="e.g. https://www.superphysics.org/icons/Juan.jpg"
-                                class="block w-full px-4 py-2 bg-sky-50 dark:bg-gray-700 border border-sky-200 dark:border-gray-600 rounded-xl shadow-inner text-gray-800 dark:text-gray-100 input-focus text-sm"
-                            />
                             <div class="flex items-center gap-3">
-                                <span class="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">OR</span>
                                 <label class="inline-flex items-center px-4 py-2 bg-teal-600 dark:bg-teal-500 text-white rounded-xl cursor-pointer hover:bg-teal-700 dark:hover:bg-teal-600 transition-colors">
                                     <Upload class="w-4 h-4 mr-2" />
                                     <span class="text-sm font-medium">{m.upload_image()}</span>
@@ -429,6 +422,21 @@ function handleUsernameInput(event: Event) {
                                 </label>
                             </div>
                             {#if uploadError}<p class="text-xs text-red-500 dark:text-red-400 mt-2 font-medium">{uploadError}</p>{/if}
+                            <span class="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">or enter url of your face photo or palm photo</span>
+                            <div class="relative group">
+                            <Info class="w-4 h-4 text-gray-400 dark:text-gray-500 cursor-help hover:text-teal-500 dark:hover:text-teal-400 transition-colors" />
+                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 p-3 bg-gray-900 dark:bg-gray-800 text-white text-xs rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none">
+                                <div class="font-medium mb-1 text-teal-400">This will be used to identify you during meetups. Users who do not want to provide information that is easily identifiable to their person can use their palm photos to identify them</div>
+                                <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 dark:bg-gray-800 rotate-45"></div>
+                            </div>
+                        </div>
+                            <input
+                                type="url"
+                                bind:value={avatarUrl}
+                                placeholder="e.g. https://www.superphysics.org/icons/Juan.jpg"
+                                class="block w-full px-4 py-2 bg-sky-50 dark:bg-gray-700 border border-sky-200 dark:border-gray-600 rounded-xl shadow-inner text-gray-800 dark:text-gray-100 input-focus text-sm"
+                            />
+
                         </div>
                     </div>
                     <input type="hidden" name="avatar" value={avatarUrl} />
@@ -441,6 +449,27 @@ function handleUsernameInput(event: Event) {
                     <span class="text-gray-700 dark:text-gray-300 font-medium">{m.dob()}</span>
                     <input type="date" name="dateOfBirth" class="mt-1 block w-full px-4 py-2 bg-sky-50 dark:bg-gray-700 border border-sky-200 dark:border-gray-600 rounded-xl shadow-inner text-gray-800 dark:text-gray-100 input-focus" />
                 </label>
+
+
+                <label class="block">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-gray-700 dark:text-gray-300 font-medium">{m.relationship_mode()} (Default is OFF)</span>
+                        <div class="relative group">
+                            <Info class="w-4 h-4 text-gray-400 dark:text-gray-500 cursor-help hover:text-teal-500 dark:hover:text-teal-400 transition-colors" />
+                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 p-3 bg-gray-900 dark:bg-gray-800 text-white text-xs rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none">
+                                <div class="font-medium mb-1 text-teal-400">{m.relationship_()}</div>
+                                <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 dark:bg-gray-800 rotate-45"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <select bind:value={selectedRel} class="mt-1 block w-full px-4 py-2 bg-sky-50 dark:bg-gray-700 border border-sky-200 dark:border-gray-600 rounded-xl shadow-inner text-gray-800 dark:text-gray-100 input-focus appearance-none">
+                        <option value="">{m.choose_rel()}</option>
+                        {#each relOptions as option}
+                            <option value={option.code}>{option.label}</option>
+                        {/each}
+                    </select>
+                </label>
+
 
                 <label class="block">
                     <div class="flex items-center gap-2 mb-1">
@@ -524,25 +553,6 @@ function handleUsernameInput(event: Event) {
                     <select bind:value={selectedNationality} class="mt-1 block w-full px-4 py-2 bg-sky-50 dark:bg-gray-700 border border-sky-200 dark:border-gray-600 rounded-xl shadow-inner text-gray-800 dark:text-gray-100 input-focus appearance-none">
                         <option value="">{m.nationality_select()}</option>
                         {#each nationalityOptions as option}
-                            <option value={option.code}>{option.label}</option>
-                        {/each}
-                    </select>
-                </label>
-
-                <label class="block">
-                    <div class="flex items-center gap-2 mb-1">
-                        <span class="text-gray-700 dark:text-gray-300 font-medium">{m.relationship_mode()}</span>
-                        <div class="relative group">
-                            <Info class="w-4 h-4 text-gray-400 dark:text-gray-500 cursor-help hover:text-teal-500 dark:hover:text-teal-400 transition-colors" />
-                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 p-3 bg-gray-900 dark:bg-gray-800 text-white text-xs rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none">
-                                <div class="font-medium mb-1 text-teal-400">{m.relationship_()}</div>
-                                <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 dark:bg-gray-800 rotate-45"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <select bind:value={selectedRel} class="mt-1 block w-full px-4 py-2 bg-sky-50 dark:bg-gray-700 border border-sky-200 dark:border-gray-600 rounded-xl shadow-inner text-gray-800 dark:text-gray-100 input-focus appearance-none">
-                        <option value="">{m.choose_rel()}</option>
-                        {#each relOptions as option}
                             <option value={option.code}>{option.label}</option>
                         {/each}
                     </select>
